@@ -1,0 +1,1 @@
+{"enum":["email","push","sms"],"type":"string","description":"* `email` - Email\n* `push` - Push\n* `sms` - SMS","x-readme-ref-name":"ChannelEnum"}

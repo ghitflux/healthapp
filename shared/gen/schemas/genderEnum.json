@@ -1,0 +1,1 @@
+{"enum":["M","F","O"],"type":"string","description":"* `M` - Male\n* `F` - Female\n* `O` - Other","x-readme-ref-name":"GenderEnum"}

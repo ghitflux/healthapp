@@ -1,0 +1,1 @@
+{"enum":["consultation","exam","return_visit"],"type":"string","description":"* `consultation` - Consultation\n* `exam` - Exam\n* `return_visit` - Return Visit","x-readme-ref-name":"AppointmentTypeEnum"}

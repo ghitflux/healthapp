@@ -1,0 +1,25 @@
+{
+  "name": "healthapp",
+  "version": "1.0.0",
+  "description": "HealthApp Monorepo — API Code Generation with Kubb",
+  "private": true,
+  "scripts": {
+    "schema:export": "cd backend && python manage.py spectacular --color --file ../shared/schema.yaml --validate",
+    "generate:api": "kubb generate",
+    "generate:watch": "kubb generate --watch",
+    "api:sync": "npm run schema:export && npm run generate:api",
+    "generate:debug": "kubb generate --logLevel info"
+  },
+  "devDependencies": {
+    "@kubb/cli": "^4.27.2",
+    "@kubb/core": "^4.27.2",
+    "@kubb/plugin-client": "^4.27.2",
+    "@kubb/plugin-faker": "^4.27.2",
+    "@kubb/plugin-msw": "^4.27.2",
+    "@kubb/plugin-oas": "^4.27.2",
+    "@kubb/plugin-react-query": "^4.27.2",
+    "@kubb/plugin-ts": "^4.27.2",
+    "@kubb/plugin-zod": "^4.27.2",
+    "typescript": "^5.9.3"
+  }
+}

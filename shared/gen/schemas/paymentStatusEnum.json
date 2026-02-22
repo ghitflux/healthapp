@@ -1,0 +1,1 @@
+{"enum":["pending","processing","completed","failed","refunded"],"type":"string","description":"* `pending` - Pending\n* `processing` - Processing\n* `completed` - Completed\n* `failed` - Failed\n* `refunded` - Refunded","x-readme-ref-name":"PaymentStatusEnum"}

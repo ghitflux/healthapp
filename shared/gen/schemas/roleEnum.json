@@ -1,0 +1,1 @@
+{"enum":["patient","doctor","convenio_admin","owner"],"type":"string","description":"* `patient` - Patient\n* `doctor` - Doctor\n* `convenio_admin` - Convenio Admin\n* `owner` - Owner","x-readme-ref-name":"RoleEnum"}

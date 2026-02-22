@@ -1,0 +1,78 @@
+name: API Sync — Code Generation
+
+on:
+  push:
+    paths:
+      - 'backend/apps/**/serializers.py'
+      - 'backend/apps/**/views.py'
+      - 'backend/apps/**/urls.py'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: healthapp
+          POSTGRES_USER: healthapp
+          POSTGRES_PASSWORD: healthapp_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7.2-alpine
+        ports:
+          - 6379:6379
+
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.development
+      POSTGRES_DB: healthapp
+      POSTGRES_USER: healthapp
+      POSTGRES_PASSWORD: healthapp_ci
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: "5432"
+      REDIS_URL: redis://localhost:6379/0
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Python dependencies
+        working-directory: backend
+        run: pip install -r requirements/base.txt
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Run migrations
+        working-directory: backend
+        run: python manage.py migrate --noinput
+
+      - name: Export OpenAPI schema
+        run: npm run schema:export
+
+      - name: Generate API code
+        run: npm run generate:api
+
+      - name: Commit generated code
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: regenerate API types from OpenAPI schema'
+          file_pattern: 'shared/gen/**'

@@ -1,0 +1,1 @@
+{"type":"object","properties":{"score":{"type":"integer","maximum":5,"minimum":1},"comment":{"type":"string"},"is_anonymous":{"type":"boolean"}},"required":["score"],"x-readme-ref-name":"RatingCreateRequest"}

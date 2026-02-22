@@ -1,0 +1,1 @@
+{"type":"object","properties":{"time":{"type":"string","format":"time"},"duration_minutes":{"type":"integer"},"is_available":{"type":"boolean"}},"required":["duration_minutes","is_available","time"],"x-readme-ref-name":"AvailableSlot"}

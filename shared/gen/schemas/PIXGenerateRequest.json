@@ -1,0 +1,1 @@
+{"type":"object","properties":{"appointment_id":{"type":"string","format":"uuid"}},"required":["appointment_id"],"x-readme-ref-name":"PIXGenerateRequest"}

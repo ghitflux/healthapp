@@ -1,0 +1,3170 @@
+openapi: 3.0.3
+info:
+  title: HealthApp API
+  version: 1.0.0
+  description: API REST para gestão de saúde — agendamentos, pagamentos e convênios
+paths:
+  /api/v1/appointments/:
+    get:
+      operationId: listAppointments
+      summary: List user appointments
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - appointments
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAppointmentListList'
+          description: ''
+    post:
+      operationId: createAppointment
+      summary: Create appointment (with Redis lock)
+      tags:
+      - appointments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AppointmentCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AppointmentCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+          description: ''
+  /api/v1/appointments/{id}/:
+    get:
+      operationId: getAppointmentById
+      summary: Get appointment details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - appointments
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+          description: ''
+  /api/v1/appointments/{id}/cancel/:
+    post:
+      operationId: cancelAppointment
+      summary: Cancel an appointment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - appointments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelAppointmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CancelAppointmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CancelAppointmentRequest'
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+          description: ''
+  /api/v1/appointments/{id}/confirm/:
+    post:
+      operationId: confirmAppointment
+      summary: Confirm an appointment (convenio)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - appointments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AppointmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AppointmentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+          description: ''
+  /api/v1/appointments/{id}/rate/:
+    post:
+      operationId: rateAppointment
+      summary: Rate a completed appointment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - appointments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatingCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RatingCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RatingCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rating'
+          description: ''
+  /api/v1/auth/forgot-password/:
+    post:
+      operationId: forgotPassword
+      summary: Request password reset via email
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/auth/login/:
+    post:
+      operationId: loginUser
+      summary: Login with email and password
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/auth/register/:
+    post:
+      operationId: registerUser
+      summary: Register a new patient user
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/v1/auth/reset-password/:
+    post:
+      operationId: resetPassword
+      summary: Reset password with token
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/auth/token/refresh/:
+    post:
+      operationId: refreshToken
+      summary: Refresh access token
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/auth/verify-email/:
+    post:
+      operationId: verifyEmail
+      summary: Verify email with OTP code
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyEmailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VerifyEmailRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VerifyEmailRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/auth/verify-phone/:
+    post:
+      operationId: verifyPhone
+      summary: Verify phone with SMS code
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyPhoneRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VerifyPhoneRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VerifyPhoneRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/convenios/:
+    get:
+      operationId: listConvenios
+      summary: List all convenios
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - convenio
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedConvenioListList'
+          description: ''
+    post:
+      operationId: createConvenio
+      summary: Create a new convenio
+      tags:
+      - owner
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConvenioRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ConvenioRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ConvenioRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Convenio'
+          description: ''
+  /api/v1/convenios/{id}/:
+    get:
+      operationId: getConvenioById
+      summary: Get convenio details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - convenio
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Convenio'
+          description: ''
+    patch:
+      operationId: patchConvenioSettings
+      summary: Update convenio settings
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - convenio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedConvenioRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedConvenioRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedConvenioRequest'
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Convenio'
+          description: ''
+    delete:
+      operationId: api_v1_convenios_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/convenios/dashboard/:
+    get:
+      operationId: getConvenioDashboard
+      summary: Get convenio dashboard KPIs
+      tags:
+      - convenio
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConvenioDashboard'
+          description: ''
+  /api/v1/doctors/:
+    get:
+      operationId: listDoctors
+      summary: List doctors with filters
+      parameters:
+      - in: query
+        name: city
+        schema:
+          type: string
+      - in: query
+        name: convenio
+        schema:
+          type: string
+        description: Filter by convenio ID
+      - in: query
+        name: is_available
+        schema:
+          type: boolean
+      - in: query
+        name: max_price
+        schema:
+          type: number
+      - in: query
+        name: min_price
+        schema:
+          type: number
+      - in: query
+        name: name
+        schema:
+          type: string
+        description: Search by doctor name
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: specialty
+        schema:
+          type: string
+        description: Filter by specialty
+      tags:
+      - doctors
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDoctorListList'
+          description: ''
+    post:
+      operationId: api_v1_doctors_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DoctorRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DoctorRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DoctorRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Doctor'
+          description: ''
+  /api/v1/doctors/{id}/:
+    get:
+      operationId: getDoctorById
+      summary: Get doctor details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this doctor.
+        required: true
+      tags:
+      - doctors
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Doctor'
+          description: ''
+    patch:
+      operationId: api_v1_doctors_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this doctor.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDoctorRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDoctorRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDoctorRequest'
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Doctor'
+          description: ''
+    delete:
+      operationId: api_v1_doctors_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this doctor.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/doctors/{id}/slots/:
+    get:
+      operationId: getDoctorSlots
+      summary: Get available slots for a doctor on a specific date
+      parameters:
+      - in: query
+        name: city
+        schema:
+          type: string
+      - in: query
+        name: convenio
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: date
+        schema:
+          type: string
+        description: Date in YYYY-MM-DD format
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this doctor.
+        required: true
+      - in: query
+        name: is_available
+        schema:
+          type: boolean
+      - in: query
+        name: max_price
+        schema:
+          type: number
+      - in: query
+        name: min_price
+        schema:
+          type: number
+      - in: query
+        name: name
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: specialty
+        schema:
+          type: string
+      tags:
+      - doctors
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAvailableSlotList'
+          description: ''
+  /api/v1/exam-types/:
+    get:
+      operationId: listExamTypes
+      summary: List exam types
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - convenio
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedExamTypeList'
+          description: ''
+    post:
+      operationId: createExamType
+      summary: Create exam type
+      tags:
+      - convenio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExamTypeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ExamTypeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ExamTypeRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExamType'
+          description: ''
+  /api/v1/exam-types/{id}/:
+    get:
+      operationId: api_v1_exam_types_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExamType'
+          description: ''
+    patch:
+      operationId: patchExamType
+      summary: Update exam type
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - convenio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedExamTypeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedExamTypeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedExamTypeRequest'
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExamType'
+          description: ''
+    delete:
+      operationId: deleteExamType
+      summary: Delete exam type
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - convenio
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/notifications/:
+    get:
+      operationId: listNotifications
+      summary: List user notifications
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v1/notifications/{id}/read/:
+    patch:
+      operationId: markNotificationRead
+      summary: Mark notification as read
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/v1/notifications/read-all/:
+    post:
+      operationId: markAllNotificationsRead
+      summary: Mark all notifications as read
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/notifications/unread-count/:
+    get:
+      operationId: getUnreadNotificationCount
+      summary: Get unread notification count
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnreadCount'
+          description: ''
+  /api/v1/payments/{id}/refund/:
+    post:
+      operationId: refundPayment
+      summary: Request payment refund
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - payments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RefundRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RefundRequest'
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+          description: ''
+  /api/v1/payments/{id}/status/:
+    get:
+      operationId: getPaymentStatus
+      summary: Get payment status
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - payments
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+          description: ''
+  /api/v1/payments/create-intent/:
+    post:
+      operationId: createPaymentIntent
+      summary: Create Stripe Payment Intent
+      tags:
+      - payments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentIntentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentIntentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentIntentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/payments/history/:
+    get:
+      operationId: getPaymentHistory
+      summary: Get payment history
+      tags:
+      - payments
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+          description: ''
+  /api/v1/payments/pix/generate/:
+    post:
+      operationId: generatePIX
+      summary: Generate PIX QR Code
+      tags:
+      - payments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PIXGenerateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PIXGenerateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PIXGenerateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/schedule-exceptions/:
+    get:
+      operationId: listScheduleExceptions
+      summary: List schedule exceptions
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - convenio
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedScheduleExceptionList'
+          description: ''
+    post:
+      operationId: createScheduleException
+      summary: Create schedule exception
+      tags:
+      - convenio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleExceptionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ScheduleExceptionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ScheduleExceptionRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleException'
+          description: ''
+  /api/v1/schedule-exceptions/{id}/:
+    get:
+      operationId: api_v1_schedule_exceptions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleException'
+          description: ''
+    delete:
+      operationId: deleteScheduleException
+      summary: Delete schedule exception
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - convenio
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/schedules/:
+    get:
+      operationId: listDoctorSchedules
+      summary: List doctor schedules
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - convenio
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDoctorScheduleList'
+          description: ''
+    post:
+      operationId: createDoctorSchedule
+      summary: Create doctor schedule
+      tags:
+      - convenio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DoctorScheduleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DoctorScheduleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DoctorScheduleRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorSchedule'
+          description: ''
+  /api/v1/schedules/{id}/:
+    get:
+      operationId: api_v1_schedules_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorSchedule'
+          description: ''
+    patch:
+      operationId: patchDoctorSchedule
+      summary: Update doctor schedule
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - convenio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDoctorScheduleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDoctorScheduleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDoctorScheduleRequest'
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorSchedule'
+          description: ''
+    delete:
+      operationId: deleteDoctorSchedule
+      summary: Delete doctor schedule
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - convenio
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/users/me/:
+    get:
+      operationId: getUserProfile
+      summary: Get authenticated user profile
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+    patch:
+      operationId: patchUserProfile
+      summary: Update authenticated user profile
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProfileRequest'
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+    delete:
+      operationId: deleteUserAccount
+      summary: Delete user account (LGPD — anonymization)
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/users/me/change-password/:
+    post:
+      operationId: changePassword
+      summary: Change password
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/users/me/export-data/:
+    post:
+      operationId: exportUserData
+      summary: Export personal data (LGPD compliance)
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/webhooks/stripe/:
+    post:
+      operationId: stripeWebhook
+      summary: Stripe webhook handler
+      tags:
+      - payments
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+components:
+  schemas:
+    Appointment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        patient:
+          type: string
+          format: uuid
+        patient_name:
+          type: string
+          readOnly: true
+        doctor:
+          type: string
+          format: uuid
+        doctor_name:
+          type: string
+          readOnly: true
+        convenio:
+          type: string
+          format: uuid
+        convenio_name:
+          type: string
+          readOnly: true
+        appointment_type:
+          $ref: '#/components/schemas/AppointmentTypeEnum'
+        exam_type:
+          type: string
+          format: uuid
+          nullable: true
+        scheduled_date:
+          type: string
+          format: date
+        scheduled_time:
+          type: string
+          format: time
+        duration_minutes:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status308Enum'
+          readOnly: true
+        cancellation_reason:
+          type: string
+          readOnly: true
+        notes:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        payment:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        reminder_sent:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - appointment_type
+      - cancellation_reason
+      - convenio
+      - convenio_name
+      - created_at
+      - doctor
+      - doctor_name
+      - id
+      - patient
+      - patient_name
+      - payment
+      - reminder_sent
+      - scheduled_date
+      - scheduled_time
+      - status
+      - updated_at
+    AppointmentCreateRequest:
+      type: object
+      properties:
+        doctor:
+          type: string
+          format: uuid
+        appointment_type:
+          $ref: '#/components/schemas/AppointmentTypeEnum'
+        exam_type:
+          type: string
+          format: uuid
+          nullable: true
+        scheduled_date:
+          type: string
+          format: date
+        scheduled_time:
+          type: string
+          format: time
+        notes:
+          type: string
+      required:
+      - appointment_type
+      - doctor
+      - scheduled_date
+      - scheduled_time
+    AppointmentList:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        doctor_name:
+          type: string
+          readOnly: true
+        doctor_specialty:
+          type: string
+          readOnly: true
+        appointment_type:
+          $ref: '#/components/schemas/AppointmentTypeEnum'
+        scheduled_date:
+          type: string
+          format: date
+        scheduled_time:
+          type: string
+          format: time
+        status:
+          $ref: '#/components/schemas/Status308Enum'
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+      required:
+      - appointment_type
+      - doctor_name
+      - doctor_specialty
+      - id
+      - scheduled_date
+      - scheduled_time
+    AppointmentRequest:
+      type: object
+      properties:
+        patient:
+          type: string
+          format: uuid
+        doctor:
+          type: string
+          format: uuid
+        convenio:
+          type: string
+          format: uuid
+        appointment_type:
+          $ref: '#/components/schemas/AppointmentTypeEnum'
+        exam_type:
+          type: string
+          format: uuid
+          nullable: true
+        scheduled_date:
+          type: string
+          format: date
+        scheduled_time:
+          type: string
+          format: time
+        duration_minutes:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        notes:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+      required:
+      - appointment_type
+      - convenio
+      - doctor
+      - patient
+      - scheduled_date
+      - scheduled_time
+    AppointmentTypeEnum:
+      enum:
+      - consultation
+      - exam
+      - return_visit
+      type: string
+      description: |-
+        * `consultation` - Consultation
+        * `exam` - Exam
+        * `return_visit` - Return Visit
+    AvailableSlot:
+      type: object
+      properties:
+        time:
+          type: string
+          format: time
+        duration_minutes:
+          type: integer
+        is_available:
+          type: boolean
+      required:
+      - duration_minutes
+      - is_available
+      - time
+    BlankEnum:
+      enum:
+      - ''
+    CancelAppointmentRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+    ChangePasswordRequest:
+      type: object
+      properties:
+        old_password:
+          type: string
+          writeOnly: true
+          minLength: 1
+        new_password:
+          type: string
+          writeOnly: true
+          minLength: 8
+      required:
+      - new_password
+      - old_password
+    ChannelEnum:
+      enum:
+      - email
+      - push
+      - sms
+      type: string
+      description: |-
+        * `email` - Email
+        * `push` - Push
+        * `sms` - SMS
+    Convenio:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        cnpj:
+          type: string
+          maxLength: 18
+        logo_url:
+          type: string
+          format: uri
+          maxLength: 200
+        description:
+          type: string
+        contact_email:
+          type: string
+          format: email
+          maxLength: 254
+        contact_phone:
+          type: string
+          maxLength: 20
+        address: {}
+        settings: {}
+        subscription_plan:
+          type: string
+          maxLength: 50
+        subscription_status:
+          type: string
+          maxLength: 20
+        is_active:
+          type: boolean
+        is_approved:
+          type: boolean
+          readOnly: true
+        approved_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - approved_at
+      - cnpj
+      - contact_email
+      - contact_phone
+      - created_at
+      - id
+      - is_approved
+      - name
+      - updated_at
+    ConvenioDashboard:
+      type: object
+      properties:
+        total_doctors:
+          type: integer
+        total_appointments_month:
+          type: integer
+        total_revenue_month:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        occupancy_rate:
+          type: number
+          format: double
+        cancellation_rate:
+          type: number
+          format: double
+      required:
+      - cancellation_rate
+      - occupancy_rate
+      - total_appointments_month
+      - total_doctors
+      - total_revenue_month
+    ConvenioList:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        logo_url:
+          type: string
+          format: uri
+          maxLength: 200
+        contact_email:
+          type: string
+          format: email
+          maxLength: 254
+        subscription_plan:
+          type: string
+          maxLength: 50
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - contact_email
+      - created_at
+      - id
+      - name
+    ConvenioRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        cnpj:
+          type: string
+          minLength: 1
+          maxLength: 18
+        logo_url:
+          type: string
+          format: uri
+          maxLength: 200
+        description:
+          type: string
+        contact_email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        contact_phone:
+          type: string
+          minLength: 1
+          maxLength: 20
+        address: {}
+        settings: {}
+        subscription_plan:
+          type: string
+          minLength: 1
+          maxLength: 50
+        subscription_status:
+          type: string
+          minLength: 1
+          maxLength: 20
+        is_active:
+          type: boolean
+      required:
+      - cnpj
+      - contact_email
+      - contact_phone
+      - name
+    CreatePaymentIntentPaymentMethodEnum:
+      enum:
+      - credit_card
+      - debit_card
+      type: string
+      description: |-
+        * `credit_card` - credit_card
+        * `debit_card` - debit_card
+    CreatePaymentIntentRequest:
+      type: object
+      properties:
+        appointment_id:
+          type: string
+          format: uuid
+        payment_method:
+          $ref: '#/components/schemas/CreatePaymentIntentPaymentMethodEnum'
+      required:
+      - appointment_id
+      - payment_method
+    Doctor:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+        user_name:
+          type: string
+          readOnly: true
+        user_email:
+          type: string
+          readOnly: true
+        convenio:
+          type: string
+          format: uuid
+        convenio_name:
+          type: string
+          readOnly: true
+        crm:
+          type: string
+          maxLength: 20
+        crm_state:
+          type: string
+          maxLength: 2
+        specialty:
+          type: string
+          maxLength: 100
+        subspecialties:
+          type: array
+          items:
+            type: string
+            maxLength: 100
+        bio:
+          type: string
+        consultation_duration:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Duration in minutes
+        consultation_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        rating:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,2})?$
+          readOnly: true
+        total_ratings:
+          type: integer
+          readOnly: true
+        is_available:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - convenio
+      - convenio_name
+      - created_at
+      - crm
+      - crm_state
+      - id
+      - rating
+      - specialty
+      - total_ratings
+      - updated_at
+      - user
+      - user_email
+      - user_name
+    DoctorList:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        user_name:
+          type: string
+          readOnly: true
+        avatar_url:
+          type: string
+          readOnly: true
+        specialty:
+          type: string
+          maxLength: 100
+        convenio_name:
+          type: string
+          readOnly: true
+        consultation_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        rating:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,2})?$
+        total_ratings:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        is_available:
+          type: boolean
+      required:
+      - avatar_url
+      - convenio_name
+      - id
+      - specialty
+      - user_name
+    DoctorRequest:
+      type: object
+      properties:
+        user:
+          type: string
+          format: uuid
+        convenio:
+          type: string
+          format: uuid
+        crm:
+          type: string
+          minLength: 1
+          maxLength: 20
+        crm_state:
+          type: string
+          minLength: 1
+          maxLength: 2
+        specialty:
+          type: string
+          minLength: 1
+          maxLength: 100
+        subspecialties:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 100
+        bio:
+          type: string
+        consultation_duration:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Duration in minutes
+        consultation_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        is_available:
+          type: boolean
+      required:
+      - convenio
+      - crm
+      - crm_state
+      - specialty
+      - user
+    DoctorSchedule:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        doctor:
+          type: string
+          format: uuid
+        weekday:
+          type: integer
+          maximum: 6
+          minimum: 0
+          description: 0=Monday, 6=Sunday
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        slot_duration:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Slot duration in minutes
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - doctor
+      - end_time
+      - id
+      - start_time
+      - weekday
+    DoctorScheduleRequest:
+      type: object
+      properties:
+        doctor:
+          type: string
+          format: uuid
+        weekday:
+          type: integer
+          maximum: 6
+          minimum: 0
+          description: 0=Monday, 6=Sunday
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        slot_duration:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Slot duration in minutes
+        is_active:
+          type: boolean
+      required:
+      - doctor
+      - end_time
+      - start_time
+      - weekday
+    ExamType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        convenio:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        preparation:
+          type: string
+        duration_minutes:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - convenio
+      - created_at
+      - id
+      - name
+      - price
+      - updated_at
+    ExamTypeRequest:
+      type: object
+      properties:
+        convenio:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+        preparation:
+          type: string
+        duration_minutes:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        is_active:
+          type: boolean
+      required:
+      - convenio
+      - name
+      - price
+    ForgotPasswordRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+      required:
+      - email
+    GenderEnum:
+      enum:
+      - M
+      - F
+      - O
+      type: string
+      description: |-
+        * `M` - Male
+        * `F` - Female
+        * `O` - Other
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - email
+      - password
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+          readOnly: true
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TypeEnum'
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        body:
+          type: string
+          readOnly: true
+        channel:
+          allOf:
+          - $ref: '#/components/schemas/ChannelEnum'
+          readOnly: true
+        is_read:
+          type: boolean
+        read_at:
+          type: string
+          format: date-time
+          nullable: true
+        sent_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        metadata: {}
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - body
+      - channel
+      - created_at
+      - id
+      - sent_at
+      - title
+      - type
+      - user
+    PIXGenerateRequest:
+      type: object
+      properties:
+        appointment_id:
+          type: string
+          format: uuid
+      required:
+      - appointment_id
+    PaginatedAppointmentListList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppointmentList'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
+    PaginatedAvailableSlotList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailableSlot'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
+    PaginatedConvenioListList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConvenioList'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
+    PaginatedDoctorListList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DoctorList'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
+    PaginatedDoctorScheduleList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DoctorSchedule'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
+    PaginatedExamTypeList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExamType'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
+    PaginatedScheduleExceptionList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScheduleException'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
+    PatchedConvenioRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        cnpj:
+          type: string
+          minLength: 1
+          maxLength: 18
+        logo_url:
+          type: string
+          format: uri
+          maxLength: 200
+        description:
+          type: string
+        contact_email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        contact_phone:
+          type: string
+          minLength: 1
+          maxLength: 20
+        address: {}
+        settings: {}
+        subscription_plan:
+          type: string
+          minLength: 1
+          maxLength: 50
+        subscription_status:
+          type: string
+          minLength: 1
+          maxLength: 20
+        is_active:
+          type: boolean
+    PatchedDoctorRequest:
+      type: object
+      properties:
+        user:
+          type: string
+          format: uuid
+        convenio:
+          type: string
+          format: uuid
+        crm:
+          type: string
+          minLength: 1
+          maxLength: 20
+        crm_state:
+          type: string
+          minLength: 1
+          maxLength: 2
+        specialty:
+          type: string
+          minLength: 1
+          maxLength: 100
+        subspecialties:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 100
+        bio:
+          type: string
+        consultation_duration:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Duration in minutes
+        consultation_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        is_available:
+          type: boolean
+    PatchedDoctorScheduleRequest:
+      type: object
+      properties:
+        doctor:
+          type: string
+          format: uuid
+        weekday:
+          type: integer
+          maximum: 6
+          minimum: 0
+          description: 0=Monday, 6=Sunday
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        slot_duration:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: Slot duration in minutes
+        is_active:
+          type: boolean
+    PatchedExamTypeRequest:
+      type: object
+      properties:
+        convenio:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+        preparation:
+          type: string
+        duration_minutes:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        is_active:
+          type: boolean
+    PatchedProfileRequest:
+      type: object
+      properties:
+        full_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        gender:
+          oneOf:
+          - $ref: '#/components/schemas/GenderEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        avatar_url:
+          type: string
+          format: uri
+          maxLength: 200
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        currency:
+          type: string
+          maxLength: 3
+        payment_method:
+          $ref: '#/components/schemas/PaymentPaymentMethodEnum'
+        status:
+          allOf:
+          - $ref: '#/components/schemas/PaymentStatusEnum'
+          readOnly: true
+        stripe_payment_intent_id:
+          type: string
+          readOnly: true
+        pix_code:
+          type: string
+          readOnly: true
+        pix_qr_code:
+          type: string
+          readOnly: true
+        pix_expiration:
+          type: string
+          format: date-time
+          nullable: true
+        paid_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        refunded_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        refund_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+        metadata: {}
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount
+      - created_at
+      - id
+      - paid_at
+      - payment_method
+      - pix_code
+      - pix_qr_code
+      - refunded_at
+      - status
+      - stripe_payment_intent_id
+      - updated_at
+      - user
+    PaymentPaymentMethodEnum:
+      enum:
+      - pix
+      - credit_card
+      - debit_card
+      type: string
+      description: |-
+        * `pix` - PIX
+        * `credit_card` - Credit Card
+        * `debit_card` - Debit Card
+    PaymentStatusEnum:
+      enum:
+      - pending
+      - processing
+      - completed
+      - failed
+      - refunded
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `processing` - Processing
+        * `completed` - Completed
+        * `failed` - Failed
+        * `refunded` - Refunded
+    Profile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        full_name:
+          type: string
+          maxLength: 255
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        gender:
+          oneOf:
+          - $ref: '#/components/schemas/GenderEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        avatar_url:
+          type: string
+          format: uri
+          maxLength: 200
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleEnum'
+          readOnly: true
+        email_verified:
+          type: boolean
+          readOnly: true
+        phone_verified:
+          type: boolean
+          readOnly: true
+        is_2fa_enabled:
+          type: boolean
+          readOnly: true
+        convenio:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - convenio
+      - created_at
+      - email
+      - email_verified
+      - full_name
+      - id
+      - is_2fa_enabled
+      - phone_verified
+      - role
+    Rating:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        appointment:
+          type: string
+          format: uuid
+        patient:
+          type: string
+          format: uuid
+          readOnly: true
+        patient_name:
+          type: string
+          readOnly: true
+        doctor:
+          type: string
+          format: uuid
+          readOnly: true
+        score:
+          type: integer
+          maximum: 5
+          minimum: 1
+        comment:
+          type: string
+        is_anonymous:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - appointment
+      - created_at
+      - doctor
+      - id
+      - patient
+      - patient_name
+      - score
+    RatingCreateRequest:
+      type: object
+      properties:
+        score:
+          type: integer
+          maximum: 5
+          minimum: 1
+        comment:
+          type: string
+        is_anonymous:
+          type: boolean
+      required:
+      - score
+    RefundRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+    RegisterRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          minLength: 8
+        password_confirm:
+          type: string
+          writeOnly: true
+          minLength: 8
+        full_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        cpf:
+          type: string
+          nullable: true
+          maxLength: 14
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        gender:
+          oneOf:
+          - $ref: '#/components/schemas/GenderEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+      required:
+      - email
+      - full_name
+      - password
+      - password_confirm
+    ResetPasswordRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          minLength: 1
+        new_password:
+          type: string
+          writeOnly: true
+          minLength: 8
+      required:
+      - new_password
+      - token
+    RoleEnum:
+      enum:
+      - patient
+      - doctor
+      - convenio_admin
+      - owner
+      type: string
+      description: |-
+        * `patient` - Patient
+        * `doctor` - Doctor
+        * `convenio_admin` - Convenio Admin
+        * `owner` - Owner
+    ScheduleException:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        doctor:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          format: time
+          nullable: true
+        end_time:
+          type: string
+          format: time
+          nullable: true
+        is_full_day:
+          type: boolean
+        is_available:
+          type: boolean
+        reason:
+          type: string
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - date
+      - doctor
+      - id
+    ScheduleExceptionRequest:
+      type: object
+      properties:
+        doctor:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          format: time
+          nullable: true
+        end_time:
+          type: string
+          format: time
+          nullable: true
+        is_full_day:
+          type: boolean
+        is_available:
+          type: boolean
+        reason:
+          type: string
+          maxLength: 255
+      required:
+      - date
+      - doctor
+    Status308Enum:
+      enum:
+      - pending
+      - confirmed
+      - in_progress
+      - completed
+      - cancelled
+      - no_show
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `confirmed` - Confirmed
+        * `in_progress` - In Progress
+        * `completed` - Completed
+        * `cancelled` - Cancelled
+        * `no_show` - No Show
+    TypeEnum:
+      enum:
+      - appointment
+      - payment
+      - system
+      - reminder
+      type: string
+      description: |-
+        * `appointment` - Appointment
+        * `payment` - Payment
+        * `system` - System
+        * `reminder` - Reminder
+    UnreadCount:
+      type: object
+      properties:
+        count:
+          type: integer
+      required:
+      - count
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        full_name:
+          type: string
+          maxLength: 255
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        gender:
+          oneOf:
+          - $ref: '#/components/schemas/GenderEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        avatar_url:
+          type: string
+          format: uri
+          maxLength: 200
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleEnum'
+          readOnly: true
+        email_verified:
+          type: boolean
+          readOnly: true
+        phone_verified:
+          type: boolean
+          readOnly: true
+        is_2fa_enabled:
+          type: boolean
+        convenio:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - email
+      - email_verified
+      - full_name
+      - id
+      - phone_verified
+      - role
+      - updated_at
+    VerifyEmailRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          minLength: 6
+          maxLength: 6
+      required:
+      - code
+    VerifyPhoneRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          minLength: 6
+          maxLength: 6
+      required:
+      - code
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+tags:
+- name: auth
+  description: Autenticação e registro
+- name: users
+  description: Gestão de usuários e perfil
+- name: doctors
+  description: Médicos e busca
+- name: appointments
+  description: Agendamentos
+- name: payments
+  description: Pagamentos e PIX
+- name: convenio
+  description: Painel do convênio
+- name: owner
+  description: Painel do owner
+- name: notifications
+  description: Notificações
