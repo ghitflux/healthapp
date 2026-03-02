@@ -3,22 +3,23 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  LayoutDashboard,
-  Stethoscope,
-  Calendar,
-  FlaskConical,
-  CalendarCheck,
-  DollarSign,
-  Settings,
-  BarChart3,
-  Building2,
-  Users,
-  Wallet,
-  TrendingUp,
-  Shield,
-  LogOut,
-  Heart,
-} from 'lucide-react';
+  LayoutDashboardIcon,
+  StethoscopeIcon,
+  CalendarIcon,
+  FlaskConicalIcon,
+  CalendarCheckIcon,
+  DollarSignIcon,
+  SettingsIcon,
+  BarChart3Icon,
+  Building2Icon,
+  UsersIcon,
+  WalletIcon,
+  TrendingUpIcon,
+  ShieldIcon,
+  LogOutIcon,
+  HeartIcon,
+  type LucideIcon,
+} from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -31,7 +32,7 @@ import { Separator } from '@/components/ui/separator';
 interface NavItem {
   label: string;
   href: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
 }
 
 /**
@@ -40,24 +41,24 @@ interface NavItem {
 function createNavItems(variant: 'convenio' | 'owner'): NavItem[] {
   if (variant === 'owner') {
     return [
-      { label: 'Dashboard', href: '/owner/dashboard', icon: BarChart3 },
-      { label: 'Convênios', href: '/owner/convenios', icon: Building2 },
-      { label: 'Usuários', href: '/owner/users', icon: Users },
-      { label: 'Financeiro', href: '/owner/financial', icon: Wallet },
-      { label: 'Analytics', href: '/owner/analytics', icon: TrendingUp },
-      { label: 'Auditoria', href: '/owner/audit-logs', icon: Shield },
-      { label: 'Configurações', href: '/owner/settings', icon: Settings },
+      { label: 'Dashboard', href: '/owner/dashboard', icon: BarChart3Icon },
+      { label: 'Convênios', href: '/owner/convenios', icon: Building2Icon },
+      { label: 'Usuários', href: '/owner/users', icon: UsersIcon },
+      { label: 'Financeiro', href: '/owner/financial', icon: WalletIcon },
+      { label: 'Analytics', href: '/owner/analytics', icon: TrendingUpIcon },
+      { label: 'Auditoria', href: '/owner/audit-logs', icon: ShieldIcon },
+      { label: 'Configurações', href: '/owner/settings', icon: SettingsIcon },
     ];
   }
 
   return [
-    { label: 'Dashboard', href: '/convenio/dashboard', icon: LayoutDashboard },
-    { label: 'Médicos', href: '/convenio/doctors', icon: Stethoscope },
-    { label: 'Agendas', href: '/convenio/schedules', icon: Calendar },
-    { label: 'Exames', href: '/convenio/exams', icon: FlaskConical },
-    { label: 'Agendamentos', href: '/convenio/appointments', icon: CalendarCheck },
-    { label: 'Financeiro', href: '/convenio/financial', icon: DollarSign },
-    { label: 'Configurações', href: '/convenio/settings', icon: Settings },
+    { label: 'Dashboard', href: '/convenio/dashboard', icon: LayoutDashboardIcon },
+    { label: 'Médicos', href: '/convenio/doctors', icon: StethoscopeIcon },
+    { label: 'Agendas', href: '/convenio/schedules', icon: CalendarIcon },
+    { label: 'Exames', href: '/convenio/exams', icon: FlaskConicalIcon },
+    { label: 'Agendamentos', href: '/convenio/appointments', icon: CalendarCheckIcon },
+    { label: 'Financeiro', href: '/convenio/financial', icon: DollarSignIcon },
+    { label: 'Configurações', href: '/convenio/settings', icon: SettingsIcon },
   ];
 }
 
@@ -85,7 +86,7 @@ export function Sidebar({ variant }: SidebarProps) {
       {/* Logo */}
       <div className="flex items-center gap-3 px-6 py-5 border-b">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600">
-          <Heart className="h-4 w-4 text-white" />
+          <HeartIcon className="h-4 w-4 text-white" />
         </div>
         <span className="font-bold text-lg">HealthApp</span>
         {variant === 'owner' && (
@@ -143,7 +144,7 @@ export function Sidebar({ variant }: SidebarProps) {
           onClick={handleLogout}
           className="w-full justify-start text-muted-foreground hover:text-foreground"
         >
-          <LogOut className="h-4 w-4 mr-2" />
+          <LogOutIcon className="h-4 w-4 mr-2" />
           Sair
         </Button>
       </div>

@@ -1,8 +1,8 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Users, Building2, CalendarCheck, DollarSign, TrendingUp, CheckCircle } from 'lucide-react';
-import { KPICard, KPICardSkeleton } from '@/components/data-display/kpi-card';
+import { UsersIcon, Building2Icon, CalendarCheckIcon, DollarSignIcon, TrendingUpIcon, CheckCircleIcon } from '@/lib/icons';
+import { KpiCard as KPICard, KpiCardSkeleton as KPICardSkeleton } from '@/components/patterns/kpi-card';
 import { api } from '@/lib/api';
 import { formatCurrency } from '@/lib/formatters';
 
@@ -39,37 +39,37 @@ export function OwnerDashboardKPIs() {
     {
       title: 'Total de Usuários',
       value: (data?.total_users ?? 0).toLocaleString('pt-BR'),
-      icon: Users,
+      icon: UsersIcon,
       iconColor: 'text-primary-600',
     },
     {
       title: 'Convênios Ativos',
       value: data?.total_convenios ?? 0,
-      icon: Building2,
+      icon: Building2Icon,
       iconColor: 'text-success-600',
     },
     {
       title: 'Agendamentos Total',
       value: (data?.total_appointments ?? 0).toLocaleString('pt-BR'),
-      icon: CalendarCheck,
+      icon: CalendarCheckIcon,
       iconColor: 'text-warning-600',
     },
     {
       title: 'Receita Total',
       value: formatCurrency(data?.total_revenue ?? 0),
-      icon: DollarSign,
+      icon: DollarSignIcon,
       iconColor: 'text-primary-600',
     },
     {
       title: 'Ticket Médio',
       value: formatCurrency(data?.average_ticket ?? 0),
-      icon: TrendingUp,
+      icon: TrendingUpIcon,
       iconColor: 'text-success-600',
     },
     {
       title: 'Taxa de Sucesso',
       value: `${(data?.payment_success_rate ?? 0).toFixed(1)}%`,
-      icon: CheckCircle,
+      icon: CheckCircleIcon,
       iconColor: 'text-success-600',
       description: 'Pagamentos bem-sucedidos',
     },

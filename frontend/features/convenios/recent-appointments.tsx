@@ -3,9 +3,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
 import { api } from '@/lib/api';
-import { formatDateTime } from '@/lib/formatters';
+import { StatusPill } from '@/components/ds/status-pill';
+import type { AppointmentStatus } from '@/components/ds/status-pill';
+import { DateTimeText } from '@/components/ds/datetime-text';
 
 interface RecentAppointment {
   id: string;
@@ -15,14 +16,6 @@ interface RecentAppointment {
   status: string;
 }
 
-const STATUS_CONFIG: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning' | 'info' }> = {
-  pending: { label: 'Pendente', variant: 'warning' },
-  confirmed: { label: 'Confirmado', variant: 'info' },
-  in_progress: { label: 'Em andamento', variant: 'default' },
-  completed: { label: 'Concluído', variant: 'success' },
-  cancelled: { label: 'Cancelado', variant: 'destructive' },
-  no_show: { label: 'Não compareceu', variant: 'secondary' },
-};
 
 export function RecentAppointments() {
   const { data, isLoading } = useQuery<RecentAppointment[]>({
@@ -64,7 +57,6 @@ export function RecentAppointments() {
           </p>
         ) : (
           appointments.slice(0, 5).map((apt) => {
-            const statusConfig = STATUS_CONFIG[apt.status] ?? { label: apt.status, variant: 'outline' as const };
             return (
               <div
                 key={apt.id}
@@ -73,10 +65,11 @@ export function RecentAppointments() {
                 <div className="space-y-0.5">
                   <p className="text-sm font-medium">{apt.patient_name}</p>
                   <p className="text-xs text-muted-foreground">
-                    Dr(a). {apt.doctor_name} · {formatDateTime(apt.scheduled_at)}
+                    Dr(a). {apt.doctor_name} ·{' '}
+                    <DateTimeText value={apt.scheduled_at} variant="datetime" />
                   </p>
                 </div>
-                <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>
+                <StatusPill status={apt.status as AppointmentStatus} />
               </div>
             );
           })

@@ -1,9 +1,7 @@
+/**
+ * Auth Layout — passthrough simples.
+ * O AuthTemplate em cada page.tsx já fornece o layout visual completo.
+ */
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950">
-      <div className="w-full max-w-md px-4">
-        {children}
-      </div>
-    </div>
-  );
+  return <>{children}</>;
 }

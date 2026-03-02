@@ -5,26 +5,26 @@ import { RevenueChart } from '@/components/charts/revenue-chart';
 import { AppointmentsStatusChart } from '@/components/charts/appointments-status-chart';
 import { TopDoctorsTable } from '@/features/convenios/top-doctors-table';
 import { RecentAppointments } from '@/features/convenios/recent-appointments';
+import { DashboardTemplate } from '@/components/templates/dashboard-template';
 
 export default function ConvenioDashboardPage() {
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Visão geral do seu convênio</p>
-      </div>
-
-      <ConvenioDashboardKPIs />
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RevenueChart endpoint="/v1/convenios/dashboard/" />
-        <AppointmentsStatusChart endpoint="/v1/convenios/dashboard/" />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <TopDoctorsTable />
-        <RecentAppointments />
-      </div>
-    </div>
+    <DashboardTemplate
+      title="Dashboard"
+      description="Visão geral do seu convênio"
+      kpis={<ConvenioDashboardKPIs />}
+      charts={
+        <>
+          <RevenueChart endpoint="/v1/convenios/dashboard/" />
+          <AppointmentsStatusChart endpoint="/v1/convenios/dashboard/" />
+        </>
+      }
+      tables={
+        <>
+          <TopDoctorsTable />
+          <RecentAppointments />
+        </>
+      }
+    />
   );
 }

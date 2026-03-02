@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Star } from 'lucide-react';
+import { RatingStars } from '@/components/ds/rating-stars';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -85,9 +85,8 @@ export function TopDoctorsTable() {
                     </TableCell>
                     <TableCell className="text-right text-sm">{doctor.total_appointments}</TableCell>
                     <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm">{doctor.rating.toFixed(1)}</span>
+                      <div className="flex items-center justify-end">
+                        <RatingStars value={doctor.rating} size="sm" showValue />
                       </div>
                     </TableCell>
                   </TableRow>

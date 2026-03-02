@@ -1,8 +1,8 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Stethoscope, CalendarCheck, DollarSign, XCircle } from 'lucide-react';
-import { KPICard, KPICardSkeleton } from '@/components/data-display/kpi-card';
+import { StethoscopeIcon, CalendarCheckIcon, DollarSignIcon, XCircleIcon } from '@/lib/icons';
+import { KpiCard as KPICard, KpiCardSkeleton as KPICardSkeleton } from '@/components/patterns/kpi-card';
 import { api } from '@/lib/api';
 import { formatCurrency } from '@/lib/formatters';
 
@@ -37,28 +37,28 @@ export function ConvenioDashboardKPIs() {
     {
       title: 'Médicos Ativos',
       value: data?.total_doctors ?? 0,
-      icon: Stethoscope,
+      icon: StethoscopeIcon,
       iconColor: 'text-primary-600',
       description: 'Total de médicos no convênio',
     },
     {
       title: 'Agendamentos (Mês)',
       value: data?.total_appointments_month ?? 0,
-      icon: CalendarCheck,
+      icon: CalendarCheckIcon,
       iconColor: 'text-success-600',
       description: 'Agendamentos no mês atual',
     },
     {
       title: 'Receita (Mês)',
       value: formatCurrency(data?.total_revenue_month ?? 0),
-      icon: DollarSign,
+      icon: DollarSignIcon,
       iconColor: 'text-warning-600',
       description: 'Faturamento do mês atual',
     },
     {
       title: 'Taxa de Cancelamento',
       value: `${(data?.cancellation_rate ?? 0).toFixed(1)}%`,
-      icon: XCircle,
+      icon: XCircleIcon,
       iconColor: 'text-danger-600',
       description: 'Percentual de cancelamentos',
     },

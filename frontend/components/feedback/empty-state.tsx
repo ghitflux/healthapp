@@ -1,27 +1,6 @@
-import type { LucideIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-
-interface EmptyStateProps {
-  icon?: LucideIcon;
-  title: string;
-  description?: string;
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
-}
-
-export function EmptyState({ icon: Icon, title, description, action }: EmptyStateProps) {
-  return (
-    <div className="flex flex-col items-center justify-center py-16 space-y-3 text-center">
-      {Icon && <Icon className="h-12 w-12 text-muted-foreground/40" />}
-      <h3 className="text-lg font-medium">{title}</h3>
-      {description && <p className="text-sm text-muted-foreground max-w-xs">{description}</p>}
-      {action && (
-        <Button variant="outline" onClick={action.onClick}>
-          {action.label}
-        </Button>
-      )}
-    </div>
-  );
-}
+/**
+ * @deprecated Usar @/components/patterns/empty-state-block (localização canônica DS)
+ * Re-export de compatibilidade — mantido para não quebrar imports existentes.
+ */
+export { EmptyStateBlock as EmptyState } from '@/components/patterns/empty-state-block';
+export type { EmptyStateBlockProps as EmptyStateProps } from '@/components/patterns/empty-state-block';

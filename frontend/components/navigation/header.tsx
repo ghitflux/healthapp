@@ -2,7 +2,14 @@
 
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Bell, Moon, Sun, User, LogOut, Menu } from 'lucide-react';
+import {
+  BellIcon,
+  MoonIcon,
+  SunIcon,
+  UserIcon,
+  LogOutIcon,
+  MenuIcon,
+} from '@/lib/icons';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -13,7 +20,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
 import { authService } from '@/lib/auth';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -61,8 +67,8 @@ export function Header() {
     <header className="h-16 border-b flex items-center justify-between px-6 bg-background">
       {/* Left — Breadcrumb */}
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" className="lg:hidden">
-          <Menu className="h-5 w-5" />
+        <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Abrir menu">
+          <MenuIcon className="h-5 w-5" />
         </Button>
         <nav className="text-sm text-muted-foreground">
           <span>{breadcrumb}</span>
@@ -78,19 +84,19 @@ export function Header() {
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           aria-label="Alternar tema"
         >
-          <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <SunIcon className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <MoonIcon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         </Button>
 
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="relative" aria-label="Notificações">
-          <Bell className="h-4 w-4" />
-          <Badge
-            variant="destructive"
-            className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px]"
+          <BellIcon className="h-4 w-4" />
+          <span
+            className="absolute -top-1 -right-1 h-4 min-w-4 rounded-full bg-danger-500 text-white text-[10px] font-medium flex items-center justify-center px-1"
+            aria-label="3 notificações não lidas"
           >
             3
-          </Badge>
+          </span>
         </Button>
 
         {/* User Menu */}
@@ -112,12 +118,12 @@ export function Header() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
+              <UserIcon className="mr-2 h-4 w-4" />
               Perfil
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-              <LogOut className="mr-2 h-4 w-4" />
+              <LogOutIcon className="mr-2 h-4 w-4" />
               Sair
             </DropdownMenuItem>
           </DropdownMenuContent>
