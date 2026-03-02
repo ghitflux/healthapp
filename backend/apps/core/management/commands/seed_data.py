@@ -18,8 +18,9 @@ from faker import Faker
 
 from apps.appointments.models import Appointment, Rating
 from apps.convenios.models import Convenio, ConvenioPlan, ExamType
+from apps.core.models import PlatformSettings
 from apps.doctors.models import Doctor, DoctorSchedule, ScheduleException
-from apps.notifications.models import Notification
+from apps.notifications.models import DeviceToken, Notification
 from apps.payments.models import Payment
 from apps.users.models import CONSENT_PURPOSE_CHOICES, ConsentRecord, CustomUser
 
@@ -40,7 +41,7 @@ SPECIALTIES = [
 
 
 class Command(BaseCommand):
-    help = "Seed realistic data for week 3 APIs and dashboards"
+    help = "Seed realistic data for week 4 APIs and dashboards"
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -48,33 +49,51 @@ class Command(BaseCommand):
             action="store_true",
             help="Delete existing week3 seed data and recreate from scratch.",
         )
+        parser.add_argument(
+            "--minimal",
+            action="store_true",
+            help="Generate a smaller dataset for faster local setup.",
+        )
 
     def handle(self, *args, **options):
         force = options["force"]
+        minimal = options["minimal"]
         if force:
             self._clear_seed_data()
 
-        if Appointment.objects.filter(notes__startswith="[seed-week3]").count() >= 50:
+        profile = {
+            "doctors": 3 if minimal else 15,
+            "patients": 5 if minimal else 30,
+            "appointments": 10 if minimal else 100,
+            "payments": 8 if minimal else 70,
+            "ratings": 5 if minimal else 40,
+            "notifications": 20 if minimal else 100,
+            "device_tokens": 6 if minimal else 24,
+        }
+
+        if Appointment.objects.filter(notes__startswith="[seed-week3]").count() >= profile["appointments"]:
             self.stdout.write(self.style.WARNING("Week 3 seed data already present. Use --force to recreate."))
             return
 
-        self.stdout.write("Seeding Week 3 dataset...")
+        self.stdout.write("Seeding Week 4 dataset...")
 
         self._create_plans()
+        self._create_platform_settings()
         owner = self._create_owner()
         convenios = self._create_convenios()
         self._create_exam_types(convenios)
-        doctors = self._create_doctors(convenios)
+        doctors = self._create_doctors(convenios, profile["doctors"])
         self._create_schedules(doctors)
         self._create_schedule_exceptions(doctors)
-        patients = self._create_patients(25)
-        appointments = self._create_appointments(doctors, patients)
-        payments = self._create_payments(appointments)
-        self._create_ratings(appointments)
-        self._create_notifications(doctors, patients)
+        patients = self._create_patients(profile["patients"])
+        appointments = self._create_appointments(doctors, patients, profile["appointments"])
+        payments = self._create_payments(appointments, profile["payments"])
+        self._create_ratings(appointments, profile["ratings"])
+        self._create_notifications(doctors, patients, profile["notifications"])
+        self._create_device_tokens(patients, doctors, profile["device_tokens"])
         self._create_consents()
 
-        self.stdout.write(self.style.SUCCESS("Week 3 seed completed successfully."))
+        self.stdout.write(self.style.SUCCESS("Week 4 seed completed successfully."))
         self.stdout.write(f"  Owner: {owner.email}")
         self.stdout.write(f"  Convenios: {len(convenios)}")
         self.stdout.write(f"  Doctors: {len(doctors)}")
@@ -83,6 +102,7 @@ class Command(BaseCommand):
         self.stdout.write(f"  Payments: {len(payments)}")
 
     def _clear_seed_data(self):
+        DeviceToken.objects.filter(token__startswith="seed-device-").delete()
         Notification.objects.filter(metadata__source="seed-week3").delete()
         Rating.objects.filter(comment__startswith="[seed-week3]").delete()
         Appointment.objects.filter(notes__startswith="[seed-week3]").delete()
@@ -94,7 +114,23 @@ class Command(BaseCommand):
         Convenio.objects.filter(name__startswith="Clinica Seed ").delete()
         CustomUser.objects.filter(email__startswith="patient").delete()
         CustomUser.objects.filter(email__startswith="admin.seed").delete()
+        PlatformSettings.objects.all().delete()
         self.stdout.write("  Cleared previous week3 seed data.")
+
+    def _create_platform_settings(self):
+        settings_obj = PlatformSettings.load()
+        settings_obj.platform_fee_percentage = Decimal("10.00")
+        settings_obj.max_advance_booking_days = 60
+        settings_obj.min_cancellation_hours = 24
+        settings_obj.cancellation_fee_percentage = Decimal("15.00")
+        settings_obj.appointment_lock_ttl_minutes = 10
+        settings_obj.payment_timeout_minutes = 30
+        settings_obj.max_appointments_per_day_patient = 3
+        settings_obj.pix_enabled = True
+        settings_obj.credit_card_enabled = True
+        settings_obj.maintenance_mode = False
+        settings_obj.maintenance_message = ""
+        settings_obj.save()
 
     def _create_owner(self) -> CustomUser:
         owner, created = CustomUser.objects.get_or_create(
@@ -197,9 +233,9 @@ class Command(BaseCommand):
                     },
                 )
 
-    def _create_doctors(self, convenios: list[Convenio]) -> list[Doctor]:
+    def _create_doctors(self, convenios: list[Convenio], total: int) -> list[Doctor]:
         doctors: list[Doctor] = []
-        for index in range(10):
+        for index in range(total):
             convenio = convenios[index % len(convenios)]
             user, created = CustomUser.objects.get_or_create(
                 email=f"doctor{index + 1}@healthapp.com.br",
@@ -251,7 +287,7 @@ class Command(BaseCommand):
 
     def _create_schedule_exceptions(self, doctors: list[Doctor]):
         today = timezone.localdate()
-        for index in range(5):
+        for index in range(min(5, len(doctors))):
             doctor = doctors[index]
             exception_date = today + timedelta(days=index + 3)
             ScheduleException.objects.get_or_create(
@@ -287,15 +323,23 @@ class Command(BaseCommand):
             patients.append(patient)
         return patients
 
-    def _create_appointments(self, doctors: list[Doctor], patients: list[CustomUser]) -> list[Appointment]:
+    def _create_appointments(
+        self,
+        doctors: list[Doctor],
+        patients: list[CustomUser],
+        total: int,
+    ) -> list[Appointment]:
         today = timezone.localdate()
         status_sequence = (
-            ["completed"] * 20
-            + ["confirmed"] * 15
-            + ["pending"] * 5
-            + ["cancelled"] * 5
-            + ["no_show"] * 5
+            ["completed"] * int(total * 0.35)
+            + ["confirmed"] * int(total * 0.20)
+            + ["pending"] * int(total * 0.15)
+            + ["cancelled"] * int(total * 0.10)
+            + ["no_show"] * int(total * 0.10)
         )
+        while len(status_sequence) < total:
+            status_sequence.append("in_progress")
+        status_sequence = status_sequence[:total]
         appointments: list[Appointment] = []
 
         for index, apt_status in enumerate(status_sequence, start=1):
@@ -329,15 +373,42 @@ class Command(BaseCommand):
             appointment.scheduled_date = scheduled_date
             appointment.scheduled_time = scheduled_time
             appointment.cancellation_reason = "Paciente desistiu" if apt_status == "cancelled" else ""
+            appointment.started_at = (
+                timezone.now() - timedelta(hours=1) if apt_status in {"in_progress", "completed"} else None
+            )
+            appointment.completed_at = timezone.now() if apt_status == "completed" else None
+            appointment.no_show_at = timezone.now() if apt_status == "no_show" else None
+            appointment.reminder_stages_sent = (
+                {"48h": timezone.now().isoformat(), "24h": timezone.now().isoformat()}
+                if apt_status in {"confirmed", "completed"} and index % 4 == 0
+                else {}
+            )
             appointment.save(
-                update_fields=["status", "scheduled_date", "scheduled_time", "cancellation_reason", "updated_at"]
+                update_fields=[
+                    "status",
+                    "scheduled_date",
+                    "scheduled_time",
+                    "cancellation_reason",
+                    "started_at",
+                    "completed_at",
+                    "no_show_at",
+                    "reminder_stages_sent",
+                    "updated_at",
+                ]
             )
             appointments.append(appointment)
 
         return appointments
 
-    def _create_payments(self, appointments: list[Appointment]) -> list[Payment]:
-        payment_statuses = ["completed"] * 20 + ["failed"] * 5 + ["refunded"] * 3 + ["pending"] * 2
+    def _create_payments(self, appointments: list[Appointment], total: int) -> list[Payment]:
+        payment_statuses = (
+            ["completed"] * int(total * 0.55)
+            + ["failed"] * int(total * 0.20)
+            + ["refunded"] * int(total * 0.15)
+        )
+        while len(payment_statuses) < total:
+            payment_statuses.append("pending")
+        payment_statuses = payment_statuses[:total]
         payments: list[Payment] = []
 
         for index, status_value in enumerate(payment_statuses, start=1):
@@ -369,8 +440,8 @@ class Command(BaseCommand):
 
         return payments
 
-    def _create_ratings(self, appointments: list[Appointment]):
-        completed = [item for item in appointments if item.status == "completed"][:20]
+    def _create_ratings(self, appointments: list[Appointment], total: int):
+        completed = [item for item in appointments if item.status == "completed"][:total]
         for index, appointment in enumerate(completed, start=1):
             rating, _ = Rating.objects.get_or_create(
                 appointment=appointment,
@@ -385,12 +456,12 @@ class Command(BaseCommand):
             rating.comment = f"[seed-week3] avaliacao {index}"
             rating.save(update_fields=["score", "comment", "updated_at"])
 
-    def _create_notifications(self, doctors: list[Doctor], patients: list[CustomUser]):
+    def _create_notifications(self, doctors: list[Doctor], patients: list[CustomUser], total: int):
         users_pool = patients + [doctor.user for doctor in doctors]
         types = ["appointment", "payment", "system", "reminder"]
         channels = ["push", "email", "sms"]
 
-        for index in range(50):
+        for index in range(total):
             user = users_pool[index % len(users_pool)]
             notif_type = types[index % len(types)]
             channel = channels[index % len(channels)]
@@ -406,16 +477,36 @@ class Command(BaseCommand):
                 },
             )
 
+    def _create_device_tokens(self, patients: list[CustomUser], doctors: list[Doctor], total: int):
+        users_pool = patients + [doctor.user for doctor in doctors]
+        device_types = ["android", "ios", "web"]
+        for index in range(total):
+            user = users_pool[index % len(users_pool)]
+            DeviceToken.objects.get_or_create(
+                token=f"seed-device-{index + 1:03d}",
+                defaults={
+                    "user": user,
+                    "device_type": device_types[index % len(device_types)],
+                    "device_name": f"Seed Device {index + 1}",
+                    "is_active": True,
+                    "last_used_at": timezone.now(),
+                },
+            )
+
     def _create_consents(self):
-        for user in CustomUser.objects.all():
-            for purpose, _ in CONSENT_PURPOSE_CHOICES:
+        for user_index, user in enumerate(CustomUser.objects.all()):
+            for purpose_index, (purpose, _) in enumerate(CONSENT_PURPOSE_CHOICES):
+                granted = not (purpose == "notifications_sms" and (user_index + purpose_index) % 5 == 0)
                 consent, _ = ConsentRecord.objects.get_or_create(
                     user=user,
                     purpose=purpose,
-                    defaults={"granted": True, "granted_at": timezone.now()},
+                    defaults={
+                        "granted": granted,
+                        "granted_at": timezone.now() if granted else None,
+                        "revoked_at": None if granted else timezone.now(),
+                    },
                 )
-                if not consent.granted:
-                    consent.granted = True
-                    consent.granted_at = timezone.now()
-                    consent.revoked_at = None
-                    consent.save(update_fields=["granted", "granted_at", "revoked_at", "updated_at"])
+                consent.granted = granted
+                consent.granted_at = timezone.now() if granted else consent.granted_at
+                consent.revoked_at = None if granted else timezone.now()
+                consent.save(update_fields=["granted", "granted_at", "revoked_at", "updated_at"])

@@ -1,6 +1,11 @@
 export { cancelAppointmentPathParamsSchema, cancelAppointment200Schema, cancelAppointmentMutationRequestSchema, cancelAppointmentMutationResponseSchema } from "./cancelAppointmentSchema.ts";
+export { completeAppointmentPathParamsSchema, completeAppointment200Schema, completeAppointmentMutationRequestSchema, completeAppointmentMutationResponseSchema } from "./completeAppointmentSchema.ts";
 export { confirmAppointmentPathParamsSchema, confirmAppointment200Schema, confirmAppointmentMutationRequestSchema, confirmAppointmentMutationResponseSchema } from "./confirmAppointmentSchema.ts";
 export { createAppointment201Schema, createAppointmentMutationRequestSchema, createAppointmentMutationResponseSchema } from "./createAppointmentSchema.ts";
 export { getAppointmentByIdPathParamsSchema, getAppointmentById200Schema, getAppointmentByIdQueryResponseSchema } from "./getAppointmentByIdSchema.ts";
+export { getAppointmentCancellationPolicyPathParamsSchema, getAppointmentCancellationPolicy200Schema, getAppointmentCancellationPolicyQueryResponseSchema } from "./getAppointmentCancellationPolicySchema.ts";
+export { getAppointmentRemindersPathParamsSchema, getAppointmentRemindersQueryParamsSchema, getAppointmentReminders200Schema, getAppointmentRemindersQueryResponseSchema } from "./getAppointmentRemindersSchema.ts";
 export { listAppointmentsQueryParamsSchema, listAppointments200Schema, listAppointmentsQueryResponseSchema } from "./listAppointmentsSchema.ts";
+export { markNoShowPathParamsSchema, markNoShow200Schema, markNoShowMutationRequestSchema, markNoShowMutationResponseSchema } from "./markNoShowSchema.ts";
 export { rateAppointmentPathParamsSchema, rateAppointment201Schema, rateAppointmentMutationRequestSchema, rateAppointmentMutationResponseSchema } from "./rateAppointmentSchema.ts";
+export { startAppointmentPathParamsSchema, startAppointment200Schema, startAppointmentMutationResponseSchema } from "./startAppointmentSchema.ts";

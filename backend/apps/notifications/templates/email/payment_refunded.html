@@ -1,0 +1,6 @@
+{% extends "email/base.html" %}
+{% block content %}
+<h2 style="margin:0 0 12px;font-size:22px;">Reembolso processado</h2>
+<p style="margin:0 0 8px;">Valor: <strong>R$ {{ amount }}</strong></p>
+<p style="margin:0;">Prazo estimado para estorno: {{ eta|default:"5 a 10 dias uteis" }}.</p>
+{% endblock %}

@@ -1,7 +1,12 @@
 export { appointmentsClient } from "./appointmentsClient.ts";
 export { cancelAppointment } from "./cancelAppointment.ts";
+export { completeAppointment } from "./completeAppointment.ts";
 export { confirmAppointment } from "./confirmAppointment.ts";
 export { createAppointment } from "./createAppointment.ts";
 export { getAppointmentById } from "./getAppointmentById.ts";
+export { getAppointmentCancellationPolicy } from "./getAppointmentCancellationPolicy.ts";
+export { getAppointmentReminders } from "./getAppointmentReminders.ts";
 export { listAppointments } from "./listAppointments.ts";
+export { markNoShow } from "./markNoShow.ts";
 export { rateAppointment } from "./rateAppointment.ts";
+export { startAppointment } from "./startAppointment.ts";

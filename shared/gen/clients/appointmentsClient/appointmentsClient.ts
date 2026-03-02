@@ -4,12 +4,17 @@
 */
 
 import { cancelAppointment } from "./cancelAppointment.ts";
+import { completeAppointment } from "./completeAppointment.ts";
 import { confirmAppointment } from "./confirmAppointment.ts";
 import { createAppointment } from "./createAppointment.ts";
 import { getAppointmentById } from "./getAppointmentById.ts";
+import { getAppointmentCancellationPolicy } from "./getAppointmentCancellationPolicy.ts";
+import { getAppointmentReminders } from "./getAppointmentReminders.ts";
 import { listAppointments } from "./listAppointments.ts";
+import { markNoShow } from "./markNoShow.ts";
 import { rateAppointment } from "./rateAppointment.ts";
+import { startAppointment } from "./startAppointment.ts";
 
 export function appointmentsClient() {
-  return { listAppointments, createAppointment, getAppointmentById, cancelAppointment, confirmAppointment, rateAppointment }
+  return { listAppointments, createAppointment, getAppointmentById, cancelAppointment, getAppointmentCancellationPolicy, completeAppointment, confirmAppointment, markNoShow, rateAppointment, getAppointmentReminders, startAppointment }
 }

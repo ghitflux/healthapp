@@ -12,40 +12,65 @@ from celery import shared_task
 logger = logging.getLogger(__name__)
 
 
-@shared_task
-def send_email_notification(user_id: str, subject: str, body: str):
-    """Send email notification (lightweight — django.tasks candidate)."""
+@shared_task(bind=True, autoretry_for=(Exception,), retry_backoff=True, retry_kwargs={"max_retries": 3})
+def send_email_notification(
+    self,
+    user_id: str,
+    subject: str,
+    body_or_template: str,
+    context: dict[str, Any] | None = None,
+):  # noqa: ANN001
+    """Send email notification."""
+    del self
     from apps.users.models import CustomUser
 
     from .services import EmailService
 
     try:
         user = CustomUser.objects.get(id=user_id)
-        EmailService.send_email(user, subject, body)
+        template_name = body_or_template if body_or_template.endswith(".html") else None
+        email_context = context or {}
+        if not template_name:
+            email_context = {"message": body_or_template, **email_context}
+        if context is None:
+            EmailService.send_email(user, subject, template_name or body_or_template)
+        else:
+            EmailService.send_email(user.email, subject, template_name or body_or_template, email_context)
     except CustomUser.DoesNotExist:
         logger.warning("User %s not found for email notification", user_id)
 
 
-@shared_task
-def send_push_notification(user_id: str, title: str, body: str, data: dict[str, Any] | None = None):
-    """Send push notification (lightweight — django.tasks candidate)."""
-    from apps.users.models import CustomUser
-
+@shared_task(bind=True, autoretry_for=(Exception,), retry_backoff=True, retry_kwargs={"max_retries": 3})
+def send_push_notification(
+    self,
+    user_id: str,
+    title: str,
+    body: str,
+    data: dict[str, Any] | None = None,
+):  # noqa: ANN001
+    """Send push notification."""
     from .services import PushService
 
-    try:
-        user = CustomUser.objects.get(id=user_id)
-        PushService.send_push(user, title, body, data)
-    except CustomUser.DoesNotExist:
-        logger.warning("User %s not found for push notification", user_id)
+    result = PushService.send_to_user(user_id, title, body, data)
+    if result["failure_count"] > 0 and result["success_count"] == 0:
+        raise RuntimeError(f"Push notification failed for user {user_id}: {result['errors']}")
 
 
-@shared_task
-def send_sms_notification(phone: str, message: str):
+@shared_task(bind=True, autoretry_for=(Exception,), retry_backoff=True, retry_kwargs={"max_retries": 3})
+def send_sms_notification(self, phone: str, message: str, user_id: str | None = None):  # noqa: ANN001
     """Send SMS notification."""
+    del self
+    user = None
+    if user_id:
+        from apps.users.models import CustomUser
+
+        user = CustomUser.objects.filter(id=user_id).first()
+
     from .services import SMSService
 
-    SMSService.send_sms(phone, message)
+    result = SMSService.send_sms(phone, message, user=user, require_consent=bool(user))
+    if not result["success"]:
+        raise RuntimeError(f"SMS notification failed for phone {phone}")
 
 
 def _safe_delay(task, *args, **kwargs):
@@ -64,14 +89,8 @@ def _minutes_until(appointment, now) -> float:
 
 
 def _was_stage_sent(appointment, stage: str) -> bool:
-    from .models import Notification
-
-    return Notification.objects.filter(
-        user=appointment.patient,
-        type="reminder",
-        metadata__appointment_id=str(appointment.id),
-        metadata__reminder_stage=stage,
-    ).exists()
+    stages = appointment.reminder_stages_sent or {}
+    return stage in stages
 
 
 @shared_task
@@ -79,15 +98,17 @@ def send_bulk_reminders():
     """Send multi-stage appointment reminders (48h, 24h, 2h, 30min)."""
     from apps.appointments.models import Appointment
 
-    from .services import NotificationService
+    from .services import NotificationService, SMSService
 
     now = timezone.now()
+    lower_bound = timezone.localdate()
     upper_bound = timezone.localdate() + timedelta(days=3)
 
     appointments = Appointment.objects.filter(
         status="confirmed",
+        scheduled_date__gte=lower_bound,
         scheduled_date__lte=upper_bound,
-    ).select_related("patient", "doctor__user")
+    ).select_related("patient", "doctor__user").order_by("scheduled_date", "scheduled_time")
 
     sent_count = 0
     for appointment in appointments:
@@ -109,29 +130,42 @@ def send_bulk_reminders():
             if _was_stage_sent(appointment, stage):
                 continue
 
+            reminder_meta = {
+                "appointment_id": str(appointment.id),
+                "reminder_stage": stage,
+            }
             notification = NotificationService.create_notification(
                 user=appointment.patient,
                 notification_type="reminder",
                 title=title,
                 body=body,
                 channel="push",
-                metadata={"appointment_id": str(appointment.id), "reminder_stage": stage},
+                metadata=reminder_meta,
             )
             sent_count += 1
             stage_sent = True
 
-            _safe_delay(
-                send_push_notification,
-                str(appointment.patient.id),
-                title,
-                body,
-                {"appointment_id": str(appointment.id), "reminder_stage": stage},
-            )
+            if stage in {"24h", "2h", "30min"}:
+                _safe_delay(send_push_notification, str(appointment.patient.id), title, body, reminder_meta)
 
             if stage in {"48h", "24h"}:
-                _safe_delay(send_email_notification, str(appointment.patient.id), title, body)
+                _safe_delay(
+                    send_email_notification,
+                    str(appointment.patient.id),
+                    title,
+                    "appointment_reminder.html",
+                    {
+                        "doctor_name": appointment.doctor.user.full_name,
+                        "date": appointment.scheduled_date.isoformat(),
+                        "time": appointment.scheduled_time.strftime("%H:%M"),
+                    },
+                )
             if stage == "2h" and appointment.patient.phone:
-                _safe_delay(send_sms_notification, appointment.patient.phone, body)
+                SMSService.send_reminder(
+                    appointment.patient.phone,
+                    appointment,
+                    user=appointment.patient,
+                )
 
             logger.info(
                 "Reminder stage %s sent for appointment %s using notification %s",
@@ -139,6 +173,10 @@ def send_bulk_reminders():
                 appointment.id,
                 notification.id,
             )
+            reminders = appointment.reminder_stages_sent or {}
+            reminders[stage] = timezone.now().isoformat()
+            appointment.reminder_stages_sent = reminders
+            appointment.save(update_fields=["reminder_stages_sent", "updated_at"])
 
         if stage_sent and not appointment.reminder_sent:
             appointment.reminder_sent = True
@@ -167,6 +205,7 @@ def cleanup_old_notifications():
 def check_no_show_appointments():
     """Mark appointments as no_show 30 minutes after expected end time."""
     from apps.appointments.models import Appointment
+    from apps.appointments.services import BookingService
     from apps.users.models import CustomUser
 
     from .services import NotificationService
@@ -184,8 +223,7 @@ def check_no_show_appointments():
         if now < threshold:
             continue
 
-        appointment.status = "no_show"
-        appointment.save(update_fields=["status", "updated_at"])
+        appointment = BookingService.mark_no_show(appointment)
         marked_count += 1
 
         convenio_admins = CustomUser.objects.filter(

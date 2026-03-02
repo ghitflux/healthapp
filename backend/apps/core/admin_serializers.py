@@ -4,6 +4,7 @@ from auditlog.models import LogEntry
 from rest_framework import serializers
 
 from apps.convenios.models import Convenio
+from apps.core.models import PlatformSettings
 from apps.users.models import CustomUser
 
 
@@ -126,3 +127,44 @@ class OwnerFinancialReportSerializer(serializers.Serializer):
     payment_method_breakdown = serializers.ListField(child=serializers.DictField())
     refund_rate = serializers.FloatField()
     reconciliation = serializers.DictField()
+
+
+class PlatformSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlatformSettings
+        fields = [
+            "id",
+            "platform_fee_percentage",
+            "max_advance_booking_days",
+            "min_cancellation_hours",
+            "cancellation_fee_percentage",
+            "appointment_lock_ttl_minutes",
+            "payment_timeout_minutes",
+            "max_appointments_per_day_patient",
+            "pix_enabled",
+            "credit_card_enabled",
+            "maintenance_mode",
+            "maintenance_message",
+            "updated_by",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["id", "updated_by", "created_at", "updated_at"]
+
+
+class UpdatePlatformSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlatformSettings
+        fields = [
+            "platform_fee_percentage",
+            "max_advance_booking_days",
+            "min_cancellation_hours",
+            "cancellation_fee_percentage",
+            "appointment_lock_ttl_minutes",
+            "payment_timeout_minutes",
+            "max_appointments_per_day_patient",
+            "pix_enabled",
+            "credit_card_enabled",
+            "maintenance_mode",
+            "maintenance_message",
+        ]

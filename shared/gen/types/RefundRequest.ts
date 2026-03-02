@@ -6,6 +6,11 @@
 
 export type RefundRequest = {
     /**
+     * @pattern ^-?\d{0,8}(?:\.\d{0,2})?$
+     * @type string | undefined, decimal
+    */
+    amount?: string;
+    /**
      * @type string | undefined
     */
     reason?: string;

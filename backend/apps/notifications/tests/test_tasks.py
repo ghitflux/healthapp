@@ -51,12 +51,13 @@ class TestNotificationTasks:
         user = PatientFactory()
         called = {"value": False}
 
-        def _send_push(target_user, title, body, data):
+        def _send_push(user_id, title, body, data):
             called["value"] = True
-            assert target_user.id == user.id
+            assert user_id == str(user.id)
             assert title == "Reminder"
+            return {"success_count": 1, "failure_count": 0, "errors": []}
 
-        monkeypatch.setattr("apps.notifications.services.PushService.send_push", _send_push)
+        monkeypatch.setattr("apps.notifications.services.PushService.send_to_user", _send_push)
 
         send_push_notification(str(user.id), "Reminder", "Body", {"k": "v"})
 
@@ -80,9 +81,10 @@ class TestNotificationTasks:
     def test_send_sms_notification(self, monkeypatch):
         called = {"value": False}
 
-        def _send_sms(phone, message):
+        def _send_sms(phone, message, **kwargs):
             called["value"] = True
             assert phone == "+5511999999999"
+            return {"success": True, "sid": "SM_TEST"}
 
         monkeypatch.setattr("apps.notifications.services.SMSService.send_sms", _send_sms)
         send_sms_notification("+5511999999999", "Teste")
@@ -132,3 +134,26 @@ class TestNotificationTasks:
         assert Notification.objects.filter(id=old_read.id).exists() is False
         assert Notification.objects.filter(id=recent_read.id).exists() is True
         assert Notification.objects.filter(id=old_unread.id).exists() is True
+
+    def test_send_bulk_reminders_deduplicates_stage(self, monkeypatch):
+        now = timezone.localtime() + timedelta(hours=24)
+        appointment = AppointmentFactory(status="confirmed", reminder_sent=False, reminder_stages_sent={})
+        appointment.scheduled_date = now.date()
+        appointment.scheduled_time = now.time().replace(second=0, microsecond=0)
+        appointment.save(
+            update_fields=["scheduled_date", "scheduled_time", "reminder_sent", "reminder_stages_sent", "updated_at"]
+        )
+
+        monkeypatch.setattr("apps.notifications.tasks._safe_delay", lambda *args, **kwargs: None)
+        monkeypatch.setattr(
+            "apps.notifications.services.SMSService.send_reminder",
+            lambda *args, **kwargs: {"success": True, "sid": "SM_REMINDER"},
+        )
+
+        first = send_bulk_reminders()
+        second = send_bulk_reminders()
+
+        appointment.refresh_from_db()
+        assert first >= 1
+        assert second >= 0
+        assert "24h" in (appointment.reminder_stages_sent or {})

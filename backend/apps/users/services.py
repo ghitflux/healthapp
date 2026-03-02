@@ -26,6 +26,18 @@ class OTPService:
     def generate_email_otp(user: CustomUser) -> str:
         code = generate_otp()
         cache.set(f"{OTP_PREFIX_EMAIL}{user.id}", code, timeout=OTP_EXPIRY_SECONDS)
+        from apps.notifications.services import EmailService
+
+        EmailService.send_transactional(
+            user.email,
+            "Codigo de verificacao do HealthApp",
+            "verification_code.html",
+            {
+                "user_name": user.full_name,
+                "code": code,
+                "expires_minutes": OTP_EXPIRY_SECONDS // 60,
+            },
+        )
         logger.info("Email OTP generated for user %s", user.id)
         return code
 
@@ -43,6 +55,10 @@ class OTPService:
     def generate_phone_otp(user: CustomUser) -> str:
         code = generate_otp()
         cache.set(f"{OTP_PREFIX_PHONE}{user.id}", code, timeout=OTP_EXPIRY_SECONDS)
+        if user.phone:
+            from apps.notifications.services import SMSService
+
+            SMSService.send_otp(user.phone, code, user=user)
         logger.info("Phone OTP generated for user %s", user.id)
         return code
 

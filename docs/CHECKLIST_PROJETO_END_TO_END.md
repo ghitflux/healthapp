@@ -7,41 +7,41 @@
 ## 0. Baseline do Projeto
 
 ### 0.1 Ambiente e stack
-- [ ] Python 3.12+ (ideal 3.13) disponivel
-- [ ] Node.js 20.9+ disponivel
-- [ ] Docker e Docker Compose operacionais
-- [ ] PostgreSQL 16 e Redis 7.2 acessiveis em dev
-- [ ] Variaveis de ambiente configuradas (`backend/.env`)
+- [x] Python 3.12+ (ideal 3.13) disponivel
+- [x] Node.js 20.9+ disponivel
+- [x] Docker e Docker Compose operacionais
+- [x] PostgreSQL 16 e Redis 7.2 acessiveis em dev
+- [x] Variaveis de ambiente configuradas (`backend/.env`)
 
 ### 0.2 Repositorio e qualidade
-- [ ] Monorepo com pastas `backend/`, `frontend/`, `mobile/`, `shared/`
-- [ ] CI baseline ativa (ruff + mypy + pytest)
-- [ ] Convencao de commits (Conventional Commits) em uso
-- [ ] `CLAUDE.md` raiz e por subprojeto revisados
+- [x] Monorepo com pastas `backend/`, `frontend/`, `mobile/`, `shared/`
+- [x] CI baseline ativa (ruff + mypy + pytest)
+- [x] Convencao de commits (Conventional Commits) em uso
+- [x] `CLAUDE.md` raiz e por subprojeto revisados
 
 ---
 
 ## 1. Fase 1 - Backend Foundation (Semanas 1-4)
 
 ### Semana 1 - Setup e Infraestrutura
-- [ ] Scaffold Django 6 + DRF com settings (`base/development/staging/production`)
-- [ ] Docker dev com PostgreSQL + Redis + MinIO
-- [ ] Models base criados (users, convenios, doctors, appointments, payments, notifications, core)
-- [ ] Admin Django funcional para models principais
-- [ ] Celery + worker + beat configurados
-- [ ] drf-spectacular configurado com tags e security scheme
-- [ ] Kubb configurado na raiz (`kubb.config.ts` com plugins TS/Zod/client/hooks/faker/msw)
-- [ ] `npm run api:sync` inicial executado com sucesso
+- [x] Scaffold Django 6 + DRF com settings (`base/development/staging/production`)
+- [x] Docker dev com PostgreSQL + Redis + MinIO
+- [x] Models base criados (users, convenios, doctors, appointments, payments, notifications, core)
+- [x] Admin Django funcional para models principais
+- [x] Celery + worker + beat configurados
+- [x] drf-spectacular configurado com tags e security scheme
+- [x] Kubb configurado na raiz (`kubb.config.ts` com plugins TS/Zod/client/hooks/faker/msw)
+- [x] `npm run api:sync` inicial executado com sucesso
 
 ### Semana 2 - Autenticacao e Seguranca
-- [ ] Auth completo (register/login/refresh/logout)
-- [ ] Forgot/reset password com token seguro
-- [ ] Verificacao email/telefone com OTP + resend
-- [ ] 2FA TOTP (setup/verify/disable/login2fa)
-- [ ] RBAC base aplicado (patient/doctor/convenio_admin/owner)
-- [ ] Rate limiting aplicado em auth e rotas sensiveis
-- [ ] Consentimentos LGPD (`users/me/consents`) e export de dados
-- [ ] Cobertura de testes backend >= 80%
+- [x] Auth completo (register/login/refresh/logout)
+- [x] Forgot/reset password com token seguro
+- [x] Verificacao email/telefone com OTP + resend
+- [x] 2FA TOTP (setup/verify/disable/login2fa)
+- [x] RBAC base aplicado (patient/doctor/convenio_admin/owner)
+- [x] Rate limiting aplicado em auth e rotas sensiveis
+- [x] Consentimentos LGPD (`users/me/consents`) e export de dados
+- [x] Cobertura de testes backend >= 80%
 
 ### Semana 3 - APIs Core (Execucao detalhada abaixo)
 - [x] Dashboard de convenio com KPIs reais
@@ -57,11 +57,11 @@
 - [x] `api:sync` atualizado com novos endpoints
 
 ### Semana 4 - Agendamentos, Pagamentos e Notificacoes (refinamento)
-- [ ] Integracao real Firebase Admin (push)
-- [ ] Integracao real email (SendGrid/SES)
-- [ ] Fluxo Stripe + PIX end-to-end endurecido
-- [ ] State machine completa de appointment (`pending -> confirmed -> in_progress -> completed`)
-- [ ] Configuracoes globais owner (taxas/limites/politicas)
+- [x] Integracao real Firebase Admin (push)
+- [x] Integracao real email (SendGrid/SES)
+- [x] Fluxo Stripe + PIX end-to-end endurecido
+- [x] State machine completa de appointment (`pending -> confirmed -> in_progress -> completed`)
+- [x] Configuracoes globais owner (taxas/limites/politicas)
 - [ ] Testes de carga iniciais e hardening final backend
 
 ---
@@ -218,6 +218,7 @@ Somente apos este gate, liberar "Preparacao Semana 4".
 - [x] Mapear testes faltantes de carga e resiliencia
 - [x] Planejar ajustes finais de state machine de appointments
 - [x] Validar prontidao do backend para inicio forte da Semana 5 (frontend)
+- [x] Definir hierarquia inteligente de componentes frontend (atoms -> seções -> templates)
 
 ### 7.1 Evidencias da validacao (2026-03-02)
 - [x] `backend/.venv/Scripts/python.exe manage.py seed_data --force` (ok)
@@ -227,3 +228,24 @@ Somente apos este gate, liberar "Preparacao Semana 4".
 - [x] `backend/.venv/Scripts/mypy.exe apps` (ok)
 - [x] `backend/.venv/Scripts/ruff.exe check apps --fix` (ok)
 - [x] `backend/.venv/Scripts/pytest.exe --cov=apps --cov-report=term-missing --cov-fail-under=80 -v` (318 passed, 91.93%)
+
+---
+
+## 8. Progresso Semana 4 (Execucao em 2026-03-02)
+
+- [x] DeviceToken model + rotas `register/unregister/list`
+- [x] PushService real com Firebase + fallback sem credenciais
+- [x] EmailService real com templates HTML transacionais (8+)
+- [x] SMSService real com Twilio + OTP por SMS
+- [x] Appointment machine com `start/complete/no-show` e transicoes validadas
+- [x] PlatformSettings global + endpoints owner + cache invalidation
+- [x] MaintenanceModeMiddleware
+- [x] Cancellation policy engine + endpoint `cancellation-policy`
+- [x] Reminder stages tracking (`reminder_stages_sent`) + endpoint `reminders`
+- [x] Seed data atualizado (completo + `--minimal`)
+- [x] Locust scaffold (`backend/locustfile.py` + `backend/scripts/setup_load_test.py`)
+- [x] `npm run api:sync` com novos endpoints em `shared/schema.yaml` e `shared/gen/`
+- [x] `ruff check apps --fix` sem pendencias
+- [x] `mypy apps` sem erros
+- [x] `npx tsc --noEmit -p tsconfig.base.json` sem erros
+- [ ] `pytest --cov ...` completo bloqueado por credencial local do PostgreSQL (`localhost:5432`, user `healthapp`)

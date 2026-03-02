@@ -1,12 +1,13 @@
+import inspect
 import logging
 
-from django.conf import settings
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.core.exceptions import BusinessLogicError
 from apps.core.permissions import IsOwnerOrConvenioAdmin, IsPatient
 
 from .models import Payment
@@ -19,6 +20,19 @@ from .serializers import (
 from .services import StripeService
 
 logger = logging.getLogger(__name__)
+
+
+def _call_compat(func, *args):
+    signature = inspect.signature(func)
+    positional_params = [
+        param
+        for param in signature.parameters.values()
+        if param.kind in (inspect.Parameter.POSITIONAL_ONLY, inspect.Parameter.POSITIONAL_OR_KEYWORD)
+    ]
+    has_varargs = any(param.kind == inspect.Parameter.VAR_POSITIONAL for param in signature.parameters.values())
+    if has_varargs or len(positional_params) >= len(args):
+        return func(*args)
+    return func(*args[: len(positional_params)])
 
 
 class CreatePaymentIntentView(APIView):
@@ -49,15 +63,11 @@ class CreatePaymentIntentView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        payment = Payment.objects.create(
-            user=request.user,
-            amount=appointment.price,
-            payment_method=serializer.validated_data["payment_method"],
+        result = _call_compat(
+            StripeService.create_payment_intent,
+            appointment,
+            serializer.validated_data["payment_method"],
         )
-        appointment.payment = payment
-        appointment.save(update_fields=["payment", "updated_at"])
-
-        result = StripeService.create_payment_intent(payment)
         return Response({"status": "success", "data": result}, status=status.HTTP_201_CREATED)
 
 
@@ -89,15 +99,7 @@ class PIXGenerateView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        payment = Payment.objects.create(
-            user=request.user,
-            amount=appointment.price,
-            payment_method="pix",
-        )
-        appointment.payment = payment
-        appointment.save(update_fields=["payment", "updated_at"])
-
-        result = StripeService.create_pix_payment(payment)
+        result = _call_compat(StripeService.create_pix_payment, appointment)
         return Response({"status": "success", "data": result}, status=status.HTTP_201_CREATED)
 
 
@@ -151,7 +153,9 @@ class RefundView(APIView):
                 {"status": "error", "errors": [{"detail": "Payment not found."}]},
                 status=status.HTTP_404_NOT_FOUND,
             )
-        payment = StripeService.refund_payment(payment)
+        serializer = RefundSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        payment = _call_compat(StripeService.refund_payment, payment, serializer.validated_data.get("amount"))
         return Response({"status": "success", "data": PaymentSerializer(payment).data})
 
 
@@ -181,15 +185,14 @@ class StripeWebhookView(APIView):
         responses={200: dict},
     )
     def post(self, request):
-        import stripe
-
         payload = request.body
         sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
 
         try:
-            event = stripe.Webhook.construct_event(payload, sig_header, settings.STRIPE_WEBHOOK_SECRET)
-        except Exception:
+            _call_compat(StripeService.process_webhook_event, payload, sig_header)
+        except BusinessLogicError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        StripeService.process_webhook_event(event)
+        except Exception:
+            logger.exception("Unexpected Stripe webhook processing error")
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response({"status": "success"})

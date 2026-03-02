@@ -67,6 +67,10 @@ class Appointment(BaseModel):
         related_name="appointment",
     )
     reminder_sent = models.BooleanField(default=False)
+    reminder_stages_sent = models.JSONField(default=dict)
+    started_at = models.DateTimeField(null=True, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+    no_show_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = "appointment"

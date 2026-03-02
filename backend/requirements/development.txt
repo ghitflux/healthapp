@@ -21,3 +21,4 @@ djangorestframework-stubs==3.*
 
 # Dev tools
 watchfiles==1.*
+locust==2.*

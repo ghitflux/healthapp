@@ -6,5 +6,6 @@
 import { z } from "zod/v4";
 
 export const refundRequestSchema = z.object({
-    "reason": z.optional(z.string())
+    "amount": z.optional(z.string().regex(/^-?\d{0,8}(?:\.\d{0,2})?$/)),
+"reason": z.optional(z.string())
     })

@@ -136,6 +136,20 @@ def notify_payment_completed(payment) -> None:
     _safe_delay(send_push_notification, str(payment.user.id), title, body, metadata)
 
 
+def notify_payment_failed(payment) -> None:
+    title = "Falha no pagamento"
+    body = "Nao foi possivel confirmar seu pagamento. Tente novamente."
+    NotificationService.create_notification(
+        user=payment.user,
+        notification_type="payment",
+        title=title,
+        body=body,
+        channel="push",
+        metadata={"payment_id": str(payment.id), "status": "failed"},
+    )
+    _safe_delay(send_push_notification, str(payment.user.id), title, body, {"payment_id": str(payment.id)})
+
+
 def notify_payment_refunded(payment) -> None:
     title = "Reembolso processado"
     body = (

@@ -4,7 +4,9 @@ export type { DeleteConvenioPathParams, DeleteConvenio204, DeleteConvenioMutatio
 export type { GetAdminConvenioByIdPathParams, GetAdminConvenioById200, GetAdminConvenioByIdQueryResponse, GetAdminConvenioByIdQuery } from "./GetAdminConvenioById.ts";
 export type { GetOwnerDashboard200, GetOwnerDashboardQueryResponse, GetOwnerDashboardQuery } from "./GetOwnerDashboard.ts";
 export type { GetOwnerFinancialReport200, GetOwnerFinancialReportQueryResponse, GetOwnerFinancialReportQuery } from "./GetOwnerFinancialReport.ts";
+export type { GetPlatformSettings200, GetPlatformSettingsQueryResponse, GetPlatformSettingsQuery } from "./GetPlatformSettings.ts";
 export type { ListAdminConveniosQueryParams, ListAdminConvenios200, ListAdminConveniosQueryResponse, ListAdminConveniosQuery } from "./ListAdminConvenios.ts";
 export type { ListAdminUsersQueryParams, ListAdminUsers200, ListAdminUsersQueryResponse, ListAdminUsersQuery } from "./ListAdminUsers.ts";
 export type { ListAuditLogsQueryParams, ListAuditLogs200, ListAuditLogsQueryResponse, ListAuditLogsQuery } from "./ListAuditLogs.ts";
 export type { SuspendConvenioPathParams, SuspendConvenio200, SuspendConvenioMutationResponse, SuspendConvenioMutation } from "./SuspendConvenio.ts";
+export type { UpdatePlatformSettings200, UpdatePlatformSettingsMutationRequest, UpdatePlatformSettingsMutationResponse, UpdatePlatformSettingsMutation } from "./UpdatePlatformSettings.ts";

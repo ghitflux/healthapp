@@ -9,7 +9,7 @@ import { faker } from "@faker-js/faker";
 export function createRefundRequest(data?: Partial<RefundRequest>): RefundRequest {
 
   return {
-    ...{"reason": faker.string.alpha()},
+    ...{"amount": faker.helpers.fromRegExp("^-?\d{0,8}(?:\.\d{0,2})?$"),"reason": faker.string.alpha()},
     ...data || {}
   }
 }

@@ -9,11 +9,13 @@ import { deleteConvenio } from "./deleteConvenio.ts";
 import { getAdminConvenioById } from "./getAdminConvenioById.ts";
 import { getOwnerDashboard } from "./getOwnerDashboard.ts";
 import { getOwnerFinancialReport } from "./getOwnerFinancialReport.ts";
+import { getPlatformSettings } from "./getPlatformSettings.ts";
 import { listAdminConvenios } from "./listAdminConvenios.ts";
 import { listAdminUsers } from "./listAdminUsers.ts";
 import { listAuditLogs } from "./listAuditLogs.ts";
 import { suspendConvenio } from "./suspendConvenio.ts";
+import { updatePlatformSettings } from "./updatePlatformSettings.ts";
 
 export function ownerClient() {
-  return { listAuditLogs, listAdminConvenios, getAdminConvenioById, approveConvenio, suspendConvenio, getOwnerDashboard, getOwnerFinancialReport, listAdminUsers, createConvenio, deleteConvenio }
+  return { listAuditLogs, listAdminConvenios, getAdminConvenioById, approveConvenio, suspendConvenio, getOwnerDashboard, getOwnerFinancialReport, getPlatformSettings, updatePlatformSettings, listAdminUsers, createConvenio, deleteConvenio }
 }

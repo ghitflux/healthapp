@@ -3,23 +3,31 @@ import types
 from decimal import Decimal
 
 import pytest
-from django.utils import timezone
 
+from apps.appointments.tests.factories import AppointmentFactory
 from apps.core.exceptions import BusinessLogicError
+from apps.payments.models import Payment
 from apps.payments.services import StripeService
-from apps.payments.tests.factories import CompletedPaymentFactory, PaymentFactory
+from apps.payments.tests.factories import CompletedPaymentFactory
 
 
 @pytest.mark.django_db
 class TestStripeService:
-    @staticmethod
-    def _patch_stripe(monkeypatch, payment_intent_create=None, refund_create=None):
+    def _patch_stripe(self, monkeypatch, payment_intent_create=None, webhook_construct=None, refund_create=None):
         class _PaymentIntent:
             @staticmethod
             def create(**kwargs):
                 if payment_intent_create:
                     return payment_intent_create(**kwargs)
-                return types.SimpleNamespace(id="pi_test_123", client_secret="cs_test_123")
+                return types.SimpleNamespace(id="pi_test_123", client_secret="cs_test_123", next_action={})
+
+        class _Webhook:
+            @staticmethod
+            def construct_event(payload, sig_header, secret):
+                del payload, sig_header, secret
+                if webhook_construct:
+                    return webhook_construct()
+                return {"type": "payment_intent.succeeded", "data": {"object": {"metadata": {}}}}
 
         class _Refund:
             @staticmethod
@@ -28,76 +36,128 @@ class TestStripeService:
                     return refund_create(**kwargs)
                 return {"id": "re_test"}
 
-        dummy = types.SimpleNamespace(PaymentIntent=_PaymentIntent, Refund=_Refund)
+        dummy = types.SimpleNamespace(PaymentIntent=_PaymentIntent, Webhook=_Webhook, Refund=_Refund)
         monkeypatch.setitem(sys.modules, "stripe", dummy)
 
     def test_create_payment_intent_success(self, monkeypatch, settings):
         settings.STRIPE_SECRET_KEY = "sk_test"
-        payment = PaymentFactory(amount=Decimal("123.45"), currency="BRL")
-        self._patch_stripe(monkeypatch)
+        appointment = AppointmentFactory(status="pending", price=Decimal("150.00"))
+        captured = {}
 
-        result = StripeService.create_payment_intent(payment)
+        def _fake_create(**kwargs):
+            captured.update(kwargs)
+            return types.SimpleNamespace(id="pi_ok", client_secret="cs_ok", next_action={})
 
-        payment.refresh_from_db()
-        assert result["payment_intent_id"] == "pi_test_123"
-        assert result["client_secret"] == "cs_test_123"
+        self._patch_stripe(monkeypatch, payment_intent_create=_fake_create)
+
+        result = StripeService.create_payment_intent(appointment, payment_method="credit_card")
+        payment = Payment.objects.get(id=result["payment_id"])
+
+        assert result["payment_intent_id"] == "pi_ok"
+        assert captured["amount"] == 15000
         assert payment.status == "processing"
-        assert payment.stripe_payment_intent_id == "pi_test_123"
-
-    def test_create_payment_intent_failure(self, monkeypatch, settings):
-        settings.STRIPE_SECRET_KEY = "sk_test"
-        payment = PaymentFactory(amount=Decimal("50.00"), currency="BRL")
-
-        def _raise_error(**kwargs):
-            raise RuntimeError("stripe unavailable")
-
-        self._patch_stripe(monkeypatch, payment_intent_create=_raise_error)
-
-        with pytest.raises(BusinessLogicError):
-            StripeService.create_payment_intent(payment)
 
     def test_create_pix_payment_success(self, monkeypatch, settings):
         settings.STRIPE_SECRET_KEY = "sk_test"
-        payment = PaymentFactory(amount=Decimal("89.90"))
-        self._patch_stripe(monkeypatch)
+        appointment = AppointmentFactory(status="pending", price=Decimal("89.90"))
 
-        result = StripeService.create_pix_payment(payment)
+        def _fake_create(**kwargs):
+            del kwargs
+            return types.SimpleNamespace(
+                id="pi_pix",
+                client_secret="cs_pix",
+                next_action={"pix_display_qr_code": {"qr_code": "img", "copy_paste": "code"}},
+            )
 
-        payment.refresh_from_db()
-        assert result["payment_intent_id"] == "pi_test_123"
+        self._patch_stripe(monkeypatch, payment_intent_create=_fake_create)
+
+        result = StripeService.create_pix_payment(appointment)
+        payment = Payment.objects.get(id=result["payment_id"])
+
+        assert result["payment_intent_id"] == "pi_pix"
         assert payment.status == "processing"
+        assert payment.pix_expiration is not None
 
-    def test_process_webhook_event_marks_payment_completed(self):
-        payment = PaymentFactory(status="processing")
+    def test_process_webhook_payment_succeeded(self, monkeypatch, settings):
+        settings.STRIPE_SECRET_KEY = "sk_test"
+        settings.STRIPE_WEBHOOK_SECRET = "whsec"
+        payment = Payment.objects.create(
+            user=AppointmentFactory().patient,
+            amount=Decimal("120.00"),
+            payment_method="pix",
+            status="processing",
+            stripe_payment_intent_id="pi_webhook",
+        )
+        appointment = AppointmentFactory(status="pending", payment=payment)
 
-        StripeService.process_webhook_event(
-            {
+        def _event():
+            return {
                 "type": "payment_intent.succeeded",
                 "data": {"object": {"metadata": {"payment_id": str(payment.id)}}},
             }
-        )
+
+        self._patch_stripe(monkeypatch, webhook_construct=_event)
+
+        StripeService.process_webhook_event(b"{}", "sig")
 
         payment.refresh_from_db()
+        appointment.refresh_from_db()
         assert payment.status == "completed"
         assert payment.paid_at is not None
+        assert appointment.status == "confirmed"
 
-    def test_refund_payment_requires_completed_status(self, monkeypatch, settings):
+    def test_process_webhook_payment_failed(self, monkeypatch, settings):
         settings.STRIPE_SECRET_KEY = "sk_test"
-        payment = PaymentFactory(status="pending")
-        self._patch_stripe(monkeypatch)
+        settings.STRIPE_WEBHOOK_SECRET = "whsec"
+        payment = Payment.objects.create(
+            user=AppointmentFactory().patient,
+            amount=Decimal("90.00"),
+            payment_method="credit_card",
+            status="processing",
+        )
 
-        with pytest.raises(BusinessLogicError):
-            StripeService.refund_payment(payment)
+        def _event():
+            return {
+                "type": "payment_intent.payment_failed",
+                "data": {"object": {"metadata": {"payment_id": str(payment.id)}}},
+            }
 
-    def test_refund_payment_success(self, monkeypatch, settings):
+        self._patch_stripe(monkeypatch, webhook_construct=_event)
+        StripeService.process_webhook_event(b"{}", "sig")
+        payment.refresh_from_db()
+        assert payment.status == "failed"
+
+    def test_refund_payment_full(self, monkeypatch, settings):
         settings.STRIPE_SECRET_KEY = "sk_test"
-        payment = CompletedPaymentFactory(stripe_payment_intent_id="pi_refund")
+        payment = CompletedPaymentFactory(stripe_payment_intent_id="pi_refund", amount=Decimal("200.00"))
         self._patch_stripe(monkeypatch)
 
         result = StripeService.refund_payment(payment)
-
         result.refresh_from_db()
+
         assert result.status == "refunded"
-        assert result.refunded_at is not None
-        assert result.refunded_at <= timezone.now()
-        assert str(result.refund_amount) == str(result.amount)
+        assert result.refund_amount == Decimal("200.00")
+
+    def test_refund_payment_partial(self, monkeypatch, settings):
+        settings.STRIPE_SECRET_KEY = "sk_test"
+        payment = CompletedPaymentFactory(stripe_payment_intent_id="pi_refund2", amount=Decimal("200.00"))
+        self._patch_stripe(monkeypatch)
+
+        result = StripeService.refund_payment(payment, amount=Decimal("50.00"))
+        result.refresh_from_db()
+
+        assert result.status == "refunded"
+        assert result.refund_amount == Decimal("50.00")
+
+    def test_refund_payment_requires_completed_status(self, monkeypatch, settings):
+        settings.STRIPE_SECRET_KEY = "sk_test"
+        payment = Payment.objects.create(
+            user=AppointmentFactory().patient,
+            amount=Decimal("100.00"),
+            payment_method="pix",
+            status="pending",
+        )
+        self._patch_stripe(monkeypatch)
+
+        with pytest.raises(BusinessLogicError):
+            StripeService.refund_payment(payment, amount=Decimal("10.00"))

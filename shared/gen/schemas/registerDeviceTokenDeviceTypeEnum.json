@@ -1,0 +1,1 @@
+{"enum":["ios","android","web"],"type":"string","description":"* `ios` - ios\n* `android` - android\n* `web` - web","x-readme-ref-name":"RegisterDeviceTokenDeviceTypeEnum"}

@@ -1,6 +1,11 @@
 export type { CancelAppointmentPathParams, CancelAppointment200, CancelAppointmentMutationRequest, CancelAppointmentMutationResponse, CancelAppointmentMutation } from "./CancelAppointment.ts";
+export type { CompleteAppointmentPathParams, CompleteAppointment200, CompleteAppointmentMutationRequest, CompleteAppointmentMutationResponse, CompleteAppointmentMutation } from "./CompleteAppointment.ts";
 export type { ConfirmAppointmentPathParams, ConfirmAppointment200, ConfirmAppointmentMutationRequest, ConfirmAppointmentMutationResponse, ConfirmAppointmentMutation } from "./ConfirmAppointment.ts";
 export type { CreateAppointment201, CreateAppointmentMutationRequest, CreateAppointmentMutationResponse, CreateAppointmentMutation } from "./CreateAppointment.ts";
 export type { GetAppointmentByIdPathParams, GetAppointmentById200, GetAppointmentByIdQueryResponse, GetAppointmentByIdQuery } from "./GetAppointmentById.ts";
+export type { GetAppointmentCancellationPolicyPathParams, GetAppointmentCancellationPolicy200, GetAppointmentCancellationPolicyQueryResponse, GetAppointmentCancellationPolicyQuery } from "./GetAppointmentCancellationPolicy.ts";
+export type { GetAppointmentRemindersPathParams, GetAppointmentRemindersQueryParams, GetAppointmentReminders200, GetAppointmentRemindersQueryResponse, GetAppointmentRemindersQuery } from "./GetAppointmentReminders.ts";
 export type { ListAppointmentsQueryParams, ListAppointments200, ListAppointmentsQueryResponse, ListAppointmentsQuery } from "./ListAppointments.ts";
+export type { MarkNoShowPathParams, MarkNoShow200, MarkNoShowMutationRequest, MarkNoShowMutationResponse, MarkNoShowMutation } from "./MarkNoShow.ts";
 export type { RateAppointmentPathParams, RateAppointment201, RateAppointmentMutationRequest, RateAppointmentMutationResponse, RateAppointmentMutation } from "./RateAppointment.ts";
+export type { StartAppointmentPathParams, StartAppointment200, StartAppointmentMutationResponse, StartAppointmentMutation } from "./StartAppointment.ts";

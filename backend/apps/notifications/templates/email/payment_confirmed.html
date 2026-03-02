@@ -1,0 +1,7 @@
+{% extends "email/base.html" %}
+{% block content %}
+<h2 style="margin:0 0 12px;font-size:22px;">Pagamento confirmado!</h2>
+<p style="margin:0 0 8px;">Valor: <strong>R$ {{ amount }}</strong></p>
+<p style="margin:0 0 8px;">Metodo: <strong>{{ method }}</strong></p>
+<p style="margin:0 0 8px;">Comprovante: {{ receipt|default:"Disponivel no app" }}</p>
+{% endblock %}

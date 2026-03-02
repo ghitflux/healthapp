@@ -62,4 +62,5 @@ class PaymentStatusSerializer(serializers.Serializer):
 
 
 class RefundSerializer(serializers.Serializer):
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
     reason = serializers.CharField(required=False, allow_blank=True)

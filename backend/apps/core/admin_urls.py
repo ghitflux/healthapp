@@ -19,4 +19,5 @@ urlpatterns = [
     path("users/", admin_views.OwnerUserListView.as_view(), name="owner-user-list"),
     path("audit-logs/", admin_views.OwnerAuditLogView.as_view(), name="owner-audit-logs"),
     path("financial/", admin_views.OwnerFinancialReportView.as_view(), name="owner-financial"),
+    path("settings/", admin_views.PlatformSettingsView.as_view(), name="owner-platform-settings"),
 ]

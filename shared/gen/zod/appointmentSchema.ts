@@ -30,6 +30,10 @@ get "status"(){
 "price": z.optional(z.string().regex(/^-?\d{0,8}(?:\.\d{0,2})?$/)),
 "payment": z.nullable(z.uuid()),
 "reminder_sent": z.boolean(),
+"reminder_stages_sent": z.any(),
+"started_at": z.nullable(z.iso.datetime()),
+"completed_at": z.nullable(z.iso.datetime()),
+"no_show_at": z.nullable(z.iso.datetime()),
 "created_at": z.iso.datetime(),
 "updated_at": z.iso.datetime()
     })

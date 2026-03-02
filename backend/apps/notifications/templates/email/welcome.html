@@ -1,0 +1,6 @@
+{% extends "email/base.html" %}
+{% block content %}
+<h2 style="margin:0 0 12px;font-size:22px;">Bem-vindo ao HealthApp!</h2>
+<p style="margin:0 0 12px;">Ola {{ user_name|default:"usuario" }}, sua conta foi criada com sucesso.</p>
+<p style="margin:0;">Finalize a verificacao de email para liberar todos os recursos.</p>
+{% endblock %}

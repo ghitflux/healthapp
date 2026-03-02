@@ -103,3 +103,53 @@ class TestNotificationViews:
     def test_unauthenticated_forbidden(self, client):
         resp = client.get("/api/v1/notifications/")
         assert resp.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_register_device_token(self):
+        user = PatientFactory()
+        response = _auth_client(user).post(
+            "/api/v1/notifications/devices/register/",
+            {"token": "fcm_token_1", "device_type": "android", "device_name": "Pixel"},
+            format="json",
+        )
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.data["data"]["token"] == "fcm_token_1"
+
+    def test_register_device_token_reassigns_user(self):
+        from apps.notifications.models import DeviceToken
+
+        first_user = PatientFactory()
+        second_user = PatientFactory()
+        DeviceToken.objects.create(user=first_user, token="same_token", device_type="ios")
+
+        response = _auth_client(second_user).post(
+            "/api/v1/notifications/devices/register/",
+            {"token": "same_token", "device_type": "android"},
+            format="json",
+        )
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.data["data"]["token"] == "same_token"
+
+    def test_list_device_tokens(self):
+        user = PatientFactory()
+        _auth_client(user).post(
+            "/api/v1/notifications/devices/register/",
+            {"token": "fcm_list_1", "device_type": "web"},
+            format="json",
+        )
+        response = _auth_client(user).get("/api/v1/notifications/devices/")
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data["data"]) == 1
+
+    def test_unregister_device_token(self):
+        user = PatientFactory()
+        _auth_client(user).post(
+            "/api/v1/notifications/devices/register/",
+            {"token": "fcm_del_1", "device_type": "ios"},
+            format="json",
+        )
+        response = _auth_client(user).delete(
+            "/api/v1/notifications/devices/unregister/",
+            {"token": "fcm_del_1"},
+            format="json",
+        )
+        assert response.status_code == status.HTTP_200_OK

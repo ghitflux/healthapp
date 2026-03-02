@@ -4,7 +4,9 @@ export { createDeleteConvenioPathParams, createDeleteConvenio204, createDeleteCo
 export { createGetAdminConvenioByIdPathParams, createGetAdminConvenioById200, createGetAdminConvenioByIdQueryResponse } from "./createGetAdminConvenioById.ts";
 export { createGetOwnerDashboard200, createGetOwnerDashboardQueryResponse } from "./createGetOwnerDashboard.ts";
 export { createGetOwnerFinancialReport200, createGetOwnerFinancialReportQueryResponse } from "./createGetOwnerFinancialReport.ts";
+export { createGetPlatformSettings200, createGetPlatformSettingsQueryResponse } from "./createGetPlatformSettings.ts";
 export { createListAdminConveniosQueryParams, createListAdminConvenios200, createListAdminConveniosQueryResponse } from "./createListAdminConvenios.ts";
 export { createListAdminUsersQueryParams, createListAdminUsers200, createListAdminUsersQueryResponse } from "./createListAdminUsers.ts";
 export { createListAuditLogsQueryParams, createListAuditLogs200, createListAuditLogsQueryResponse } from "./createListAuditLogs.ts";
 export { createSuspendConvenioPathParams, createSuspendConvenio200, createSuspendConvenioMutationResponse } from "./createSuspendConvenio.ts";
+export { createUpdatePlatformSettings200, createUpdatePlatformSettingsMutationRequest, createUpdatePlatformSettingsMutationResponse } from "./createUpdatePlatformSettings.ts";

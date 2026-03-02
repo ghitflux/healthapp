@@ -6,14 +6,14 @@ Estado de entrada: Semana 3 validada 100% (gate fechado em `docs/CHECKLIST_PROJE
 ## 1. Backlog Tecnico Priorizado
 
 ### P0 - Obrigatorio para fechar Semana 4
-- [ ] Device token management (model + endpoints register/unregister/list)
-- [ ] PushService real com Firebase Admin SDK (com degradacao graciosa sem credenciais)
-- [ ] EmailService real (SendGrid/SES) com templates transacionais
-- [ ] SMSService real (Twilio/Zenvia) com fallback seguro
-- [ ] Appointment lifecycle completo (`confirmed -> in_progress -> completed`)
-- [ ] Owner global settings APIs (taxas, limites, politica de cancelamento)
-- [ ] Testes de integracao do fluxo E2E backend (busca -> agendamento -> pagamento -> confirmacao -> consulta -> avaliacao)
-- [ ] `api:sync` final + validacao TypeScript sem erros
+- [x] Device token management (model + endpoints register/unregister/list)
+- [x] PushService real com Firebase Admin SDK (com degradacao graciosa sem credenciais)
+- [x] EmailService real (SendGrid/SES) com templates transacionais
+- [x] SMSService real (Twilio/Zenvia) com fallback seguro
+- [x] Appointment lifecycle completo (`confirmed -> in_progress -> completed`)
+- [x] Owner global settings APIs (taxas, limites, politica de cancelamento)
+- [ ] Testes de integracao do fluxo E2E backend (busca -> agendamento -> pagamento -> confirmacao -> consulta -> avaliacao) — bloqueado por credencial DB local
+- [x] `api:sync` final + validacao TypeScript sem erros
 
 ### P1 - Hardening e performance
 - [ ] Idempotencia e retry policy para push/email/sms tasks
@@ -60,7 +60,7 @@ Estado de entrada: Semana 3 validada 100% (gate fechado em `docs/CHECKLIST_PROJE
 
 ## 5. Definition of Done (Fim Semana 4)
 
-- [ ] Providers reais integrados e cobertos por teste
-- [ ] Fluxo completo de appointment/payment concluido e testado
-- [ ] Novos endpoints documentados em OpenAPI e refletidos em `shared/gen/`
-- [ ] Quality gates verdes (`ruff`, `mypy`, `pytest --cov`, `api:sync`, `tsc`)
+- [x] Providers reais integrados e cobertos por teste (unit/service level)
+- [ ] Fluxo completo de appointment/payment concluido e testado (execucao integral bloqueada por DB local)
+- [x] Novos endpoints documentados em OpenAPI e refletidos em `shared/gen/`
+- [ ] Quality gates verdes (`ruff`, `mypy`, `pytest --cov`, `api:sync`, `tsc`) — `pytest --cov` pendente por credencial DB local

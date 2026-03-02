@@ -32,6 +32,10 @@ class AppointmentSerializer(serializers.ModelSerializer):
             "price",
             "payment",
             "reminder_sent",
+            "reminder_stages_sent",
+            "started_at",
+            "completed_at",
+            "no_show_at",
             "created_at",
             "updated_at",
         ]
@@ -41,6 +45,10 @@ class AppointmentSerializer(serializers.ModelSerializer):
             "cancellation_reason",
             "payment",
             "reminder_sent",
+            "reminder_stages_sent",
+            "started_at",
+            "completed_at",
+            "no_show_at",
             "created_at",
             "updated_at",
         ]
@@ -128,6 +136,31 @@ class AppointmentListSerializer(serializers.ModelSerializer):
 
 class CancelAppointmentSerializer(serializers.Serializer):
     reason = serializers.CharField(required=False, allow_blank=True)
+
+
+class StartAppointmentSerializer(serializers.Serializer):
+    pass
+
+
+class CompleteAppointmentSerializer(serializers.Serializer):
+    notes = serializers.CharField(required=False, allow_blank=True)
+
+
+class NoShowSerializer(serializers.Serializer):
+    reason = serializers.CharField(required=False, allow_blank=True)
+
+
+class AppointmentCancellationPolicySerializer(serializers.Serializer):
+    can_cancel = serializers.BooleanField()
+    fee_amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    refund_amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    deadline = serializers.DateTimeField(allow_null=True)
+    reason = serializers.CharField()
+
+
+class AppointmentReminderSerializer(serializers.Serializer):
+    stage = serializers.CharField()
+    sent_at = serializers.DateTimeField()
 
 
 class RatingSerializer(serializers.ModelSerializer):

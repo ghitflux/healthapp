@@ -1,6 +1,11 @@
 export { createCancelAppointmentPathParams, createCancelAppointment200, createCancelAppointmentMutationRequest, createCancelAppointmentMutationResponse } from "./createCancelAppointment.ts";
+export { createCompleteAppointmentPathParams, createCompleteAppointment200, createCompleteAppointmentMutationRequest, createCompleteAppointmentMutationResponse } from "./createCompleteAppointment.ts";
 export { createConfirmAppointmentPathParams, createConfirmAppointment200, createConfirmAppointmentMutationRequest, createConfirmAppointmentMutationResponse } from "./createConfirmAppointment.ts";
 export { createCreateAppointment201, createCreateAppointmentMutationRequest, createCreateAppointmentMutationResponse } from "./createCreateAppointment.ts";
 export { createGetAppointmentByIdPathParams, createGetAppointmentById200, createGetAppointmentByIdQueryResponse } from "./createGetAppointmentById.ts";
+export { createGetAppointmentCancellationPolicyPathParams, createGetAppointmentCancellationPolicy200, createGetAppointmentCancellationPolicyQueryResponse } from "./createGetAppointmentCancellationPolicy.ts";
+export { createGetAppointmentRemindersPathParams, createGetAppointmentRemindersQueryParams, createGetAppointmentReminders200, createGetAppointmentRemindersQueryResponse } from "./createGetAppointmentReminders.ts";
 export { createListAppointmentsQueryParams, createListAppointments200, createListAppointmentsQueryResponse } from "./createListAppointments.ts";
+export { createMarkNoShowPathParams, createMarkNoShow200, createMarkNoShowMutationRequest, createMarkNoShowMutationResponse } from "./createMarkNoShow.ts";
 export { createRateAppointmentPathParams, createRateAppointment201, createRateAppointmentMutationRequest, createRateAppointmentMutationResponse } from "./createRateAppointment.ts";
+export { createStartAppointmentPathParams, createStartAppointment200, createStartAppointmentMutationResponse } from "./createStartAppointment.ts";

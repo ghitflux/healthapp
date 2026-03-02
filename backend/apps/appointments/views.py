@@ -1,6 +1,7 @@
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -10,10 +11,14 @@ from apps.doctors.models import Doctor
 
 from .models import Appointment, Rating
 from .serializers import (
+    AppointmentCancellationPolicySerializer,
     AppointmentCreateSerializer,
     AppointmentListSerializer,
+    AppointmentReminderSerializer,
     AppointmentSerializer,
     CancelAppointmentSerializer,
+    CompleteAppointmentSerializer,
+    NoShowSerializer,
     RatingCreateSerializer,
     RatingSerializer,
 )
@@ -40,10 +45,12 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == "create":
             return [IsPatient()]
-        if self.action == "confirm":
+        if self.action in {"confirm", "no_show"}:
             return [IsOwnerOrConvenioAdmin()]
         if self.action == "rate":
             return [IsPatient()]
+        if self.action in {"start", "complete"}:
+            return [IsAuthenticated()]
         return [IsAuthenticated()]
 
     def get_queryset(self):
@@ -110,6 +117,82 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         appointment = self.get_object()
         appointment = BookingService.confirm_appointment(appointment)
         return Response({"status": "success", "data": AppointmentSerializer(appointment).data})
+
+    @extend_schema(
+        operation_id="startAppointment",
+        tags=["appointments"],
+        summary="Start an appointment (confirmed -> in_progress)",
+        request=None,
+        responses={200: AppointmentSerializer},
+    )
+    @action(detail=True, methods=["post"], url_path="start")
+    def start(self, request, pk=None):
+        if request.user.role not in {"doctor", "convenio_admin"}:
+            raise PermissionDenied("Only doctors and convenio admins can start appointments.")
+        appointment = self.get_object()
+        appointment = BookingService.start_appointment(appointment)
+        return Response({"status": "success", "data": AppointmentSerializer(appointment).data})
+
+    @extend_schema(
+        operation_id="completeAppointment",
+        tags=["appointments"],
+        summary="Complete an appointment (in_progress -> completed)",
+        request=CompleteAppointmentSerializer,
+        responses={200: AppointmentSerializer},
+    )
+    @action(detail=True, methods=["post"], url_path="complete")
+    def complete(self, request, pk=None):
+        if request.user.role not in {"doctor", "convenio_admin"}:
+            raise PermissionDenied("Only doctors and convenio admins can complete appointments.")
+        serializer = CompleteAppointmentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        appointment = self.get_object()
+        appointment = BookingService.complete_appointment(appointment, serializer.validated_data.get("notes", ""))
+        return Response({"status": "success", "data": AppointmentSerializer(appointment).data})
+
+    @extend_schema(
+        operation_id="markNoShow",
+        tags=["appointments"],
+        summary="Mark appointment as no-show",
+        request=NoShowSerializer,
+        responses={200: AppointmentSerializer},
+    )
+    @action(detail=True, methods=["post"], url_path="no-show")
+    def no_show(self, request, pk=None):
+        appointment = self.get_object()
+        appointment = BookingService.mark_no_show(appointment)
+        return Response({"status": "success", "data": AppointmentSerializer(appointment).data})
+
+    @extend_schema(
+        operation_id="getAppointmentCancellationPolicy",
+        tags=["appointments"],
+        summary="Get cancellation policy preview for appointment",
+        responses={200: AppointmentCancellationPolicySerializer},
+    )
+    @action(detail=True, methods=["get"], url_path="cancellation-policy")
+    def cancellation_policy(self, request, pk=None):
+        appointment = self.get_object()
+        if request.user.role == "patient" and appointment.patient_id != request.user.id:
+            raise PermissionDenied("You can only view cancellation policy for your own appointments.")
+        policy = BookingService.get_cancellation_policy(appointment, request.user)
+        serializer = AppointmentCancellationPolicySerializer(policy)
+        return Response({"status": "success", "data": serializer.data})
+
+    @extend_schema(
+        operation_id="getAppointmentReminders",
+        tags=["appointments"],
+        summary="Get reminder stages already sent for appointment",
+        responses={200: AppointmentReminderSerializer(many=True)},
+    )
+    @action(detail=True, methods=["get"], url_path="reminders")
+    def reminders(self, request, pk=None):
+        appointment = self.get_object()
+        reminders = [
+            {"stage": stage, "sent_at": sent_at}
+            for stage, sent_at in (appointment.reminder_stages_sent or {}).items()
+        ]
+        serializer = AppointmentReminderSerializer(reminders, many=True)
+        return Response({"status": "success", "data": serializer.data})
 
     @extend_schema(
         operation_id="rateAppointment",

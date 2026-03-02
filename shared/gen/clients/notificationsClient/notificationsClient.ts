@@ -4,10 +4,13 @@
 */
 
 import { getUnreadNotificationCount } from "./getUnreadNotificationCount.ts";
+import { listDeviceTokens } from "./listDeviceTokens.ts";
 import { listNotifications } from "./listNotifications.ts";
 import { markAllNotificationsRead } from "./markAllNotificationsRead.ts";
 import { markNotificationRead } from "./markNotificationRead.ts";
+import { registerDeviceToken } from "./registerDeviceToken.ts";
+import { unregisterDeviceToken } from "./unregisterDeviceToken.ts";
 
 export function notificationsClient() {
-  return { listNotifications, markNotificationRead, markAllNotificationsRead, getUnreadNotificationCount }
+  return { listNotifications, markNotificationRead, listDeviceTokens, registerDeviceToken, unregisterDeviceToken, markAllNotificationsRead, getUnreadNotificationCount }
 }

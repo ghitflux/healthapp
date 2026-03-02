@@ -229,6 +229,48 @@ paths:
               schema:
                 $ref: '#/components/schemas/OwnerFinancialReport'
           description: ''
+  /api/v1/admin-panel/settings/:
+    get:
+      operationId: getPlatformSettings
+      summary: Get platform global settings
+      tags:
+      - owner
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformSettings'
+          description: ''
+    patch:
+      operationId: updatePlatformSettings
+      summary: Update platform global settings
+      tags:
+      - owner
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdatePlatformSettingsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdatePlatformSettingsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdatePlatformSettingsRequest'
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformSettings'
+          description: ''
   /api/v1/admin-panel/users/:
     get:
       operationId: listAdminUsers
@@ -413,6 +455,65 @@ paths:
               schema:
                 $ref: '#/components/schemas/Appointment'
           description: ''
+  /api/v1/appointments/{id}/cancellation-policy/:
+    get:
+      operationId: getAppointmentCancellationPolicy
+      summary: Get cancellation policy preview for appointment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this appointment.
+        required: true
+      tags:
+      - appointments
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentCancellationPolicy'
+          description: ''
+  /api/v1/appointments/{id}/complete/:
+    post:
+      operationId: completeAppointment
+      summary: Complete an appointment (in_progress -> completed)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this appointment.
+        required: true
+      tags:
+      - appointments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteAppointmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CompleteAppointmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CompleteAppointmentRequest'
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+          description: ''
   /api/v1/appointments/{id}/confirm/:
     post:
       operationId: confirmAppointment
@@ -439,6 +540,41 @@ paths:
             schema:
               $ref: '#/components/schemas/AppointmentRequest'
         required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+          description: ''
+  /api/v1/appointments/{id}/no-show/:
+    post:
+      operationId: markNoShow
+      summary: Mark appointment as no-show
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this appointment.
+        required: true
+      tags:
+      - appointments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoShowRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NoShowRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NoShowRequest'
       security:
       - jwtAuth: []
       - bearerAuth: []
@@ -484,6 +620,78 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Rating'
+          description: ''
+  /api/v1/appointments/{id}/reminders/:
+    get:
+      operationId: getAppointmentReminders
+      summary: Get reminder stages already sent for appointment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this appointment.
+        required: true
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - appointments
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAppointmentReminderList'
+          description: ''
+  /api/v1/appointments/{id}/start/:
+    post:
+      operationId: startAppointment
+      summary: Start an appointment (confirmed -> in_progress)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this appointment.
+        required: true
+      tags:
+      - appointments
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
           description: ''
   /api/v1/auth/2fa/disable/:
     post:
@@ -1694,6 +1902,92 @@ paths:
               schema:
                 $ref: '#/components/schemas/Notification'
           description: ''
+  /api/v1/notifications/devices/:
+    get:
+      operationId: listDeviceTokens
+      summary: List active device tokens for authenticated user
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDeviceTokenList'
+          description: ''
+  /api/v1/notifications/devices/register/:
+    post:
+      operationId: registerDeviceToken
+      summary: Register Firebase device token for authenticated user
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDeviceTokenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RegisterDeviceTokenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RegisterDeviceTokenRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceToken'
+          description: ''
+  /api/v1/notifications/devices/unregister/:
+    delete:
+      operationId: unregisterDeviceToken
+      summary: Unregister Firebase device token for authenticated user
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
   /api/v1/notifications/read-all/:
     post:
       operationId: markAllNotificationsRead
@@ -2498,6 +2792,23 @@ components:
         reminder_sent:
           type: boolean
           readOnly: true
+        reminder_stages_sent:
+          readOnly: true
+        started_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        no_show_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
         created_at:
           type: string
           format: date-time
@@ -2509,20 +2820,49 @@ components:
       required:
       - appointment_type
       - cancellation_reason
+      - completed_at
       - convenio
       - convenio_name
       - created_at
       - doctor
       - doctor_name
       - id
+      - no_show_at
       - patient
       - patient_name
       - payment
       - reminder_sent
+      - reminder_stages_sent
       - scheduled_date
       - scheduled_time
+      - started_at
       - status
       - updated_at
+    AppointmentCancellationPolicy:
+      type: object
+      properties:
+        can_cancel:
+          type: boolean
+        fee_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        refund_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        deadline:
+          type: string
+          format: date-time
+          nullable: true
+        reason:
+          type: string
+      required:
+      - can_cancel
+      - deadline
+      - fee_amount
+      - reason
+      - refund_amount
     AppointmentCreateRequest:
       type: object
       properties:
@@ -2582,6 +2922,17 @@ components:
       - id
       - scheduled_date
       - scheduled_time
+    AppointmentReminder:
+      type: object
+      properties:
+        stage:
+          type: string
+        sent_at:
+          type: string
+          format: date-time
+      required:
+      - sent_at
+      - stage
     AppointmentRequest:
       type: object
       properties:
@@ -2744,6 +3095,11 @@ components:
       required:
       - new_password
       - old_password
+    CompleteAppointmentRequest:
+      type: object
+      properties:
+        notes:
+          type: string
     ConsentRecord:
       type: object
       properties:
@@ -3006,6 +3362,55 @@ components:
       - BRL
       type: string
       description: '* `BRL` - BRL'
+    DeviceToken:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        token:
+          type: string
+          maxLength: 500
+        device_type:
+          $ref: '#/components/schemas/DeviceTokenDeviceTypeEnum'
+        device_name:
+          type: string
+          maxLength: 255
+        is_active:
+          type: boolean
+          readOnly: true
+        last_used_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - device_type
+      - id
+      - is_active
+      - last_used_at
+      - token
+      - updated_at
+    DeviceTokenDeviceTypeEnum:
+      enum:
+      - ios
+      - android
+      - web
+      type: string
+      description: |-
+        * `ios` - iOS
+        * `android` - Android
+        * `web` - Web
     Disable2FARequest:
       type: object
       properties:
@@ -3428,6 +3833,11 @@ components:
           minLength: 1
       required:
       - refresh
+    NoShowRequest:
+      type: object
+      properties:
+        reason:
+          type: string
     Notification:
       type: object
       properties:
@@ -3677,6 +4087,35 @@ components:
             total_pages:
               type: integer
               example: 8
+    PaginatedAppointmentReminderList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppointmentReminder'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
     PaginatedAuditLogList:
       type: object
       required:
@@ -3778,6 +4217,35 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ConvenioList'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
+    PaginatedDeviceTokenList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceToken'
         meta:
           type: object
           properties:
@@ -4094,6 +4562,45 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UpdateConsentItemRequest'
+    PatchedUpdatePlatformSettingsRequest:
+      type: object
+      properties:
+        platform_fee_percentage:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        max_advance_booking_days:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        min_cancellation_hours:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        cancellation_fee_percentage:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        appointment_lock_ttl_minutes:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        payment_timeout_minutes:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        max_appointments_per_day_patient:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        pix_enabled:
+          type: boolean
+        credit_card_enabled:
+          type: boolean
+        maintenance_mode:
+          type: boolean
+        maintenance_message:
+          type: string
     Payment:
       type: object
       properties:
@@ -4191,6 +4698,67 @@ components:
         * `completed` - Completed
         * `failed` - Failed
         * `refunded` - Refunded
+    PlatformSettings:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        platform_fee_percentage:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        max_advance_booking_days:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        min_cancellation_hours:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        cancellation_fee_percentage:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        appointment_lock_ttl_minutes:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        payment_timeout_minutes:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        max_appointments_per_day_patient:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        pix_enabled:
+          type: boolean
+        credit_card_enabled:
+          type: boolean
+        maintenance_mode:
+          type: boolean
+        maintenance_message:
+          type: string
+        updated_by:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - updated_at
+      - updated_by
     Profile:
       type: object
       properties:
@@ -4318,8 +4886,37 @@ components:
     RefundRequest:
       type: object
       properties:
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
         reason:
           type: string
+    RegisterDeviceTokenDeviceTypeEnum:
+      enum:
+      - ios
+      - android
+      - web
+      type: string
+      description: |-
+        * `ios` - ios
+        * `android` - android
+        * `web` - web
+    RegisterDeviceTokenRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          minLength: 1
+          maxLength: 500
+        device_type:
+          $ref: '#/components/schemas/RegisterDeviceTokenDeviceTypeEnum'
+        device_name:
+          type: string
+          maxLength: 255
+      required:
+      - device_type
+      - token
     RegisterRequest:
       type: object
       properties:

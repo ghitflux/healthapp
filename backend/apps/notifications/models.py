@@ -39,3 +39,35 @@ class Notification(BaseModel):
 
     def __str__(self):
         return f"{self.title} → {self.user.full_name}"
+
+
+DEVICE_TYPE_CHOICES = [
+    ("ios", "iOS"),
+    ("android", "Android"),
+    ("web", "Web"),
+]
+
+
+class DeviceToken(BaseModel):
+    """FCM device token for push notifications."""
+
+    user = models.ForeignKey("users.CustomUser", on_delete=models.CASCADE, related_name="device_tokens")
+    token = models.CharField(max_length=500, unique=True)
+    device_type = models.CharField(max_length=20, choices=DEVICE_TYPE_CHOICES)
+    device_name = models.CharField(max_length=255, blank=True)
+    is_active = models.BooleanField(default=True)
+    last_used_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "device token"
+        verbose_name_plural = "device tokens"
+        ordering = ["-updated_at"]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "token"], name="uniq_device_token_user_token"),
+        ]
+        indexes = [
+            models.Index(fields=["user", "is_active"], name="idx_device_user_active"),
+        ]
+
+    def __str__(self):
+        return f"{self.user.email} ({self.device_type})"

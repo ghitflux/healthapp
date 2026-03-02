@@ -1,0 +1,7 @@
+{% extends "email/base.html" %}
+{% block content %}
+<h2 style="margin:0 0 12px;font-size:22px;">Lembrete: sua consulta e amanha!</h2>
+<p style="margin:0 0 8px;">Medico: <strong>{{ doctor_name }}</strong></p>
+<p style="margin:0 0 8px;">Data: <strong>{{ date }}</strong> as <strong>{{ time }}</strong></p>
+<p style="margin:0 0 12px;">Preparo: {{ preparation|default:"Siga as orientacoes no app." }}</p>
+{% endblock %}

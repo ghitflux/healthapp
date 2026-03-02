@@ -29,7 +29,7 @@ class TestPaymentFlowIntegration:
 
         monkeypatch.setattr(
             "apps.payments.views.StripeService.create_payment_intent",
-            lambda payment: {"client_secret": "cs_seed", "payment_intent_id": "pi_seed"},
+            lambda appointment, payment_method: {"client_secret": "cs_seed", "payment_intent_id": "pi_seed"},
         )
 
         response = _auth_client(patient).post(
@@ -48,7 +48,7 @@ class TestPaymentFlowIntegration:
 
         monkeypatch.setattr(
             "apps.payments.views.StripeService.create_pix_payment",
-            lambda payment: {"client_secret": "cs_pix", "payment_intent_id": "pi_pix"},
+            lambda appointment: {"client_secret": "cs_pix", "payment_intent_id": "pi_pix"},
         )
 
         response = _auth_client(patient).post(
@@ -60,7 +60,10 @@ class TestPaymentFlowIntegration:
         assert response.status_code == status.HTTP_201_CREATED
         assert response.data["data"]["payment_intent_id"] == "pi_pix"
 
-    def test_payment_webhook_confirms_appointment(self):
+    def test_payment_webhook_confirms_appointment(self, monkeypatch, settings):
+        import sys
+        import types
+
         patient = PatientFactory()
         payment = Payment.objects.create(
             user=patient,
@@ -71,12 +74,19 @@ class TestPaymentFlowIntegration:
         )
         appointment = AppointmentFactory(patient=patient, status="pending", payment=payment)
 
-        StripeService.process_webhook_event(
-            {
-                "type": "payment_intent.succeeded",
-                "data": {"object": {"metadata": {"payment_id": str(payment.id)}}},
-            }
+        settings.STRIPE_SECRET_KEY = "sk_test"
+        settings.STRIPE_WEBHOOK_SECRET = "whsec_test"
+        dummy_stripe = types.SimpleNamespace(
+            Webhook=types.SimpleNamespace(
+                construct_event=lambda payload, sig_header, secret: {
+                    "type": "payment_intent.succeeded",
+                    "data": {"object": {"metadata": {"payment_id": str(payment.id)}}},
+                }
+            )
         )
+        monkeypatch.setitem(sys.modules, "stripe", dummy_stripe)
+
+        StripeService.process_webhook_event(b"{}", "sig")
 
         payment.refresh_from_db()
         appointment.refresh_from_db()
@@ -92,7 +102,8 @@ class TestPaymentFlowIntegration:
         payment = CompletedPaymentFactory(user=patient, stripe_payment_intent_id="pi_refund_int")
         AppointmentFactory(patient=patient, doctor=doctor, convenio=convenio, payment=payment, status="completed")
 
-        def _fake_refund(payment_obj):
+        def _fake_refund(payment_obj, amount=None):
+            del amount
             payment_obj.status = "refunded"
             payment_obj.refunded_at = timezone.now()
             payment_obj.refund_amount = payment_obj.amount

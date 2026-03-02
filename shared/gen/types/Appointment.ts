@@ -80,6 +80,19 @@ export type Appointment = {
      * @type boolean
     */
     readonly reminder_sent: boolean;
+    readonly reminder_stages_sent: any;
+    /**
+     * @type string, date-time
+    */
+    readonly started_at: string | null;
+    /**
+     * @type string, date-time
+    */
+    readonly completed_at: string | null;
+    /**
+     * @type string, date-time
+    */
+    readonly no_show_at: string | null;
     /**
      * @type string, date-time
     */

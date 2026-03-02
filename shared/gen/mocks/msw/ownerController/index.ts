@@ -4,7 +4,9 @@ export { deleteConvenioHandlerResponse204, deleteConvenioHandler } from "./delet
 export { getAdminConvenioByIdHandlerResponse200, getAdminConvenioByIdHandler } from "./getAdminConvenioByIdHandler.ts";
 export { getOwnerDashboardHandlerResponse200, getOwnerDashboardHandler } from "./getOwnerDashboardHandler.ts";
 export { getOwnerFinancialReportHandlerResponse200, getOwnerFinancialReportHandler } from "./getOwnerFinancialReportHandler.ts";
+export { getPlatformSettingsHandlerResponse200, getPlatformSettingsHandler } from "./getPlatformSettingsHandler.ts";
 export { listAdminConveniosHandlerResponse200, listAdminConveniosHandler } from "./listAdminConveniosHandler.ts";
 export { listAdminUsersHandlerResponse200, listAdminUsersHandler } from "./listAdminUsersHandler.ts";
 export { listAuditLogsHandlerResponse200, listAuditLogsHandler } from "./listAuditLogsHandler.ts";
 export { suspendConvenioHandlerResponse200, suspendConvenioHandler } from "./suspendConvenioHandler.ts";
+export { updatePlatformSettingsHandlerResponse200, updatePlatformSettingsHandler } from "./updatePlatformSettingsHandler.ts";

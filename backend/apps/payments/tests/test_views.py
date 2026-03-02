@@ -36,7 +36,7 @@ class TestPaymentViews:
 
         monkeypatch.setattr(
             "apps.payments.views.StripeService.create_payment_intent",
-            lambda payment: {"client_secret": "cs_ok", "payment_intent_id": "pi_ok"},
+            lambda appointment, payment_method: {"client_secret": "cs_ok", "payment_intent_id": "pi_ok"},
         )
 
         resp = _auth_client(patient).post(
@@ -58,7 +58,7 @@ class TestPaymentViews:
 
         monkeypatch.setattr(
             "apps.payments.views.StripeService.create_payment_intent",
-            lambda payment: {"client_secret": "cs_ok", "payment_intent_id": "pi_ok"},
+            lambda appointment, payment_method: {"client_secret": "cs_ok", "payment_intent_id": "pi_ok"},
         )
 
         resp = _auth_client(other_patient).post(
@@ -78,7 +78,7 @@ class TestPaymentViews:
 
         monkeypatch.setattr(
             "apps.payments.views.StripeService.create_pix_payment",
-            lambda payment: {"client_secret": "cs_pix", "payment_intent_id": "pi_pix"},
+            lambda appointment: {"client_secret": "cs_pix", "payment_intent_id": "pi_pix"},
         )
 
         resp = _auth_client(patient).post(
@@ -123,7 +123,8 @@ class TestPaymentViews:
         patient = PatientFactory()
         payment = CompletedPaymentFactory(user=patient)
 
-        def _fake_refund(payment_obj):
+        def _fake_refund(payment_obj, amount=None):
+            del amount
             payment_obj.status = "refunded"
             payment_obj.save(update_fields=["status", "updated_at"])
             return payment_obj

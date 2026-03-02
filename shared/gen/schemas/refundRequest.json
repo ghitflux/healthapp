@@ -1,1 +1,1 @@
-{"type":"object","properties":{"reason":{"type":"string"}},"x-readme-ref-name":"RefundRequest"}
+{"type":"object","properties":{"amount":{"type":"string","format":"decimal","pattern":"^-?\\d{0,8}(?:\\.\\d{0,2})?$"},"reason":{"type":"string"}},"x-readme-ref-name":"RefundRequest"}

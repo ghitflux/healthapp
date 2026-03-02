@@ -1,6 +1,11 @@
 export { cancelAppointmentHandlerResponse200, cancelAppointmentHandler } from "./cancelAppointmentHandler.ts";
+export { completeAppointmentHandlerResponse200, completeAppointmentHandler } from "./completeAppointmentHandler.ts";
 export { confirmAppointmentHandlerResponse200, confirmAppointmentHandler } from "./confirmAppointmentHandler.ts";
 export { createAppointmentHandlerResponse201, createAppointmentHandler } from "./createAppointmentHandler.ts";
 export { getAppointmentByIdHandlerResponse200, getAppointmentByIdHandler } from "./getAppointmentByIdHandler.ts";
+export { getAppointmentCancellationPolicyHandlerResponse200, getAppointmentCancellationPolicyHandler } from "./getAppointmentCancellationPolicyHandler.ts";
+export { getAppointmentRemindersHandlerResponse200, getAppointmentRemindersHandler } from "./getAppointmentRemindersHandler.ts";
 export { listAppointmentsHandlerResponse200, listAppointmentsHandler } from "./listAppointmentsHandler.ts";
+export { markNoShowHandlerResponse200, markNoShowHandler } from "./markNoShowHandler.ts";
 export { rateAppointmentHandlerResponse201, rateAppointmentHandler } from "./rateAppointmentHandler.ts";
+export { startAppointmentHandlerResponse200, startAppointmentHandler } from "./startAppointmentHandler.ts";

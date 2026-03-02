@@ -22,9 +22,12 @@ from .admin_serializers import (
     AuditLogSerializer,
     OwnerDashboardSerializer,
     OwnerFinancialReportSerializer,
+    PlatformSettingsSerializer,
+    UpdatePlatformSettingsSerializer,
 )
 from .admin_services import OwnerDashboardService
 from .permissions import IsOwner
+from .services import PlatformSettingsService
 
 
 class OwnerDashboardView(APIView):
@@ -234,3 +237,32 @@ class OwnerFinancialReportView(APIView):
     def get(self, request):
         data = OwnerDashboardService.get_financial_report()
         return Response({"status": "success", "data": data}, status=status.HTTP_200_OK)
+
+
+class PlatformSettingsView(APIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    @extend_schema(
+        operation_id="getPlatformSettings",
+        tags=["owner"],
+        summary="Get platform global settings",
+        responses={200: PlatformSettingsSerializer},
+    )
+    def get(self, request):
+        settings_obj = PlatformSettingsService.get_settings()
+        serializer = PlatformSettingsSerializer(settings_obj)
+        return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        operation_id="updatePlatformSettings",
+        tags=["owner"],
+        summary="Update platform global settings",
+        request=UpdatePlatformSettingsSerializer,
+        responses={200: PlatformSettingsSerializer},
+    )
+    def patch(self, request):
+        serializer = UpdatePlatformSettingsSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        settings_obj = PlatformSettingsService.update_settings(serializer.validated_data, request.user)
+        output_serializer = PlatformSettingsSerializer(settings_obj)
+        return Response({"status": "success", "data": output_serializer.data}, status=status.HTTP_200_OK)

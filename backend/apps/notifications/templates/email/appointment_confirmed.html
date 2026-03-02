@@ -1,0 +1,8 @@
+{% extends "email/base.html" %}
+{% block content %}
+<h2 style="margin:0 0 12px;font-size:22px;">Sua consulta foi confirmada!</h2>
+<p style="margin:0 0 8px;">Medico: <strong>{{ doctor_name }}</strong></p>
+<p style="margin:0 0 8px;">Data: <strong>{{ date }}</strong> as <strong>{{ time }}</strong></p>
+<p style="margin:0 0 16px;">Endereco: {{ address|default:"Consulte no app" }}</p>
+<a href="{{ app_url|default:'#' }}" style="display:inline-block;background:#0b6bcb;color:#fff;padding:10px 16px;text-decoration:none;border-radius:8px;">Ver detalhes no app</a>
+{% endblock %}
