@@ -68,12 +68,24 @@
 
 ## 2. Fase 2 - Painel Web (Semanas 5-8)
 
-### Semana 5 - Base Frontend
-- [ ] Next.js 16 + React 19.2 + Tailwind 4 + Turbopack
-- [ ] Estrutura App Router e layouts base
-- [ ] Auth web (guards, interceptors, refresh)
-- [ ] Alias `@api/*` apontando para `shared/gen/*`
-- [ ] TanStack Query e estado global configurados
+### Semana 5 - Base Frontend (CONCLUIDA em 2026-03-02)
+
+- [x] Next.js 16.1.6 + React 19 + Tailwind CSS 4 + Turbopack
+- [x] Estrutura App Router com route groups (auth), (convenio), (owner)
+- [x] Auth web: proxy.ts (role routing), useAuthGuard (client guard), JWT interceptors Axios
+- [x] Alias `@api/*` apontando para `shared/gen/*` (verificado com type-check)
+- [x] TanStack Query + Zustand auth store + Sonner toast configurados
+- [x] Login page com React Hook Form + Zod validation
+- [x] Layouts Convenio + Owner com Sidebar (Factory Method) + Header
+- [x] Dashboard Convenio: KPIs + RevenueChart + AppointmentsStatusChart + TopDoctors + Recent
+- [x] Dashboard Owner: KPIs globais + RevenueChart
+- [x] Error boundary (app/error.tsx) + 404 (app/not-found.tsx) + Loading (app/loading.tsx)
+- [x] Formatters: moeda BRL, data, hora, telefone, CPF, CNPJ
+- [x] GitHub Actions CI: eslint + type-check + build
+- [x] npm run lint: 0 errors
+- [x] npm run type-check: 0 errors
+- [x] npm run build: 20 rotas geradas com sucesso
+- [x] Padroes de design: Strategy (role routing), Factory Method (nav items), Singleton (api/auth/queryClient)
 
 ### Semana 6 - Painel Convenio
 - [ ] Dashboard com KPIs e graficos

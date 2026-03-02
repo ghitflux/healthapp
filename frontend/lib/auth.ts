@@ -1,0 +1,149 @@
+/**
+ * Serviço de autenticação.
+ * Strategy pattern: diferentes estratégias de redirect por role.
+ * Singleton pattern: authService é instância única.
+ */
+import { api } from './api';
+
+export interface AuthTokens {
+  access: string;
+  refresh: string;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface JWTPayload {
+  user_id: string;
+  email: string;
+  role: string;
+  exp: number;
+  iat: number;
+}
+
+/**
+ * Estratégia de redirect por role (Strategy Pattern).
+ */
+interface RoleRedirectStrategy {
+  getRedirectPath(): string;
+}
+
+class ConvenioAdminRedirect implements RoleRedirectStrategy {
+  getRedirectPath(): string {
+    return '/convenio/dashboard';
+  }
+}
+
+class OwnerRedirect implements RoleRedirectStrategy {
+  getRedirectPath(): string {
+    return '/owner/dashboard';
+  }
+}
+
+class DefaultRedirect implements RoleRedirectStrategy {
+  getRedirectPath(): string {
+    return '/login';
+  }
+}
+
+/**
+ * Factory Method para criar a estratégia de redirect correta por role.
+ */
+function createRedirectStrategy(role: string | null): RoleRedirectStrategy {
+  switch (role) {
+    case 'owner':
+      return new OwnerRedirect();
+    case 'convenio_admin':
+      return new ConvenioAdminRedirect();
+    default:
+      return new DefaultRedirect();
+  }
+}
+
+/**
+ * Singleton — Serviço de autenticação.
+ */
+export const authService = {
+  login: async (credentials: LoginCredentials): Promise<AuthTokens> => {
+    const response = await api.post('/v1/auth/login/', credentials);
+    const tokens = response.data.data ?? response.data;
+    localStorage.setItem('access_token', tokens.access);
+    localStorage.setItem('refresh_token', tokens.refresh);
+    return tokens;
+  },
+
+  logout: async (): Promise<void> => {
+    const refresh = typeof window !== 'undefined'
+      ? localStorage.getItem('refresh_token')
+      : null;
+
+    if (refresh) {
+      try {
+        await api.post('/v1/auth/logout/', { refresh });
+      } catch {
+        // Ignorar erro de logout — limpar tokens mesmo assim
+      }
+    }
+
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      window.location.href = '/login';
+    }
+  },
+
+  getAccessToken: (): string | null => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('access_token');
+  },
+
+  getRefreshToken: (): string | null => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('refresh_token');
+  },
+
+  isAuthenticated: (): boolean => {
+    return !!authService.getAccessToken();
+  },
+
+  decodePayload: (): JWTPayload | null => {
+    const token = authService.getAccessToken();
+    if (!token) return null;
+    try {
+      const base64 = token.split('.')[1];
+      if (!base64) return null;
+      const decoded = atob(base64);
+      return JSON.parse(decoded) as JWTPayload;
+    } catch {
+      return null;
+    }
+  },
+
+  getUserRole: (): string | null => {
+    const payload = authService.decodePayload();
+    return payload?.role ?? null;
+  },
+
+  getUserId: (): string | null => {
+    const payload = authService.decodePayload();
+    return payload?.user_id ?? null;
+  },
+
+  isTokenExpired: (): boolean => {
+    const payload = authService.decodePayload();
+    if (!payload?.exp) return true;
+    return payload.exp * 1000 < Date.now();
+  },
+
+  /**
+   * Obtém o caminho de redirect baseado no role do usuário logado.
+   * Usa Strategy Pattern para determinar o destino correto.
+   */
+  getRedirectPath: (): string => {
+    const role = authService.getUserRole();
+    const strategy = createRedirectStrategy(role);
+    return strategy.getRedirectPath();
+  },
+};
