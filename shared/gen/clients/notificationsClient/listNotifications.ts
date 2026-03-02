@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { ListNotificationsQueryResponse } from "../../types/notificationsTypes/ListNotifications.ts";
+import type { ListNotificationsQueryResponse, ListNotificationsQueryParams } from "../../types/notificationsTypes/ListNotifications.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getListNotificationsUrl() {
@@ -16,11 +16,11 @@ function getListNotificationsUrl() {
  * @summary List user notifications
  * {@link /api/v1/notifications/}
  */
-export async function listNotifications(config: Partial<RequestConfig> & { client?: Client } = {}) {
+export async function listNotifications(params?: ListNotificationsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config
 
 
 
-  const res = await request<ListNotificationsQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : getListNotificationsUrl().url.toString(), ... requestConfig })
+  const res = await request<ListNotificationsQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : getListNotificationsUrl().url.toString(), params, ... requestConfig })
   return res.data
 }

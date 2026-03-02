@@ -26,4 +26,26 @@ export type ConvenioDashboard = {
      * @type number, double
     */
     cancellation_rate: number;
+    /**
+     * @type number, double
+    */
+    revenue_comparison: number;
+    /**
+     * @type array | undefined
+    */
+    top_doctors?: {
+        [key: string]: any;
+    }[];
+    /**
+     * @type object | undefined
+    */
+    appointments_by_status?: {
+        [key: string]: number;
+    };
+    /**
+     * @type array | undefined
+    */
+    revenue_by_day?: {
+        [key: string]: any;
+    }[];
 };

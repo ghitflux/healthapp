@@ -3,9 +3,17 @@
 * Do not edit manually.
 */
 
-import type { GetConvenioDashboard200, GetConvenioDashboardQueryResponse } from "../../../types/convenioTypes/GetConvenioDashboard.ts";
+import type { GetConvenioDashboardQueryParams, GetConvenioDashboard200, GetConvenioDashboardQueryResponse } from "../../../types/convenioTypes/GetConvenioDashboard.ts";
 import { createConvenioDashboard } from "../createConvenioDashboard.ts";
 import { faker } from "@faker-js/faker";
+
+export function createGetConvenioDashboardQueryParams(data?: Partial<GetConvenioDashboardQueryParams>): GetConvenioDashboardQueryParams {
+
+  return {
+    ...{"convenio_id": faker.string.alpha()},
+    ...data || {}
+  }
+}
 
 export function createGetConvenioDashboard200(data?: Partial<GetConvenioDashboard200>): GetConvenioDashboard200 {
 

@@ -4,14 +4,14 @@
 */
 
 import type { Notification } from "../../types/Notification.ts";
-import { createChannelEnum } from "./createChannelEnum.ts";
-import { createTypeEnum } from "./createTypeEnum.ts";
+import { createNotificationChannelEnum } from "./createNotificationChannelEnum.ts";
+import { createNotificationTypeEnum } from "./createNotificationTypeEnum.ts";
 import { faker } from "@faker-js/faker";
 
 export function createNotification(data?: Partial<Notification>): Notification {
 
   return {
-    ...{"id": faker.string.uuid(),"user": faker.string.uuid(),"type": createTypeEnum(),"title": faker.string.alpha(),"body": faker.string.alpha(),"channel": createChannelEnum(),"is_read": faker.datatype.boolean(),"read_at": faker.date.anytime().toISOString(),"sent_at": faker.date.anytime().toISOString(),"metadata": undefined,"created_at": faker.date.anytime().toISOString()},
+    ...{"id": faker.string.uuid(),"user": faker.string.uuid(),"type": createNotificationTypeEnum(),"title": faker.string.alpha(),"body": faker.string.alpha(),"channel": createNotificationChannelEnum(),"is_read": faker.datatype.boolean(),"read_at": faker.date.anytime().toISOString(),"sent_at": faker.date.anytime().toISOString(),"metadata": undefined,"created_at": faker.date.anytime().toISOString()},
     ...data || {}
   }
 }

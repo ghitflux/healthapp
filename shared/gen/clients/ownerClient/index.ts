@@ -1,3 +1,11 @@
+export { approveConvenio } from "./approveConvenio.ts";
 export { createConvenio } from "./createConvenio.ts";
 export { deleteConvenio } from "./deleteConvenio.ts";
+export { getAdminConvenioById } from "./getAdminConvenioById.ts";
+export { getOwnerDashboard } from "./getOwnerDashboard.ts";
+export { getOwnerFinancialReport } from "./getOwnerFinancialReport.ts";
+export { listAdminConvenios } from "./listAdminConvenios.ts";
+export { listAdminUsers } from "./listAdminUsers.ts";
+export { listAuditLogs } from "./listAuditLogs.ts";
 export { ownerClient } from "./ownerClient.ts";
+export { suspendConvenio } from "./suspendConvenio.ts";

@@ -4,6 +4,11 @@ from django.conf import settings
 from django.utils import timezone
 
 from apps.core.exceptions import BusinessLogicError
+from apps.notifications.helpers import (
+    notify_appointment_confirmed,
+    notify_payment_completed,
+    notify_payment_refunded,
+)
 
 from .models import Payment
 
@@ -74,6 +79,17 @@ class StripeService:
                     payment.status = "completed"
                     payment.paid_at = timezone.now()
                     payment.save(update_fields=["status", "paid_at", "updated_at"])
+                    try:
+                        appointment = payment.appointment
+                    except Exception:  # noqa: BLE001
+                        appointment = None
+
+                    if appointment and appointment.status == "pending":
+                        appointment.status = "confirmed"
+                        appointment.save(update_fields=["status", "updated_at"])
+                        notify_appointment_confirmed(appointment)
+
+                    notify_payment_completed(payment)
                     logger.info("Payment %s completed via webhook", payment_id)
                 except Payment.DoesNotExist:
                     logger.warning("Payment %s not found for webhook", payment_id)
@@ -94,6 +110,7 @@ class StripeService:
             payment.refunded_at = timezone.now()
             payment.refund_amount = payment.amount
             payment.save(update_fields=["status", "refunded_at", "refund_amount", "updated_at"])
+            notify_payment_refunded(payment)
             logger.info("Payment %s refunded", payment.id)
             return payment
         except Exception as exc:

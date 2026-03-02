@@ -24,8 +24,10 @@ export { createScheduleExceptionHandlerResponse201, createScheduleExceptionHandl
 export { deleteDoctorScheduleHandlerResponse204, deleteDoctorScheduleHandler } from "./convenioController/deleteDoctorScheduleHandler.ts";
 export { deleteExamTypeHandlerResponse204, deleteExamTypeHandler } from "./convenioController/deleteExamTypeHandler.ts";
 export { deleteScheduleExceptionHandlerResponse204, deleteScheduleExceptionHandler } from "./convenioController/deleteScheduleExceptionHandler.ts";
+export { exportConvenioAppointmentsHandlerResponse200, exportConvenioAppointmentsHandler } from "./convenioController/exportConvenioAppointmentsHandler.ts";
 export { getConvenioByIdHandlerResponse200, getConvenioByIdHandler } from "./convenioController/getConvenioByIdHandler.ts";
 export { getConvenioDashboardHandlerResponse200, getConvenioDashboardHandler } from "./convenioController/getConvenioDashboardHandler.ts";
+export { getConvenioFinancialReportHandlerResponse200, getConvenioFinancialReportHandler } from "./convenioController/getConvenioFinancialReportHandler.ts";
 export { getDoctorScheduleByIdHandlerResponse200, getDoctorScheduleByIdHandler } from "./convenioController/getDoctorScheduleByIdHandler.ts";
 export { getExamTypeByIdHandlerResponse200, getExamTypeByIdHandler } from "./convenioController/getExamTypeByIdHandler.ts";
 export { getScheduleExceptionByIdHandlerResponse200, getScheduleExceptionByIdHandler } from "./convenioController/getScheduleExceptionByIdHandler.ts";
@@ -38,6 +40,7 @@ export { patchDoctorScheduleHandlerResponse200, patchDoctorScheduleHandler } fro
 export { patchExamTypeHandlerResponse200, patchExamTypeHandler } from "./convenioController/patchExamTypeHandler.ts";
 export { createDoctorHandlerResponse201, createDoctorHandler } from "./doctorsController/createDoctorHandler.ts";
 export { deleteDoctorHandlerResponse204, deleteDoctorHandler } from "./doctorsController/deleteDoctorHandler.ts";
+export { getDoctorAvailableDatesHandlerResponse200, getDoctorAvailableDatesHandler } from "./doctorsController/getDoctorAvailableDatesHandler.ts";
 export { getDoctorByIdHandlerResponse200, getDoctorByIdHandler } from "./doctorsController/getDoctorByIdHandler.ts";
 export { getDoctorSlotsHandlerResponse200, getDoctorSlotsHandler } from "./doctorsController/getDoctorSlotsHandler.ts";
 export { listDoctorsHandlerResponse200, listDoctorsHandler } from "./doctorsController/listDoctorsHandler.ts";
@@ -46,8 +49,16 @@ export { getUnreadNotificationCountHandlerResponse200, getUnreadNotificationCoun
 export { listNotificationsHandlerResponse200, listNotificationsHandler } from "./notificationsController/listNotificationsHandler.ts";
 export { markAllNotificationsReadHandlerResponse200, markAllNotificationsReadHandler } from "./notificationsController/markAllNotificationsReadHandler.ts";
 export { markNotificationReadHandlerResponse200, markNotificationReadHandler } from "./notificationsController/markNotificationReadHandler.ts";
+export { approveConvenioHandlerResponse200, approveConvenioHandler } from "./ownerController/approveConvenioHandler.ts";
 export { createConvenioHandlerResponse201, createConvenioHandler } from "./ownerController/createConvenioHandler.ts";
 export { deleteConvenioHandlerResponse204, deleteConvenioHandler } from "./ownerController/deleteConvenioHandler.ts";
+export { getAdminConvenioByIdHandlerResponse200, getAdminConvenioByIdHandler } from "./ownerController/getAdminConvenioByIdHandler.ts";
+export { getOwnerDashboardHandlerResponse200, getOwnerDashboardHandler } from "./ownerController/getOwnerDashboardHandler.ts";
+export { getOwnerFinancialReportHandlerResponse200, getOwnerFinancialReportHandler } from "./ownerController/getOwnerFinancialReportHandler.ts";
+export { listAdminConveniosHandlerResponse200, listAdminConveniosHandler } from "./ownerController/listAdminConveniosHandler.ts";
+export { listAdminUsersHandlerResponse200, listAdminUsersHandler } from "./ownerController/listAdminUsersHandler.ts";
+export { listAuditLogsHandlerResponse200, listAuditLogsHandler } from "./ownerController/listAuditLogsHandler.ts";
+export { suspendConvenioHandlerResponse200, suspendConvenioHandler } from "./ownerController/suspendConvenioHandler.ts";
 export { createPaymentIntentHandlerResponse201, createPaymentIntentHandler } from "./paymentsController/createPaymentIntentHandler.ts";
 export { generatePIXHandlerResponse201, generatePIXHandler } from "./paymentsController/generatePIXHandler.ts";
 export { getPaymentHistoryHandlerResponse200, getPaymentHistoryHandler } from "./paymentsController/getPaymentHistoryHandler.ts";

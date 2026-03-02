@@ -1,0 +1,1 @@
+{"enum":["appointment","payment","system","reminder"],"type":"string","description":"* `appointment` - Appointment\n* `payment` - Payment\n* `system` - System\n* `reminder` - Reminder","x-readme-ref-name":"NotificationTypeEnum"}

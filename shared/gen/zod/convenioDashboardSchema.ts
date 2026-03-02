@@ -10,5 +10,15 @@ export const convenioDashboardSchema = z.object({
 "total_appointments_month": z.int(),
 "total_revenue_month": z.string().regex(/^-?\d{0,10}(?:\.\d{0,2})?$/),
 "occupancy_rate": z.number(),
-"cancellation_rate": z.number()
+"cancellation_rate": z.number(),
+"revenue_comparison": z.number(),
+"top_doctors": z.optional(z.array(z.object({
+    
+    }).catchall(z.any()))),
+"appointments_by_status": z.optional(z.object({
+    
+    }).catchall(z.int())),
+"revenue_by_day": z.optional(z.array(z.object({
+    
+    }).catchall(z.any())))
     })

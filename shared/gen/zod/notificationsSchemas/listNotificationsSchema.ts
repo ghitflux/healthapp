@@ -3,9 +3,19 @@
 * Do not edit manually.
 */
 
-import { notificationSchema } from "../notificationSchema.ts";
+import { paginatedNotificationListSchema } from "../paginatedNotificationListSchema.ts";
 import { z } from "zod/v4";
 
-export const listNotifications200Schema = z.array(z.lazy(() => notificationSchema))
+export const listNotificationsQueryParamsSchema = z.object({
+    "channel": z.optional(z.string()),
+"is_read": z.optional(z.boolean()),
+"ordering": z.optional(z.string().describe("Which field to use when ordering the results.")),
+"page": z.optional(z.coerce.number().int()),
+"page_size": z.optional(z.coerce.number().int()),
+"search": z.optional(z.string().describe("A search term.")),
+"type": z.optional(z.string())
+    }).optional()
+
+export const listNotifications200Schema = z.lazy(() => paginatedNotificationListSchema)
 
 export const listNotificationsQueryResponseSchema = z.lazy(() => listNotifications200Schema)

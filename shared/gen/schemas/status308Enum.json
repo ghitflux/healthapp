@@ -1,1 +1,0 @@
-{"enum":["pending","confirmed","in_progress","completed","cancelled","no_show"],"type":"string","description":"* `pending` - Pending\n* `confirmed` - Confirmed\n* `in_progress` - In Progress\n* `completed` - Completed\n* `cancelled` - Cancelled\n* `no_show` - No Show","x-readme-ref-name":"Status308Enum"}

@@ -9,8 +9,10 @@ import { createScheduleException } from "./createScheduleException.ts";
 import { deleteDoctorSchedule } from "./deleteDoctorSchedule.ts";
 import { deleteExamType } from "./deleteExamType.ts";
 import { deleteScheduleException } from "./deleteScheduleException.ts";
+import { exportConvenioAppointments } from "./exportConvenioAppointments.ts";
 import { getConvenioById } from "./getConvenioById.ts";
 import { getConvenioDashboard } from "./getConvenioDashboard.ts";
+import { getConvenioFinancialReport } from "./getConvenioFinancialReport.ts";
 import { getDoctorScheduleById } from "./getDoctorScheduleById.ts";
 import { getExamTypeById } from "./getExamTypeById.ts";
 import { getScheduleExceptionById } from "./getScheduleExceptionById.ts";
@@ -23,5 +25,5 @@ import { patchDoctorSchedule } from "./patchDoctorSchedule.ts";
 import { patchExamType } from "./patchExamType.ts";
 
 export function convenioClient() {
-  return { listConvenios, getConvenioById, patchConvenioSettings, getConvenioDashboard, listExamTypes, createExamType, getExamTypeById, patchExamType, deleteExamType, listScheduleExceptions, createScheduleException, getScheduleExceptionById, deleteScheduleException, listDoctorSchedules, createDoctorSchedule, getDoctorScheduleById, patchDoctorSchedule, deleteDoctorSchedule }
+  return { listConvenios, getConvenioById, patchConvenioSettings, getConvenioDashboard, exportConvenioAppointments, getConvenioFinancialReport, listExamTypes, createExamType, getExamTypeById, patchExamType, deleteExamType, listScheduleExceptions, createScheduleException, getScheduleExceptionById, deleteScheduleException, listDoctorSchedules, createDoctorSchedule, getDoctorScheduleById, patchDoctorSchedule, deleteDoctorSchedule }
 }

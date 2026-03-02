@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetConvenioDashboardQueryResponse } from "../../types/convenioTypes/GetConvenioDashboard.ts";
+import type { GetConvenioDashboardQueryResponse, GetConvenioDashboardQueryParams } from "../../types/convenioTypes/GetConvenioDashboard.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getGetConvenioDashboardUrl() {
@@ -16,11 +16,11 @@ function getGetConvenioDashboardUrl() {
  * @summary Get convenio dashboard KPIs
  * {@link /api/v1/convenios/dashboard/}
  */
-export async function getConvenioDashboard(config: Partial<RequestConfig> & { client?: Client } = {}) {
+export async function getConvenioDashboard(params?: GetConvenioDashboardQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config
 
 
 
-  const res = await request<GetConvenioDashboardQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : getGetConvenioDashboardUrl().url.toString(), ... requestConfig })
+  const res = await request<GetConvenioDashboardQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : getGetConvenioDashboardUrl().url.toString(), params, ... requestConfig })
   return res.data
 }

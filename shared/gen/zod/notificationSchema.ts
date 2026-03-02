@@ -3,20 +3,20 @@
 * Do not edit manually.
 */
 
-import { channelEnumSchema } from "./channelEnumSchema.ts";
-import { typeEnumSchema } from "./typeEnumSchema.ts";
+import { notificationChannelEnumSchema } from "./notificationChannelEnumSchema.ts";
+import { notificationTypeEnumSchema } from "./notificationTypeEnumSchema.ts";
 import { z } from "zod/v4";
 
 export const notificationSchema = z.object({
     "id": z.uuid(),
 "user": z.uuid(),
 get "type"(){
-                return typeEnumSchema
+                return notificationTypeEnumSchema
               },
 "title": z.string(),
 "body": z.string(),
 get "channel"(){
-                return channelEnumSchema
+                return notificationChannelEnumSchema
               },
 "is_read": z.optional(z.boolean()),
 "read_at": z.iso.datetime().nullish(),

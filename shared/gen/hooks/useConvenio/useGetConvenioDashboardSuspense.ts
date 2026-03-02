@@ -4,25 +4,25 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetConvenioDashboardQueryResponse } from "../../types/convenioTypes/GetConvenioDashboard.ts";
+import type { GetConvenioDashboardQueryResponse, GetConvenioDashboardQueryParams } from "../../types/convenioTypes/GetConvenioDashboard.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { getConvenioDashboard } from "../../clients/convenioClient/getConvenioDashboard.ts";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const getConvenioDashboardSuspenseQueryKey = () => [{ url: '/api/v1/convenios/dashboard/' }] as const
+export const getConvenioDashboardSuspenseQueryKey = (params: GetConvenioDashboardQueryParams = {}) => [{ url: '/api/v1/convenios/dashboard/' }, ...(params ? [params] : [])] as const
 
 export type GetConvenioDashboardSuspenseQueryKey = ReturnType<typeof getConvenioDashboardSuspenseQueryKey>
 
-export function getConvenioDashboardSuspenseQueryOptions(config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function getConvenioDashboardSuspenseQueryOptions(params?: GetConvenioDashboardQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
-        const queryKey = getConvenioDashboardSuspenseQueryKey()
+        const queryKey = getConvenioDashboardSuspenseQueryKey(params)
         return queryOptions<GetConvenioDashboardQueryResponse, ResponseErrorConfig<Error>, GetConvenioDashboardQueryResponse, typeof queryKey>({
          
          queryKey,
          queryFn: async ({ signal }) => {
             config.signal = signal
-            return getConvenioDashboard(config)
+            return getConvenioDashboard(params, config)
          },
         })
 
@@ -32,7 +32,7 @@ export function getConvenioDashboardSuspenseQueryOptions(config: Partial<Request
  * @summary Get convenio dashboard KPIs
  * {@link /api/v1/convenios/dashboard/}
  */
-export function useGetConvenioDashboardSuspense<TData = GetConvenioDashboardQueryResponse, TQueryKey extends QueryKey = GetConvenioDashboardSuspenseQueryKey>(options: 
+export function useGetConvenioDashboardSuspense<TData = GetConvenioDashboardQueryResponse, TQueryKey extends QueryKey = GetConvenioDashboardSuspenseQueryKey>(params?: GetConvenioDashboardQueryParams, options: 
 {
   query?: Partial<UseSuspenseQueryOptions<GetConvenioDashboardQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
@@ -41,11 +41,11 @@ export function useGetConvenioDashboardSuspense<TData = GetConvenioDashboardQuer
 
          const { query: queryConfig = {}, client: config = {} } = options ?? {}
          const { client: queryClient, ...queryOptions } = queryConfig
-         const queryKey = queryOptions?.queryKey ?? getConvenioDashboardSuspenseQueryKey()
+         const queryKey = queryOptions?.queryKey ?? getConvenioDashboardSuspenseQueryKey(params)
          
 
          const query = useSuspenseQuery({
-          ...getConvenioDashboardSuspenseQueryOptions(config),
+          ...getConvenioDashboardSuspenseQueryOptions(params, config),
           queryKey,
           ...queryOptions
          } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }

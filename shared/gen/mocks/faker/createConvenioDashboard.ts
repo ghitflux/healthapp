@@ -9,7 +9,7 @@ import { faker } from "@faker-js/faker";
 export function createConvenioDashboard(data?: Partial<ConvenioDashboard>): ConvenioDashboard {
 
   return {
-    ...{"total_doctors": faker.number.int(),"total_appointments_month": faker.number.int(),"total_revenue_month": faker.helpers.fromRegExp("^-?\d{0,10}(?:\.\d{0,2})?$"),"occupancy_rate": faker.number.float(),"cancellation_rate": faker.number.float()},
+    ...{"total_doctors": faker.number.int(),"total_appointments_month": faker.number.int(),"total_revenue_month": faker.helpers.fromRegExp("^-?\d{0,10}(?:\.\d{0,2})?$"),"occupancy_rate": faker.number.float(),"cancellation_rate": faker.number.float(),"revenue_comparison": faker.number.float(),"top_doctors": faker.helpers.multiple(() => ({})),"appointments_by_status": {},"revenue_by_day": faker.helpers.multiple(() => ({}))},
     ...data || {}
   }
 }

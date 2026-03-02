@@ -4,25 +4,25 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { ListNotificationsQueryResponse } from "../../types/notificationsTypes/ListNotifications.ts";
+import type { ListNotificationsQueryResponse, ListNotificationsQueryParams } from "../../types/notificationsTypes/ListNotifications.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { listNotifications } from "../../clients/notificationsClient/listNotifications.ts";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const listNotificationsSuspenseQueryKey = () => [{ url: '/api/v1/notifications/' }] as const
+export const listNotificationsSuspenseQueryKey = (params: ListNotificationsQueryParams = {}) => [{ url: '/api/v1/notifications/' }, ...(params ? [params] : [])] as const
 
 export type ListNotificationsSuspenseQueryKey = ReturnType<typeof listNotificationsSuspenseQueryKey>
 
-export function listNotificationsSuspenseQueryOptions(config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function listNotificationsSuspenseQueryOptions(params?: ListNotificationsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
-        const queryKey = listNotificationsSuspenseQueryKey()
+        const queryKey = listNotificationsSuspenseQueryKey(params)
         return queryOptions<ListNotificationsQueryResponse, ResponseErrorConfig<Error>, ListNotificationsQueryResponse, typeof queryKey>({
          
          queryKey,
          queryFn: async ({ signal }) => {
             config.signal = signal
-            return listNotifications(config)
+            return listNotifications(params, config)
          },
         })
 
@@ -32,7 +32,7 @@ export function listNotificationsSuspenseQueryOptions(config: Partial<RequestCon
  * @summary List user notifications
  * {@link /api/v1/notifications/}
  */
-export function useListNotificationsSuspense<TData = ListNotificationsQueryResponse, TQueryKey extends QueryKey = ListNotificationsSuspenseQueryKey>(options: 
+export function useListNotificationsSuspense<TData = ListNotificationsQueryResponse, TQueryKey extends QueryKey = ListNotificationsSuspenseQueryKey>(params?: ListNotificationsQueryParams, options: 
 {
   query?: Partial<UseSuspenseQueryOptions<ListNotificationsQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
@@ -41,11 +41,11 @@ export function useListNotificationsSuspense<TData = ListNotificationsQueryRespo
 
          const { query: queryConfig = {}, client: config = {} } = options ?? {}
          const { client: queryClient, ...queryOptions } = queryConfig
-         const queryKey = queryOptions?.queryKey ?? listNotificationsSuspenseQueryKey()
+         const queryKey = queryOptions?.queryKey ?? listNotificationsSuspenseQueryKey(params)
          
 
          const query = useSuspenseQuery({
-          ...listNotificationsSuspenseQueryOptions(config),
+          ...listNotificationsSuspenseQueryOptions(params, config),
           queryKey,
           ...queryOptions
          } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }

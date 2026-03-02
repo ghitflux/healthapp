@@ -3,8 +3,8 @@
 * Do not edit manually.
 */
 
+import type { AppointmentStatusEnum } from "./AppointmentStatusEnum.ts";
 import type { AppointmentTypeEnum } from "./AppointmentTypeEnum.ts";
-import type { Status308Enum } from "./Status308Enum.ts";
 
 export type Appointment = {
     /**
@@ -58,7 +58,7 @@ export type Appointment = {
      * @type integer | undefined
     */
     duration_minutes?: number;
-    readonly status: Status308Enum;
+    readonly status: AppointmentStatusEnum;
     /**
      * @type string
     */

@@ -1,10 +1,17 @@
 import logging
+from decimal import Decimal
 
 from django.core.cache import cache
+from django.db.models import Avg, Count
 
 from apps.core.exceptions import BusinessLogicError, ConflictError
+from apps.notifications.helpers import (
+    notify_appointment_cancelled,
+    notify_appointment_confirmed,
+    notify_appointment_created,
+)
 
-from .models import Appointment
+from .models import Appointment, Rating
 
 logger = logging.getLogger(__name__)
 
@@ -59,6 +66,8 @@ class BookingService:
             status="pending",
         )
 
+        notify_appointment_created(appointment)
+
         logger.info("Appointment %s created for patient %s with doctor %s", appointment.id, patient.id, doctor.id)
         return appointment
 
@@ -81,6 +90,7 @@ class BookingService:
         )
         cache.delete(lock_key)
 
+        notify_appointment_cancelled(appointment, cancelled_by)
         logger.info("Appointment %s cancelled by %s", appointment.id, cancelled_by.id)
         return appointment
 
@@ -92,5 +102,15 @@ class BookingService:
 
         appointment.status = "confirmed"
         appointment.save(update_fields=["status", "updated_at"])
+        notify_appointment_confirmed(appointment)
         logger.info("Appointment %s confirmed", appointment.id)
         return appointment
+
+    @staticmethod
+    def update_doctor_rating(doctor) -> None:
+        metrics = Rating.objects.filter(doctor=doctor).aggregate(avg_score=Avg("score"), total=Count("id"))
+        average = metrics["avg_score"] or 0
+        total_ratings = metrics["total"] or 0
+        doctor.rating = Decimal(str(round(average, 2)))
+        doctor.total_ratings = total_ratings
+        doctor.save(update_fields=["rating", "total_ratings", "updated_at"])

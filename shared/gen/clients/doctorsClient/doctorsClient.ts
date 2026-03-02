@@ -5,11 +5,12 @@
 
 import { createDoctor } from "./createDoctor.ts";
 import { deleteDoctor } from "./deleteDoctor.ts";
+import { getDoctorAvailableDates } from "./getDoctorAvailableDates.ts";
 import { getDoctorById } from "./getDoctorById.ts";
 import { getDoctorSlots } from "./getDoctorSlots.ts";
 import { listDoctors } from "./listDoctors.ts";
 import { patchDoctor } from "./patchDoctor.ts";
 
 export function doctorsClient() {
-  return { listDoctors, createDoctor, getDoctorById, patchDoctor, deleteDoctor, getDoctorSlots }
+  return { listDoctors, createDoctor, getDoctorById, patchDoctor, deleteDoctor, getDoctorAvailableDates, getDoctorSlots }
 }

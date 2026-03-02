@@ -9,6 +9,7 @@ import { z } from "zod/v4";
 export const listDoctorsQueryParamsSchema = z.object({
     "city": z.optional(z.string()),
 "convenio": z.optional(z.string().describe("Filter by convenio ID")),
+"include_next_slot": z.optional(z.boolean().describe("Include next available slot fields")),
 "is_available": z.optional(z.boolean()),
 "max_price": z.optional(z.coerce.number()),
 "min_price": z.optional(z.coerce.number()),
@@ -16,7 +17,7 @@ export const listDoctorsQueryParamsSchema = z.object({
 "ordering": z.optional(z.string().describe("Which field to use when ordering the results.")),
 "page": z.optional(z.coerce.number().int().describe("A page number within the paginated result set.")),
 "page_size": z.optional(z.coerce.number().int().describe("Number of results to return per page.")),
-"search": z.optional(z.string().describe("A search term.")),
+"search": z.optional(z.string().describe("Fuzzy search by name/specialty")),
 "specialty": z.optional(z.string().describe("Filter by specialty"))
     }).optional()
 

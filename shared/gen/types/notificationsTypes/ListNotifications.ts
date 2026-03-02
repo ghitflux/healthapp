@@ -3,13 +3,47 @@
 * Do not edit manually.
 */
 
-import type { Notification } from "../Notification.ts";
+import type { PaginatedNotificationList } from "../PaginatedNotificationList.ts";
 
-export type ListNotifications200 = Notification[];
+export type ListNotificationsQueryParams = {
+    /**
+     * @type string | undefined
+    */
+    channel?: string;
+    /**
+     * @type boolean | undefined
+    */
+    is_read?: boolean;
+    /**
+     * @description Which field to use when ordering the results.
+     * @type string | undefined
+    */
+    ordering?: string;
+    /**
+     * @type integer | undefined
+    */
+    page?: number;
+    /**
+     * @type integer | undefined
+    */
+    page_size?: number;
+    /**
+     * @description A search term.
+     * @type string | undefined
+    */
+    search?: string;
+    /**
+     * @type string | undefined
+    */
+    type?: string;
+};
+
+export type ListNotifications200 = PaginatedNotificationList;
 
 export type ListNotificationsQueryResponse = ListNotifications200;
 
 export type ListNotificationsQuery = {
     Response: ListNotifications200;
+    QueryParams: ListNotificationsQueryParams;
     Errors: any;
 };

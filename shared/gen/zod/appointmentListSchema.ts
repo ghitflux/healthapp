@@ -3,8 +3,8 @@
 * Do not edit manually.
 */
 
+import { appointmentStatusEnumSchema } from "./appointmentStatusEnumSchema.ts";
 import { appointmentTypeEnumSchema } from "./appointmentTypeEnumSchema.ts";
-import { status308EnumSchema } from "./status308EnumSchema.ts";
 import { z } from "zod/v4";
 
 export const appointmentListSchema = z.object({
@@ -17,7 +17,7 @@ get "appointment_type"(){
 "scheduled_date": z.iso.date(),
 "scheduled_time": z.iso.time(),
 get "status"(){
-                return status308EnumSchema.describe("* `pending` - Pending\n* `confirmed` - Confirmed\n* `in_progress` - In Progress\n* `completed` - Completed\n* `cancelled` - Cancelled\n* `no_show` - No Show").optional()
+                return appointmentStatusEnumSchema.describe("* `pending` - Pending\n* `confirmed` - Confirmed\n* `in_progress` - In Progress\n* `completed` - Completed\n* `cancelled` - Cancelled\n* `no_show` - No Show").optional()
               },
 "price": z.optional(z.string().regex(/^-?\d{0,8}(?:\.\d{0,2})?$/))
     })

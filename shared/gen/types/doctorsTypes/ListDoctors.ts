@@ -16,6 +16,11 @@ export type ListDoctorsQueryParams = {
     */
     convenio?: string;
     /**
+     * @description Include next available slot fields
+     * @type boolean | undefined
+    */
+    include_next_slot?: boolean;
+    /**
      * @type boolean | undefined
     */
     is_available?: boolean;
@@ -48,7 +53,7 @@ export type ListDoctorsQueryParams = {
     */
     page_size?: number;
     /**
-     * @description A search term.
+     * @description Fuzzy search by name/specialty
      * @type string | undefined
     */
     search?: string;

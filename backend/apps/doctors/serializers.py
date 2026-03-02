@@ -1,3 +1,6 @@
+from typing import Any
+
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from apps.core.utils import validate_crm, validate_uf
@@ -56,6 +59,33 @@ class DoctorListSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source="user.full_name", read_only=True)
     avatar_url = serializers.CharField(source="user.avatar_url", read_only=True)
     convenio_name = serializers.CharField(source="convenio.name", read_only=True)
+    next_available_date = serializers.SerializerMethodField()
+    next_available_time = serializers.SerializerMethodField()
+
+    def _get_next_slot(self, obj: Doctor) -> dict[str, Any] | None:
+        include_next_slot = self.context.get("include_next_slot", False)
+        if not include_next_slot:
+            return None
+
+        cache_key = f"doctor:{obj.id}:next_slot"
+        if cache_key in self.context:
+            return self.context[cache_key]
+
+        from .services import AvailabilityService
+
+        slot = AvailabilityService.get_next_available_slot(obj)
+        self.context[cache_key] = slot
+        return slot
+
+    @extend_schema_field(serializers.DateField(allow_null=True))
+    def get_next_available_date(self, obj: Doctor) -> str | None:
+        slot = self._get_next_slot(obj)
+        return slot["date"] if slot else None
+
+    @extend_schema_field(serializers.TimeField(allow_null=True))
+    def get_next_available_time(self, obj: Doctor) -> str | None:
+        slot = self._get_next_slot(obj)
+        return slot["time"] if slot else None
 
     class Meta:
         model = Doctor
@@ -69,6 +99,8 @@ class DoctorListSerializer(serializers.ModelSerializer):
             "rating",
             "total_ratings",
             "is_available",
+            "next_available_date",
+            "next_available_time",
         ]
 
 
@@ -109,3 +141,8 @@ class AvailableSlotSerializer(serializers.Serializer):
     time = serializers.TimeField()
     duration_minutes = serializers.IntegerField()
     is_available = serializers.BooleanField()
+
+
+class AvailableDateSerializer(serializers.Serializer):
+    date = serializers.DateField()
+    slots_count = serializers.IntegerField()

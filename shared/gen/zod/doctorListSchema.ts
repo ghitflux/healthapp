@@ -14,5 +14,7 @@ export const doctorListSchema = z.object({
 "consultation_price": z.optional(z.string().regex(/^-?\d{0,8}(?:\.\d{0,2})?$/)),
 "rating": z.optional(z.string().regex(/^-?\d{0,1}(?:\.\d{0,2})?$/)),
 "total_ratings": z.optional(z.int().min(-2147483648).max(2147483647)),
-"is_available": z.optional(z.boolean())
+"is_available": z.optional(z.boolean()),
+"next_available_date": z.nullable(z.iso.date()),
+"next_available_time": z.nullable(z.iso.time())
     })

@@ -3,8 +3,8 @@
 * Do not edit manually.
 */
 
+import { appointmentStatusEnumSchema } from "./appointmentStatusEnumSchema.ts";
 import { appointmentTypeEnumSchema } from "./appointmentTypeEnumSchema.ts";
-import { status308EnumSchema } from "./status308EnumSchema.ts";
 import { z } from "zod/v4";
 
 export const appointmentSchema = z.object({
@@ -23,7 +23,7 @@ get "appointment_type"(){
 "scheduled_time": z.iso.time(),
 "duration_minutes": z.optional(z.int().min(-2147483648).max(2147483647)),
 get "status"(){
-                return status308EnumSchema
+                return appointmentStatusEnumSchema
               },
 "cancellation_reason": z.string(),
 "notes": z.optional(z.string()),

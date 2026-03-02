@@ -1,5 +1,6 @@
 export { createCreateDoctor201, createCreateDoctorMutationRequest, createCreateDoctorMutationResponse } from "./createCreateDoctor.ts";
 export { createDeleteDoctorPathParams, createDeleteDoctor204, createDeleteDoctorMutationResponse } from "./createDeleteDoctor.ts";
+export { createGetDoctorAvailableDatesPathParams, createGetDoctorAvailableDatesQueryParams, createGetDoctorAvailableDates200, createGetDoctorAvailableDatesQueryResponse } from "./createGetDoctorAvailableDates.ts";
 export { createGetDoctorByIdPathParams, createGetDoctorById200, createGetDoctorByIdQueryResponse } from "./createGetDoctorById.ts";
 export { createGetDoctorSlotsPathParams, createGetDoctorSlotsQueryParams, createGetDoctorSlots200, createGetDoctorSlotsQueryResponse } from "./createGetDoctorSlots.ts";
 export { createListDoctorsQueryParams, createListDoctors200, createListDoctorsQueryResponse } from "./createListDoctors.ts";

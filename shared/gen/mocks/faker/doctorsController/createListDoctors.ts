@@ -10,7 +10,7 @@ import { faker } from "@faker-js/faker";
 export function createListDoctorsQueryParams(data?: Partial<ListDoctorsQueryParams>): ListDoctorsQueryParams {
 
   return {
-    ...{"city": faker.string.alpha(),"convenio": faker.string.alpha(),"is_available": faker.datatype.boolean(),"max_price": faker.number.float(),"min_price": faker.number.float(),"name": faker.string.alpha(),"ordering": faker.string.alpha(),"page": faker.number.int(),"page_size": faker.number.int(),"search": faker.string.alpha(),"specialty": faker.string.alpha()},
+    ...{"city": faker.string.alpha(),"convenio": faker.string.alpha(),"include_next_slot": faker.datatype.boolean(),"is_available": faker.datatype.boolean(),"max_price": faker.number.float(),"min_price": faker.number.float(),"name": faker.string.alpha(),"ordering": faker.string.alpha(),"page": faker.number.int(),"page_size": faker.number.int(),"search": faker.string.alpha(),"specialty": faker.string.alpha()},
     ...data || {}
   }
 }

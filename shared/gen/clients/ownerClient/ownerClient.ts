@@ -3,9 +3,17 @@
 * Do not edit manually.
 */
 
+import { approveConvenio } from "./approveConvenio.ts";
 import { createConvenio } from "./createConvenio.ts";
 import { deleteConvenio } from "./deleteConvenio.ts";
+import { getAdminConvenioById } from "./getAdminConvenioById.ts";
+import { getOwnerDashboard } from "./getOwnerDashboard.ts";
+import { getOwnerFinancialReport } from "./getOwnerFinancialReport.ts";
+import { listAdminConvenios } from "./listAdminConvenios.ts";
+import { listAdminUsers } from "./listAdminUsers.ts";
+import { listAuditLogs } from "./listAuditLogs.ts";
+import { suspendConvenio } from "./suspendConvenio.ts";
 
 export function ownerClient() {
-  return { createConvenio, deleteConvenio }
+  return { listAuditLogs, listAdminConvenios, getAdminConvenioById, approveConvenio, suspendConvenio, getOwnerDashboard, getOwnerFinancialReport, listAdminUsers, createConvenio, deleteConvenio }
 }

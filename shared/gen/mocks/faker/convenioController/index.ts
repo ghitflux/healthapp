@@ -4,8 +4,10 @@ export { createCreateScheduleException201, createCreateScheduleExceptionMutation
 export { createDeleteDoctorSchedulePathParams, createDeleteDoctorSchedule204, createDeleteDoctorScheduleMutationResponse } from "./createDeleteDoctorSchedule.ts";
 export { createDeleteExamTypePathParams, createDeleteExamType204, createDeleteExamTypeMutationResponse } from "./createDeleteExamType.ts";
 export { createDeleteScheduleExceptionPathParams, createDeleteScheduleException204, createDeleteScheduleExceptionMutationResponse } from "./createDeleteScheduleException.ts";
+export { createExportConvenioAppointmentsQueryParams, createExportConvenioAppointments200, createExportConvenioAppointmentsQueryResponse } from "./createExportConvenioAppointments.ts";
 export { createGetConvenioByIdPathParams, createGetConvenioById200, createGetConvenioByIdQueryResponse } from "./createGetConvenioById.ts";
-export { createGetConvenioDashboard200, createGetConvenioDashboardQueryResponse } from "./createGetConvenioDashboard.ts";
+export { createGetConvenioDashboardQueryParams, createGetConvenioDashboard200, createGetConvenioDashboardQueryResponse } from "./createGetConvenioDashboard.ts";
+export { createGetConvenioFinancialReportQueryParams, createGetConvenioFinancialReport200, createGetConvenioFinancialReportQueryResponse } from "./createGetConvenioFinancialReport.ts";
 export { createGetDoctorScheduleByIdPathParams, createGetDoctorScheduleById200, createGetDoctorScheduleByIdQueryResponse } from "./createGetDoctorScheduleById.ts";
 export { createGetExamTypeByIdPathParams, createGetExamTypeById200, createGetExamTypeByIdQueryResponse } from "./createGetExamTypeById.ts";
 export { createGetScheduleExceptionByIdPathParams, createGetScheduleExceptionById200, createGetScheduleExceptionByIdQueryResponse } from "./createGetScheduleExceptionById.ts";

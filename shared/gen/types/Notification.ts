@@ -3,8 +3,8 @@
 * Do not edit manually.
 */
 
-import type { ChannelEnum } from "./ChannelEnum.ts";
-import type { TypeEnum } from "./TypeEnum.ts";
+import type { NotificationChannelEnum } from "./NotificationChannelEnum.ts";
+import type { NotificationTypeEnum } from "./NotificationTypeEnum.ts";
 
 export type Notification = {
     /**
@@ -15,7 +15,7 @@ export type Notification = {
      * @type string, uuid
     */
     readonly user: string;
-    readonly type: TypeEnum;
+    readonly type: NotificationTypeEnum;
     /**
      * @type string
     */
@@ -24,7 +24,7 @@ export type Notification = {
      * @type string
     */
     readonly body: string;
-    readonly channel: ChannelEnum;
+    readonly channel: NotificationChannelEnum;
     /**
      * @type boolean | undefined
     */

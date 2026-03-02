@@ -3,8 +3,8 @@
 * Do not edit manually.
 */
 
+import type { AppointmentStatusEnum } from "./AppointmentStatusEnum.ts";
 import type { AppointmentTypeEnum } from "./AppointmentTypeEnum.ts";
-import type { Status308Enum } from "./Status308Enum.ts";
 
 export type AppointmentList = {
     /**
@@ -36,7 +36,7 @@ export type AppointmentList = {
      * @description * `pending` - Pending\n* `confirmed` - Confirmed\n* `in_progress` - In Progress\n* `completed` - Completed\n* `cancelled` - Cancelled\n* `no_show` - No Show
      * @type string | undefined
     */
-    status?: Status308Enum;
+    status?: AppointmentStatusEnum;
     /**
      * @pattern ^-?\d{0,8}(?:\.\d{0,2})?$
      * @type string | undefined, decimal

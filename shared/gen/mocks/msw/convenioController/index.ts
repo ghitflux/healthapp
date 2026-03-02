@@ -4,8 +4,10 @@ export { createScheduleExceptionHandlerResponse201, createScheduleExceptionHandl
 export { deleteDoctorScheduleHandlerResponse204, deleteDoctorScheduleHandler } from "./deleteDoctorScheduleHandler.ts";
 export { deleteExamTypeHandlerResponse204, deleteExamTypeHandler } from "./deleteExamTypeHandler.ts";
 export { deleteScheduleExceptionHandlerResponse204, deleteScheduleExceptionHandler } from "./deleteScheduleExceptionHandler.ts";
+export { exportConvenioAppointmentsHandlerResponse200, exportConvenioAppointmentsHandler } from "./exportConvenioAppointmentsHandler.ts";
 export { getConvenioByIdHandlerResponse200, getConvenioByIdHandler } from "./getConvenioByIdHandler.ts";
 export { getConvenioDashboardHandlerResponse200, getConvenioDashboardHandler } from "./getConvenioDashboardHandler.ts";
+export { getConvenioFinancialReportHandlerResponse200, getConvenioFinancialReportHandler } from "./getConvenioFinancialReportHandler.ts";
 export { getDoctorScheduleByIdHandlerResponse200, getDoctorScheduleByIdHandler } from "./getDoctorScheduleByIdHandler.ts";
 export { getExamTypeByIdHandlerResponse200, getExamTypeByIdHandler } from "./getExamTypeByIdHandler.ts";
 export { getScheduleExceptionByIdHandlerResponse200, getScheduleExceptionByIdHandler } from "./getScheduleExceptionByIdHandler.ts";

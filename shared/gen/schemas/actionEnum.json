@@ -1,0 +1,1 @@
+{"enum":[0,1,2,3],"type":"integer","description":"* `0` - create\n* `1` - update\n* `2` - delete\n* `3` - access","x-readme-ref-name":"ActionEnum"}

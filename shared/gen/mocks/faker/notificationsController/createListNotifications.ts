@@ -3,16 +3,21 @@
 * Do not edit manually.
 */
 
-import type { ListNotifications200, ListNotificationsQueryResponse } from "../../../types/notificationsTypes/ListNotifications.ts";
-import { createNotification } from "../createNotification.ts";
+import type { ListNotificationsQueryParams, ListNotifications200, ListNotificationsQueryResponse } from "../../../types/notificationsTypes/ListNotifications.ts";
+import { createPaginatedNotificationList } from "../createPaginatedNotificationList.ts";
 import { faker } from "@faker-js/faker";
 
-export function createListNotifications200(data?: ListNotifications200): ListNotifications200 {
+export function createListNotificationsQueryParams(data?: Partial<ListNotificationsQueryParams>): ListNotificationsQueryParams {
 
-  return [
-        ...faker.helpers.multiple(() => (createNotification())),
-        ...data || []
-      ]
+  return {
+    ...{"channel": faker.string.alpha(),"is_read": faker.datatype.boolean(),"ordering": faker.string.alpha(),"page": faker.number.int(),"page_size": faker.number.int(),"search": faker.string.alpha(),"type": faker.string.alpha()},
+    ...data || {}
+  }
+}
+
+export function createListNotifications200(data?: Partial<ListNotifications200>): ListNotifications200 {
+
+  return createPaginatedNotificationList(data)
 }
 
 export function createListNotificationsQueryResponse(data?: Partial<ListNotificationsQueryResponse>): ListNotificationsQueryResponse {

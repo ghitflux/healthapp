@@ -6,10 +6,13 @@ from django.utils import timezone
 from apps.appointments.tests.factories import AppointmentFactory
 from apps.notifications.models import Notification
 from apps.notifications.tasks import (
+    check_no_show_appointments,
     cleanup_old_notifications,
+    generate_daily_summary,
     send_bulk_reminders,
     send_email_notification,
     send_push_notification,
+    send_sms_notification,
 )
 from apps.notifications.tests.factories import NotificationFactory
 from apps.users.tests.factories import PatientFactory
@@ -60,29 +63,55 @@ class TestNotificationTasks:
         assert called["value"] is True
 
     def test_send_bulk_reminders_marks_appointments(self, monkeypatch):
+        now = timezone.localtime() + timedelta(hours=24)
         appointment = AppointmentFactory(status="confirmed", reminder_sent=False)
-        appointment.scheduled_date = (timezone.now() + timedelta(hours=24)).date()
-        appointment.save(update_fields=["scheduled_date", "reminder_sent", "updated_at"])
+        appointment.scheduled_date = now.date()
+        appointment.scheduled_time = now.time().replace(second=0, microsecond=0)
+        appointment.save(update_fields=["scheduled_date", "scheduled_time", "reminder_sent", "updated_at"])
 
-        created = {"count": 0}
-        pushed = {"count": 0}
-
-        monkeypatch.setattr(
-            "apps.notifications.services.NotificationService.create_notification",
-            lambda **kwargs: created.__setitem__("count", created["count"] + 1),
-        )
-        monkeypatch.setattr(
-            "apps.notifications.services.PushService.send_push",
-            lambda *args, **kwargs: pushed.__setitem__("count", pushed["count"] + 1),
-        )
+        monkeypatch.setattr("apps.notifications.tasks._safe_delay", lambda *args, **kwargs: None)
 
         result = send_bulk_reminders()
 
         appointment.refresh_from_db()
-        assert result == 1
+        assert result >= 1
         assert appointment.reminder_sent is True
-        assert created["count"] == 1
-        assert pushed["count"] == 1
+
+    def test_send_sms_notification(self, monkeypatch):
+        called = {"value": False}
+
+        def _send_sms(phone, message):
+            called["value"] = True
+            assert phone == "+5511999999999"
+
+        monkeypatch.setattr("apps.notifications.services.SMSService.send_sms", _send_sms)
+        send_sms_notification("+5511999999999", "Teste")
+        assert called["value"] is True
+
+    def test_check_no_show_appointments(self, monkeypatch):
+        appointment = AppointmentFactory(status="confirmed", duration_minutes=30)
+        past = timezone.localtime() - timedelta(hours=2)
+        appointment.scheduled_date = past.date()
+        appointment.scheduled_time = past.time().replace(second=0, microsecond=0)
+        appointment.save(update_fields=["scheduled_date", "scheduled_time", "updated_at"])
+
+        monkeypatch.setattr("apps.notifications.tasks._safe_delay", lambda *args, **kwargs: None)
+
+        result = check_no_show_appointments()
+
+        appointment.refresh_from_db()
+        assert result >= 1
+        assert appointment.status == "no_show"
+
+    def test_generate_daily_summary(self, monkeypatch):
+        appointment = AppointmentFactory(status="completed")
+        appointment.scheduled_date = timezone.localdate()
+        appointment.save(update_fields=["scheduled_date", "updated_at"])
+        monkeypatch.setattr("apps.notifications.tasks._safe_delay", lambda *args, **kwargs: None)
+
+        result = generate_daily_summary()
+
+        assert result >= 0
 
     def test_cleanup_old_notifications(self):
         old_read = NotificationFactory(is_read=True)

@@ -4,7 +4,9 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from apps.core.exceptions import BusinessLogicError, ConflictError
 from apps.core.permissions import IsOwnerOrConvenioAdmin, IsPatient
+from apps.doctors.models import Doctor
 
 from .models import Appointment, Rating
 from .serializers import (
@@ -48,18 +50,21 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if not user.is_authenticated:
             return Appointment.objects.none()
+        base_queryset = Appointment.objects.select_related(
+            "patient",
+            "doctor__user",
+            "convenio",
+            "exam_type",
+            "payment",
+        )
         if user.role == "owner":
-            return Appointment.objects.all().select_related("patient", "doctor__user", "convenio")
+            return base_queryset.all()
         if user.role == "convenio_admin" and user.convenio:
-            return Appointment.objects.filter(convenio=user.convenio).select_related(
-                "patient", "doctor__user", "convenio"
-            )
+            return base_queryset.filter(convenio=user.convenio)
         if user.role == "doctor":
-            return Appointment.objects.filter(doctor__user=user).select_related(
-                "patient", "doctor__user", "convenio"
-            )
+            return base_queryset.filter(doctor__user=user)
         # patient — sees only their own
-        return Appointment.objects.filter(patient=user).select_related("patient", "doctor__user", "convenio")
+        return base_queryset.filter(patient=user)
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -68,12 +73,14 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             return AppointmentCreateSerializer
         return AppointmentSerializer
 
-    def perform_create(self, serializer):
-        from apps.doctors.models import Doctor
-
-        data = serializer.validated_data
-        doctor = Doctor.objects.get(id=data["doctor"].id)
-        BookingService.create_appointment(self.request.user, doctor, data)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        doctor = Doctor.objects.get(id=validated_data["doctor"].id)
+        appointment = BookingService.create_appointment(request.user, doctor, validated_data)
+        response_serializer = AppointmentSerializer(appointment)
+        return Response({"status": "success", "data": response_serializer.data}, status=status.HTTP_201_CREATED)
 
     @extend_schema(
         operation_id="cancelAppointment",
@@ -115,10 +122,9 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     def rate(self, request, pk=None):
         appointment = self.get_object()
         if appointment.status != "completed":
-            return Response(
-                {"status": "error", "errors": [{"detail": "Can only rate completed appointments."}]},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            raise BusinessLogicError("Can only rate completed appointments.")
+        if Rating.objects.filter(appointment=appointment).exists():
+            raise ConflictError("This appointment has already been rated.")
         serializer = RatingCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         rating = Rating.objects.create(
@@ -127,6 +133,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             doctor=appointment.doctor,
             **serializer.validated_data,
         )
+        BookingService.update_doctor_rating(appointment.doctor)
         return Response(
             {"status": "success", "data": RatingSerializer(rating).data},
             status=status.HTTP_201_CREATED,

@@ -4,8 +4,10 @@ export { createScheduleException201Schema, createScheduleExceptionMutationReques
 export { deleteDoctorSchedulePathParamsSchema, deleteDoctorSchedule204Schema, deleteDoctorScheduleMutationResponseSchema } from "./deleteDoctorScheduleSchema.ts";
 export { deleteExamTypePathParamsSchema, deleteExamType204Schema, deleteExamTypeMutationResponseSchema } from "./deleteExamTypeSchema.ts";
 export { deleteScheduleExceptionPathParamsSchema, deleteScheduleException204Schema, deleteScheduleExceptionMutationResponseSchema } from "./deleteScheduleExceptionSchema.ts";
+export { exportConvenioAppointmentsQueryParamsSchema, exportConvenioAppointments200Schema, exportConvenioAppointmentsQueryResponseSchema } from "./exportConvenioAppointmentsSchema.ts";
 export { getConvenioByIdPathParamsSchema, getConvenioById200Schema, getConvenioByIdQueryResponseSchema } from "./getConvenioByIdSchema.ts";
-export { getConvenioDashboard200Schema, getConvenioDashboardQueryResponseSchema } from "./getConvenioDashboardSchema.ts";
+export { getConvenioDashboardQueryParamsSchema, getConvenioDashboard200Schema, getConvenioDashboardQueryResponseSchema } from "./getConvenioDashboardSchema.ts";
+export { getConvenioFinancialReportQueryParamsSchema, getConvenioFinancialReport200Schema, getConvenioFinancialReportQueryResponseSchema } from "./getConvenioFinancialReportSchema.ts";
 export { getDoctorScheduleByIdPathParamsSchema, getDoctorScheduleById200Schema, getDoctorScheduleByIdQueryResponseSchema } from "./getDoctorScheduleByIdSchema.ts";
 export { getExamTypeByIdPathParamsSchema, getExamTypeById200Schema, getExamTypeByIdQueryResponseSchema } from "./getExamTypeByIdSchema.ts";
 export { getScheduleExceptionByIdPathParamsSchema, getScheduleExceptionById200Schema, getScheduleExceptionByIdQueryResponseSchema } from "./getScheduleExceptionByIdSchema.ts";

@@ -1,2 +1,10 @@
+export { approveConvenioPathParamsSchema, approveConvenio200Schema, approveConvenioMutationResponseSchema } from "./approveConvenioSchema.ts";
 export { createConvenio201Schema, createConvenioMutationRequestSchema, createConvenioMutationResponseSchema } from "./createConvenioSchema.ts";
 export { deleteConvenioPathParamsSchema, deleteConvenio204Schema, deleteConvenioMutationResponseSchema } from "./deleteConvenioSchema.ts";
+export { getAdminConvenioByIdPathParamsSchema, getAdminConvenioById200Schema, getAdminConvenioByIdQueryResponseSchema } from "./getAdminConvenioByIdSchema.ts";
+export { getOwnerDashboard200Schema, getOwnerDashboardQueryResponseSchema } from "./getOwnerDashboardSchema.ts";
+export { getOwnerFinancialReport200Schema, getOwnerFinancialReportQueryResponseSchema } from "./getOwnerFinancialReportSchema.ts";
+export { listAdminConveniosQueryParamsSchema, listAdminConvenios200Schema, listAdminConveniosQueryResponseSchema } from "./listAdminConveniosSchema.ts";
+export { listAdminUsersQueryParamsSchema, listAdminUsers200Schema, listAdminUsersQueryResponseSchema } from "./listAdminUsersSchema.ts";
+export { listAuditLogsQueryParamsSchema, listAuditLogs200Schema, listAuditLogsQueryResponseSchema } from "./listAuditLogsSchema.ts";
+export { suspendConvenioPathParamsSchema, suspendConvenio200Schema, suspendConvenioMutationResponseSchema } from "./suspendConvenioSchema.ts";

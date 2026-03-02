@@ -5,11 +5,20 @@
 
 import type { ConvenioDashboard } from "../ConvenioDashboard.ts";
 
+export type GetConvenioDashboardQueryParams = {
+    /**
+     * @description Convenio ID (required for owner role).
+     * @type string | undefined
+    */
+    convenio_id?: string;
+};
+
 export type GetConvenioDashboard200 = ConvenioDashboard;
 
 export type GetConvenioDashboardQueryResponse = GetConvenioDashboard200;
 
 export type GetConvenioDashboardQuery = {
     Response: GetConvenioDashboard200;
+    QueryParams: GetConvenioDashboardQueryParams;
     Errors: any;
 };

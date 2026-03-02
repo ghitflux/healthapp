@@ -6,6 +6,10 @@
 import { convenioDashboardSchema } from "../convenioDashboardSchema.ts";
 import { z } from "zod/v4";
 
+export const getConvenioDashboardQueryParamsSchema = z.object({
+    "convenio_id": z.optional(z.string().describe("Convenio ID (required for owner role)."))
+    }).optional()
+
 export const getConvenioDashboard200Schema = z.lazy(() => convenioDashboardSchema)
 
 export const getConvenioDashboardQueryResponseSchema = z.lazy(() => getConvenioDashboard200Schema)

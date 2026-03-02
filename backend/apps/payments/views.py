@@ -111,7 +111,7 @@ class PaymentStatusView(APIView):
         responses={200: PaymentSerializer},
     )
     def get(self, request, pk):
-        queryset = Payment.objects.filter(id=pk)
+        queryset = Payment.objects.select_related("user", "appointment__convenio").filter(id=pk)
         if request.user.role == "patient":
             queryset = queryset.filter(user=request.user)
         elif request.user.role == "convenio_admin" and request.user.convenio_id:
@@ -165,7 +165,7 @@ class PaymentHistoryView(APIView):
         responses={200: PaymentSerializer(many=True)},
     )
     def get(self, request):
-        payments = Payment.objects.filter(user=request.user)
+        payments = Payment.objects.select_related("user").filter(user=request.user)
         serializer = PaymentSerializer(payments, many=True)
         return Response({"status": "success", "data": serializer.data})
 

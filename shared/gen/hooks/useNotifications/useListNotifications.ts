@@ -4,25 +4,25 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { ListNotificationsQueryResponse } from "../../types/notificationsTypes/ListNotifications.ts";
+import type { ListNotificationsQueryResponse, ListNotificationsQueryParams } from "../../types/notificationsTypes/ListNotifications.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { listNotifications } from "../../clients/notificationsClient/listNotifications.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const listNotificationsQueryKey = () => [{ url: '/api/v1/notifications/' }] as const
+export const listNotificationsQueryKey = (params: ListNotificationsQueryParams = {}) => [{ url: '/api/v1/notifications/' }, ...(params ? [params] : [])] as const
 
 export type ListNotificationsQueryKey = ReturnType<typeof listNotificationsQueryKey>
 
-export function listNotificationsQueryOptions(config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function listNotificationsQueryOptions(params?: ListNotificationsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
-        const queryKey = listNotificationsQueryKey()
+        const queryKey = listNotificationsQueryKey(params)
         return queryOptions<ListNotificationsQueryResponse, ResponseErrorConfig<Error>, ListNotificationsQueryResponse, typeof queryKey>({
          
          queryKey,
          queryFn: async ({ signal }) => {
             config.signal = signal
-            return listNotifications(config)
+            return listNotifications(params, config)
          },
         })
 
@@ -32,7 +32,7 @@ export function listNotificationsQueryOptions(config: Partial<RequestConfig> & {
  * @summary List user notifications
  * {@link /api/v1/notifications/}
  */
-export function useListNotifications<TData = ListNotificationsQueryResponse, TQueryData = ListNotificationsQueryResponse, TQueryKey extends QueryKey = ListNotificationsQueryKey>(options: 
+export function useListNotifications<TData = ListNotificationsQueryResponse, TQueryData = ListNotificationsQueryResponse, TQueryKey extends QueryKey = ListNotificationsQueryKey>(params?: ListNotificationsQueryParams, options: 
 {
   query?: Partial<QueryObserverOptions<ListNotificationsQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
@@ -41,11 +41,11 @@ export function useListNotifications<TData = ListNotificationsQueryResponse, TQu
 
          const { query: queryConfig = {}, client: config = {} } = options ?? {}
          const { client: queryClient, ...queryOptions } = queryConfig
-         const queryKey = queryOptions?.queryKey ?? listNotificationsQueryKey()
+         const queryKey = queryOptions?.queryKey ?? listNotificationsQueryKey(params)
          
 
          const query = useQuery({
-          ...listNotificationsQueryOptions(config),
+          ...listNotificationsQueryOptions(params, config),
           queryKey,
           ...queryOptions
          } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }

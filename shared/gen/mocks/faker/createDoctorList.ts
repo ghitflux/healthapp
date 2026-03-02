@@ -9,7 +9,7 @@ import { faker } from "@faker-js/faker";
 export function createDoctorList(data?: Partial<DoctorList>): DoctorList {
 
   return {
-    ...{"id": faker.string.uuid(),"user_name": faker.string.alpha(),"avatar_url": faker.string.alpha(),"specialty": faker.string.alpha({ length: 100 }),"convenio_name": faker.string.alpha(),"consultation_price": faker.helpers.fromRegExp("^-?\d{0,8}(?:\.\d{0,2})?$"),"rating": faker.helpers.fromRegExp("^-?\d{0,1}(?:\.\d{0,2})?$"),"total_ratings": faker.number.int({ min: -2147483648, max: 2147483647 }),"is_available": faker.datatype.boolean()},
+    ...{"id": faker.string.uuid(),"user_name": faker.string.alpha(),"avatar_url": faker.string.alpha(),"specialty": faker.string.alpha({ length: 100 }),"convenio_name": faker.string.alpha(),"consultation_price": faker.helpers.fromRegExp("^-?\d{0,8}(?:\.\d{0,2})?$"),"rating": faker.helpers.fromRegExp("^-?\d{0,1}(?:\.\d{0,2})?$"),"total_ratings": faker.number.int({ min: -2147483648, max: 2147483647 }),"is_available": faker.datatype.boolean(),"next_available_date": faker.date.anytime().toISOString().substring(0, 10),"next_available_time": faker.date.anytime().toISOString().substring(11, 19)},
     ...data || {}
   }
 }

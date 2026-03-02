@@ -30,6 +30,36 @@ class TestNotificationViews:
 
         assert resp.status_code == status.HTTP_200_OK
         assert len(resp.data["data"]) == 2
+        assert "meta" in resp.data
+
+    def test_list_notifications_filter_unread(self):
+        user = PatientFactory()
+        NotificationFactory(user=user, is_read=False)
+        NotificationFactory(user=user, is_read=True)
+
+        resp = _auth_client(user).get("/api/v1/notifications/?is_read=false")
+
+        assert resp.status_code == status.HTTP_200_OK
+        assert len(resp.data["data"]) == 1
+
+    def test_list_notifications_filter_type(self):
+        user = PatientFactory()
+        NotificationFactory(user=user, type="appointment")
+        NotificationFactory(user=user, type="payment")
+
+        resp = _auth_client(user).get("/api/v1/notifications/?type=appointment")
+
+        assert resp.status_code == status.HTTP_200_OK
+        assert len(resp.data["data"]) == 1
+
+    def test_list_notifications_pagination(self):
+        user = PatientFactory()
+        NotificationFactory.create_batch(25, user=user)
+
+        resp = _auth_client(user).get("/api/v1/notifications/?page=2")
+
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.data["meta"]["page"] == 2
 
     def test_mark_read_success(self):
         user = PatientFactory()

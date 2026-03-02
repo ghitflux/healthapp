@@ -1,4 +1,4 @@
 export type { GetUnreadNotificationCount200, GetUnreadNotificationCountQueryResponse, GetUnreadNotificationCountQuery } from "./GetUnreadNotificationCount.ts";
-export type { ListNotifications200, ListNotificationsQueryResponse, ListNotificationsQuery } from "./ListNotifications.ts";
+export type { ListNotificationsQueryParams, ListNotifications200, ListNotificationsQueryResponse, ListNotificationsQuery } from "./ListNotifications.ts";
 export type { MarkAllNotificationsRead200, MarkAllNotificationsReadMutationResponse, MarkAllNotificationsReadMutation } from "./MarkAllNotificationsRead.ts";
 export type { MarkNotificationReadPathParams, MarkNotificationRead200, MarkNotificationReadMutationResponse, MarkNotificationReadMutation } from "./MarkNotificationRead.ts";

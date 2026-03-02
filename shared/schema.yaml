@@ -4,6 +4,288 @@ info:
   version: 1.0.0
   description: API REST para gestão de saúde — agendamentos, pagamentos e convênios
 paths:
+  /api/v1/admin-panel/audit-logs/:
+    get:
+      operationId: listAuditLogs
+      summary: List audit logs
+      parameters:
+      - in: query
+        name: action
+        schema:
+          type: string
+        description: create|update|delete|access
+      - in: query
+        name: date_from
+        schema:
+          type: string
+        description: YYYY-MM-DD
+      - in: query
+        name: date_to
+        schema:
+          type: string
+        description: YYYY-MM-DD
+      - in: query
+        name: model_name
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: user
+        schema:
+          type: string
+        description: Actor user UUID
+      tags:
+      - owner
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuditLogList'
+          description: ''
+  /api/v1/admin-panel/convenios/:
+    get:
+      operationId: listAdminConvenios
+      summary: List convenios for owner admin panel
+      parameters:
+      - in: query
+        name: is_active
+        schema:
+          type: boolean
+      - in: query
+        name: is_approved
+        schema:
+          type: boolean
+      - in: query
+        name: name
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: subscription_plan
+        schema:
+          type: string
+      tags:
+      - owner
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAdminConvenioListList'
+          description: ''
+  /api/v1/admin-panel/convenios/{id}/:
+    get:
+      operationId: getAdminConvenioById
+      summary: Get convenio details and metrics
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - owner
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminConvenioDetail'
+          description: ''
+  /api/v1/admin-panel/convenios/{id}/approve/:
+    post:
+      operationId: approveConvenio
+      summary: Approve a convenio
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - owner
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/admin-panel/convenios/{id}/suspend/:
+    post:
+      operationId: suspendConvenio
+      summary: Suspend a convenio
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - owner
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/admin-panel/dashboard/:
+    get:
+      operationId: getOwnerDashboard
+      summary: Get global owner dashboard KPIs
+      tags:
+      - owner
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnerDashboard'
+          description: ''
+  /api/v1/admin-panel/financial/:
+    get:
+      operationId: getOwnerFinancialReport
+      summary: Get global owner financial report
+      tags:
+      - owner
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnerFinancialReport'
+          description: ''
+  /api/v1/admin-panel/users/:
+    get:
+      operationId: listAdminUsers
+      summary: List users for owner admin panel
+      parameters:
+      - in: query
+        name: email
+        schema:
+          type: string
+      - in: query
+        name: full_name
+        schema:
+          type: string
+      - in: query
+        name: is_active
+        schema:
+          type: boolean
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: role
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - owner
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAdminUserListList'
+          description: ''
   /api/v1/appointments/:
     get:
       operationId: listAppointments
@@ -726,6 +1008,12 @@ paths:
     get:
       operationId: getConvenioDashboard
       summary: Get convenio dashboard KPIs
+      parameters:
+      - in: query
+        name: convenio_id
+        schema:
+          type: string
+        description: Convenio ID (required for owner role).
       tags:
       - convenio
       security:
@@ -737,6 +1025,101 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConvenioDashboard'
+          description: ''
+  /api/v1/convenios/export/appointments/:
+    get:
+      operationId: exportConvenioAppointments
+      summary: Export convenio appointments as CSV or JSON
+      parameters:
+      - in: query
+        name: convenio_id
+        schema:
+          type: string
+        description: Convenio ID (required for owner role).
+      - in: query
+        name: end_date
+        schema:
+          type: string
+          format: date
+        required: true
+      - in: query
+        name: format
+        schema:
+          enum:
+          - csv
+          - json
+          type: string
+          default: json
+          minLength: 1
+        description: |-
+          * `csv` - csv
+          * `json` - json
+      - in: query
+        name: start_date
+        schema:
+          type: string
+          format: date
+        required: true
+      tags:
+      - convenio
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/convenios/reports/financial/:
+    get:
+      operationId: getConvenioFinancialReport
+      summary: Get financial report for convenio
+      parameters:
+      - in: query
+        name: convenio_id
+        schema:
+          type: string
+        description: Convenio ID (required for owner role).
+      - in: query
+        name: end_date
+        schema:
+          type: string
+          format: date
+        required: true
+      - in: query
+        name: group_by
+        schema:
+          enum:
+          - day
+          - week
+          - month
+          type: string
+          default: day
+          minLength: 1
+        description: |-
+          * `day` - day
+          * `week` - week
+          * `month` - month
+      - in: query
+        name: start_date
+        schema:
+          type: string
+          format: date
+        required: true
+      tags:
+      - convenio
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinancialReport'
           description: ''
   /api/v1/doctors/:
     get:
@@ -752,6 +1135,11 @@ paths:
         schema:
           type: string
         description: Filter by convenio ID
+      - in: query
+        name: include_next_slot
+        schema:
+          type: boolean
+        description: Include next available slot fields
       - in: query
         name: is_available
         schema:
@@ -787,12 +1175,11 @@ paths:
         description: Number of results to return per page.
         schema:
           type: integer
-      - name: search
-        required: false
-        in: query
-        description: A search term.
+      - in: query
+        name: search
         schema:
           type: string
+        description: Fuzzy search by name/specialty
       - in: query
         name: specialty
         schema:
@@ -916,6 +1303,96 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/v1/doctors/{id}/available-dates/:
+    get:
+      operationId: getDoctorAvailableDates
+      summary: Get dates with available slots in a range
+      parameters:
+      - in: query
+        name: city
+        schema:
+          type: string
+      - in: query
+        name: convenio
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: end_date
+        schema:
+          type: string
+        description: End date in YYYY-MM-DD format
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this doctor.
+        required: true
+      - in: query
+        name: is_available
+        schema:
+          type: boolean
+      - in: query
+        name: max_price
+        schema:
+          type: number
+      - in: query
+        name: min_price
+        schema:
+          type: number
+      - in: query
+        name: name
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: specialty
+        schema:
+          type: string
+      - in: query
+        name: start_date
+        schema:
+          type: string
+        description: Start date in YYYY-MM-DD format
+        required: true
+      tags:
+      - doctors
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAvailableDateList'
+          description: ''
   /api/v1/doctors/{id}/slots/:
     get:
       operationId: getDoctorSlots
@@ -1149,6 +1626,39 @@ paths:
     get:
       operationId: listNotifications
       summary: List user notifications
+      parameters:
+      - in: query
+        name: channel
+        schema:
+          type: string
+      - in: query
+        name: is_read
+        schema:
+          type: boolean
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - in: query
+        name: page
+        schema:
+          type: integer
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: type
+        schema:
+          type: string
       tags:
       - notifications
       security:
@@ -1159,9 +1669,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Notification'
+                $ref: '#/components/schemas/PaginatedNotificationList'
           description: ''
   /api/v1/notifications/{id}/read/:
     patch:
@@ -1773,6 +2281,161 @@ paths:
           description: ''
 components:
   schemas:
+    ActionEnum:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      type: integer
+      description: |-
+        * `0` - create
+        * `1` - update
+        * `2` - delete
+        * `3` - access
+    AdminConvenioDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        cnpj:
+          type: string
+          maxLength: 18
+        logo_url:
+          type: string
+          format: uri
+          maxLength: 200
+        description:
+          type: string
+        contact_email:
+          type: string
+          format: email
+          maxLength: 254
+        contact_phone:
+          type: string
+          maxLength: 20
+        address: {}
+        settings: {}
+        subscription_plan:
+          type: string
+          maxLength: 50
+        subscription_status:
+          type: string
+          maxLength: 20
+        is_active:
+          type: boolean
+        is_approved:
+          type: boolean
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        metrics:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - cnpj
+      - contact_email
+      - contact_phone
+      - created_at
+      - id
+      - metrics
+      - name
+      - updated_at
+    AdminConvenioList:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        contact_email:
+          type: string
+          format: email
+          maxLength: 254
+        subscription_plan:
+          type: string
+          maxLength: 50
+        subscription_status:
+          type: string
+          maxLength: 20
+        is_active:
+          type: boolean
+        is_approved:
+          type: boolean
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        doctors_count:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - contact_email
+      - created_at
+      - doctors_count
+      - id
+      - name
+    AdminUserList:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        full_name:
+          type: string
+          maxLength: 255
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        is_active:
+          type: boolean
+        email_verified:
+          type: boolean
+        phone_verified:
+          type: boolean
+        convenio:
+          type: string
+          format: uuid
+          nullable: true
+        convenio_name:
+          type: string
+          readOnly: true
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - convenio_name
+      - date_joined
+      - email
+      - full_name
+      - id
     Appointment:
       type: object
       properties:
@@ -1816,7 +2479,7 @@ components:
           minimum: -2147483648
         status:
           allOf:
-          - $ref: '#/components/schemas/Status308Enum'
+          - $ref: '#/components/schemas/AppointmentStatusEnum'
           readOnly: true
         cancellation_reason:
           type: string
@@ -1907,7 +2570,7 @@ components:
           type: string
           format: time
         status:
-          $ref: '#/components/schemas/Status308Enum'
+          $ref: '#/components/schemas/AppointmentStatusEnum'
         price:
           type: string
           format: decimal
@@ -1960,6 +2623,22 @@ components:
       - patient
       - scheduled_date
       - scheduled_time
+    AppointmentStatusEnum:
+      enum:
+      - pending
+      - confirmed
+      - in_progress
+      - completed
+      - cancelled
+      - no_show
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `confirmed` - Confirmed
+        * `in_progress` - In Progress
+        * `completed` - Completed
+        * `cancelled` - Cancelled
+        * `no_show` - No Show
     AppointmentTypeEnum:
       enum:
       - consultation
@@ -1970,6 +2649,65 @@ components:
         * `consultation` - Consultation
         * `exam` - Exam
         * `return_visit` - Return Visit
+    AuditLog:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        model_name:
+          type: string
+          readOnly: true
+        object_pk:
+          type: string
+          maxLength: 255
+        object_repr:
+          type: string
+          title: Object representation
+        action:
+          allOf:
+          - $ref: '#/components/schemas/ActionEnum'
+          minimum: 0
+          maximum: 32767
+        action_label:
+          type: string
+          readOnly: true
+        actor:
+          type: string
+          format: uuid
+          nullable: true
+        actor_email:
+          type: string
+          readOnly: true
+        changes:
+          nullable: true
+          title: Modificar mensagem
+        timestamp:
+          type: string
+          format: date-time
+        remote_addr:
+          type: string
+          nullable: true
+          title: Remote address
+      required:
+      - action
+      - action_label
+      - actor_email
+      - id
+      - model_name
+      - object_pk
+      - object_repr
+    AvailableDate:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        slots_count:
+          type: integer
+      required:
+      - date
+      - slots_count
     AvailableSlot:
       type: object
       properties:
@@ -2006,16 +2744,6 @@ components:
       required:
       - new_password
       - old_password
-    ChannelEnum:
-      enum:
-      - email
-      - push
-      - sms
-      type: string
-      description: |-
-        * `email` - Email
-        * `push` - Push
-        * `sms` - SMS
     ConsentRecord:
       type: object
       properties:
@@ -2151,9 +2879,27 @@ components:
         cancellation_rate:
           type: number
           format: double
+        revenue_comparison:
+          type: number
+          format: double
+        top_doctors:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        appointments_by_status:
+          type: object
+          additionalProperties:
+            type: integer
+        revenue_by_day:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
       required:
       - cancellation_rate
       - occupancy_rate
+      - revenue_comparison
       - total_appointments_month
       - total_doctors
       - total_revenue_month
@@ -2381,10 +3127,22 @@ components:
           minimum: -2147483648
         is_available:
           type: boolean
+        next_available_date:
+          type: string
+          format: date
+          nullable: true
+          readOnly: true
+        next_available_time:
+          type: string
+          format: time
+          nullable: true
+          readOnly: true
       required:
       - avatar_url
       - convenio_name
       - id
+      - next_available_date
+      - next_available_time
       - specialty
       - user_name
     DoctorRequest:
@@ -2571,6 +3329,51 @@ components:
       - convenio
       - name
       - price
+    FinancialReport:
+      type: object
+      properties:
+        total_revenue:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        total_refunds:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        net_revenue:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        transaction_count:
+          type: integer
+        average_ticket:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        revenue_by_period:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        revenue_by_payment_method:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        top_services:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+      required:
+      - average_ticket
+      - net_revenue
+      - revenue_by_payment_method
+      - revenue_by_period
+      - top_services
+      - total_refunds
+      - total_revenue
+      - transaction_count
     ForgotPasswordRequest:
       type: object
       properties:
@@ -2638,7 +3441,7 @@ components:
           readOnly: true
         type:
           allOf:
-          - $ref: '#/components/schemas/TypeEnum'
+          - $ref: '#/components/schemas/NotificationTypeEnum'
           readOnly: true
         title:
           type: string
@@ -2648,7 +3451,7 @@ components:
           readOnly: true
         channel:
           allOf:
-          - $ref: '#/components/schemas/ChannelEnum'
+          - $ref: '#/components/schemas/NotificationChannelEnum'
           readOnly: true
         is_read:
           type: boolean
@@ -2675,6 +3478,110 @@ components:
       - title
       - type
       - user
+    NotificationChannelEnum:
+      enum:
+      - email
+      - push
+      - sms
+      type: string
+      description: |-
+        * `email` - Email
+        * `push` - Push
+        * `sms` - SMS
+    NotificationTypeEnum:
+      enum:
+      - appointment
+      - payment
+      - system
+      - reminder
+      type: string
+      description: |-
+        * `appointment` - Appointment
+        * `payment` - Payment
+        * `system` - System
+        * `reminder` - Reminder
+    OwnerDashboard:
+      type: object
+      properties:
+        total_users:
+          type: object
+          additionalProperties: {}
+        total_convenios:
+          type: object
+          additionalProperties: {}
+        total_appointments:
+          type: object
+          additionalProperties: {}
+        total_revenue:
+          type: object
+          additionalProperties: {}
+        average_ticket:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        payment_success_rate:
+          type: number
+          format: double
+        top_convenios:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        users_by_day:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        appointments_by_day:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        revenue_by_day:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+      required:
+      - appointments_by_day
+      - average_ticket
+      - payment_success_rate
+      - revenue_by_day
+      - top_convenios
+      - total_appointments
+      - total_convenios
+      - total_revenue
+      - total_users
+      - users_by_day
+    OwnerFinancialReport:
+      type: object
+      properties:
+        total_revenue_platform:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,12}(?:\.\d{0,2})?$
+        revenue_by_convenio:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        payment_method_breakdown:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        refund_rate:
+          type: number
+          format: double
+        reconciliation:
+          type: object
+          additionalProperties: {}
+      required:
+      - payment_method_breakdown
+      - reconciliation
+      - refund_rate
+      - revenue_by_convenio
+      - total_revenue_platform
     PIXGenerateRequest:
       type: object
       properties:
@@ -2683,6 +3590,64 @@ components:
           format: uuid
       required:
       - appointment_id
+    PaginatedAdminConvenioListList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminConvenioList'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
+    PaginatedAdminUserListList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminUserList'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
     PaginatedAppointmentListList:
       type: object
       required:
@@ -2697,6 +3662,64 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AppointmentList'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
+    PaginatedAuditLogList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLog'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
+    PaginatedAvailableDateList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailableDate'
         meta:
           type: object
           properties:
@@ -2842,6 +3865,35 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ExamType'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            per_page:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 150
+            total_pages:
+              type: integer
+              example: 8
+    PaginatedNotificationList:
+      type: object
+      required:
+      - status
+      - data
+      - meta
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
         meta:
           type: object
           properties:
@@ -3408,34 +4460,6 @@ components:
       required:
       - key
       - provisioning_uri
-    Status308Enum:
-      enum:
-      - pending
-      - confirmed
-      - in_progress
-      - completed
-      - cancelled
-      - no_show
-      type: string
-      description: |-
-        * `pending` - Pending
-        * `confirmed` - Confirmed
-        * `in_progress` - In Progress
-        * `completed` - Completed
-        * `cancelled` - Cancelled
-        * `no_show` - No Show
-    TypeEnum:
-      enum:
-      - appointment
-      - payment
-      - system
-      - reminder
-      type: string
-      description: |-
-        * `appointment` - Appointment
-        * `payment` - Payment
-        * `system` - System
-        * `reminder` - Reminder
     UnreadCount:
       type: object
       properties:

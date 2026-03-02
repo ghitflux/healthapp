@@ -1,2 +1,10 @@
+export { createApproveConvenioPathParams, createApproveConvenio200, createApproveConvenioMutationResponse } from "./createApproveConvenio.ts";
 export { createCreateConvenio201, createCreateConvenioMutationRequest, createCreateConvenioMutationResponse } from "./createCreateConvenio.ts";
 export { createDeleteConvenioPathParams, createDeleteConvenio204, createDeleteConvenioMutationResponse } from "./createDeleteConvenio.ts";
+export { createGetAdminConvenioByIdPathParams, createGetAdminConvenioById200, createGetAdminConvenioByIdQueryResponse } from "./createGetAdminConvenioById.ts";
+export { createGetOwnerDashboard200, createGetOwnerDashboardQueryResponse } from "./createGetOwnerDashboard.ts";
+export { createGetOwnerFinancialReport200, createGetOwnerFinancialReportQueryResponse } from "./createGetOwnerFinancialReport.ts";
+export { createListAdminConveniosQueryParams, createListAdminConvenios200, createListAdminConveniosQueryResponse } from "./createListAdminConvenios.ts";
+export { createListAdminUsersQueryParams, createListAdminUsers200, createListAdminUsersQueryResponse } from "./createListAdminUsers.ts";
+export { createListAuditLogsQueryParams, createListAuditLogs200, createListAuditLogsQueryResponse } from "./createListAuditLogs.ts";
+export { createSuspendConvenioPathParams, createSuspendConvenio200, createSuspendConvenioMutationResponse } from "./createSuspendConvenio.ts";

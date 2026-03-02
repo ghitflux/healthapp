@@ -7,6 +7,8 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -190,6 +192,7 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
     ],
+    "URL_FORMAT_OVERRIDE": None,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.AnonRateThrottle",
@@ -248,6 +251,13 @@ SPECTACULAR_SETTINGS = {
     "POSTPROCESSING_HOOKS": [
         "drf_spectacular.hooks.postprocess_schema_enums",
     ],
+    "ENUM_NAME_OVERRIDES": {
+        "AppointmentStatusEnum": "apps.appointments.models.APPOINTMENT_STATUS_CHOICES",
+        "PaymentStatusEnum": "apps.payments.models.PAYMENT_STATUS_CHOICES",
+        "AppointmentTypeEnum": "apps.appointments.models.APPOINTMENT_TYPE_CHOICES",
+        "NotificationTypeEnum": "apps.notifications.models.NOTIFICATION_TYPE_CHOICES",
+        "NotificationChannelEnum": "apps.notifications.models.CHANNEL_CHOICES",
+    },
     "TAGS": [
         {"name": "auth", "description": "Autenticação e registro"},
         {"name": "users", "description": "Gestão de usuários e perfil"},
@@ -290,7 +300,19 @@ CELERY_BEAT_SCHEDULE = {
     },
     "send-appointment-reminders": {
         "task": "apps.notifications.tasks.send_bulk_reminders",
-        "schedule": 60.0 * 15,  # every 15 minutes
+        "schedule": 60.0 * 60,  # every 1 hour
+    },
+    "cleanup-old-notifications": {
+        "task": "apps.notifications.tasks.cleanup_old_notifications",
+        "schedule": crontab(hour=3, minute=0),
+    },
+    "check-no-show-appointments": {
+        "task": "apps.notifications.tasks.check_no_show_appointments",
+        "schedule": 60.0 * 30,  # every 30 minutes
+    },
+    "generate-daily-summary": {
+        "task": "apps.notifications.tasks.generate_daily_summary",
+        "schedule": crontab(hour=20, minute=0),
     },
 }
 

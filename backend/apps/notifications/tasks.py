@@ -1,5 +1,11 @@
 import logging
+from datetime import datetime, timedelta
+from decimal import Decimal
 from typing import Any
+
+from django.db.models import Sum
+from django.db.models.functions import Coalesce
+from django.utils import timezone
 
 from celery import shared_task
 
@@ -35,46 +41,111 @@ def send_push_notification(user_id: str, title: str, body: str, data: dict[str, 
 
 
 @shared_task
+def send_sms_notification(phone: str, message: str):
+    """Send SMS notification."""
+    from .services import SMSService
+
+    SMSService.send_sms(phone, message)
+
+
+def _safe_delay(task, *args, **kwargs):
+    try:
+        task.delay(*args, **kwargs)
+    except Exception:  # noqa: BLE001
+        logger.exception("Failed to enqueue task %s", task.name)
+
+
+def _minutes_until(appointment, now) -> float:
+    scheduled_datetime = timezone.make_aware(
+        datetime.combine(appointment.scheduled_date, appointment.scheduled_time),
+        timezone.get_current_timezone(),
+    )
+    return (scheduled_datetime - now).total_seconds() / 60
+
+
+def _was_stage_sent(appointment, stage: str) -> bool:
+    from .models import Notification
+
+    return Notification.objects.filter(
+        user=appointment.patient,
+        type="reminder",
+        metadata__appointment_id=str(appointment.id),
+        metadata__reminder_stage=stage,
+    ).exists()
+
+
+@shared_task
 def send_bulk_reminders():
-    """Send appointment reminders (heavy — Celery)."""
-    from datetime import timedelta
-
-    from django.utils import timezone
-
+    """Send multi-stage appointment reminders (48h, 24h, 2h, 30min)."""
     from apps.appointments.models import Appointment
 
-    from .services import NotificationService, PushService
+    from .services import NotificationService
 
     now = timezone.now()
+    upper_bound = timezone.localdate() + timedelta(days=3)
 
-    # 24h reminder
-    reminder_24h = now + timedelta(hours=24)
-    appointments_24h = Appointment.objects.filter(
+    appointments = Appointment.objects.filter(
         status="confirmed",
-        scheduled_date=reminder_24h.date(),
-        reminder_sent=False,
+        scheduled_date__lte=upper_bound,
     ).select_related("patient", "doctor__user")
 
-    count = 0
-    for apt in appointments_24h:
-        NotificationService.create_notification(
-            user=apt.patient,
-            notification_type="reminder",
-            title="Lembrete de consulta",
-            body=f"Sua consulta com Dr. {apt.doctor.user.full_name} é amanhã às {apt.scheduled_time}.",
-            metadata={"appointment_id": str(apt.id)},
-        )
-        PushService.send_push(
-            apt.patient,
-            "Lembrete de consulta",
-            f"Amanhã às {apt.scheduled_time} com Dr. {apt.doctor.user.full_name}",
-        )
-        apt.reminder_sent = True
-        apt.save(update_fields=["reminder_sent"])
-        count += 1
+    sent_count = 0
+    for appointment in appointments:
+        minutes_to_appointment = _minutes_until(appointment, now)
+        if minutes_to_appointment <= 0:
+            continue
 
-    logger.info("Sent %d appointment reminders", count)
-    return count
+        stages = [
+            ("48h", 48 * 60, 90, "Lembrete de consulta (48h)", "Sua consulta esta marcada para daqui a 48 horas."),
+            ("24h", 24 * 60, 90, "Lembrete de consulta (24h)", "Sua consulta acontece amanha."),
+            ("2h", 2 * 60, 75, "Lembrete de consulta (2h)", "Sua consulta acontece em aproximadamente 2 horas."),
+            ("30min", 30, 30, "Lembrete final (30min)", "Sua consulta esta prestes a comecar."),
+        ]
+
+        stage_sent = False
+        for stage, target_minutes, window, title, body in stages:
+            if not (target_minutes - window <= minutes_to_appointment <= target_minutes + window):
+                continue
+            if _was_stage_sent(appointment, stage):
+                continue
+
+            notification = NotificationService.create_notification(
+                user=appointment.patient,
+                notification_type="reminder",
+                title=title,
+                body=body,
+                channel="push",
+                metadata={"appointment_id": str(appointment.id), "reminder_stage": stage},
+            )
+            sent_count += 1
+            stage_sent = True
+
+            _safe_delay(
+                send_push_notification,
+                str(appointment.patient.id),
+                title,
+                body,
+                {"appointment_id": str(appointment.id), "reminder_stage": stage},
+            )
+
+            if stage in {"48h", "24h"}:
+                _safe_delay(send_email_notification, str(appointment.patient.id), title, body)
+            if stage == "2h" and appointment.patient.phone:
+                _safe_delay(send_sms_notification, appointment.patient.phone, body)
+
+            logger.info(
+                "Reminder stage %s sent for appointment %s using notification %s",
+                stage,
+                appointment.id,
+                notification.id,
+            )
+
+        if stage_sent and not appointment.reminder_sent:
+            appointment.reminder_sent = True
+            appointment.save(update_fields=["reminder_sent", "updated_at"])
+
+    logger.info("Sent %d reminders in bulk run", sent_count)
+    return sent_count
 
 
 @shared_task
@@ -90,3 +161,107 @@ def cleanup_old_notifications():
     count, _ = Notification.objects.filter(created_at__lt=cutoff, is_read=True).delete()
     logger.info("Cleaned up %d old notifications", count)
     return count
+
+
+@shared_task
+def check_no_show_appointments():
+    """Mark appointments as no_show 30 minutes after expected end time."""
+    from apps.appointments.models import Appointment
+    from apps.users.models import CustomUser
+
+    from .services import NotificationService
+
+    now = timezone.now()
+    to_check = Appointment.objects.filter(status="confirmed").select_related("doctor__user", "convenio")
+
+    marked_count = 0
+    for appointment in to_check:
+        scheduled_datetime = timezone.make_aware(
+            datetime.combine(appointment.scheduled_date, appointment.scheduled_time),
+            timezone.get_current_timezone(),
+        )
+        threshold = scheduled_datetime + timedelta(minutes=appointment.duration_minutes + 30)
+        if now < threshold:
+            continue
+
+        appointment.status = "no_show"
+        appointment.save(update_fields=["status", "updated_at"])
+        marked_count += 1
+
+        convenio_admins = CustomUser.objects.filter(
+            role="convenio_admin",
+            convenio=appointment.convenio,
+            is_active=True,
+        )
+        for admin_user in convenio_admins:
+            NotificationService.create_notification(
+                user=admin_user,
+                notification_type="system",
+                title="No-show identificado",
+                body=(
+                    f"Paciente {appointment.patient.full_name} nao compareceu para consulta de "
+                    f"{appointment.scheduled_date} as {appointment.scheduled_time.strftime('%H:%M')}."
+                ),
+                channel="push",
+                metadata={"appointment_id": str(appointment.id), "status": "no_show"},
+            )
+            _safe_delay(
+                send_push_notification,
+                str(admin_user.id),
+                "No-show identificado",
+                f"Consulta {appointment.id} marcada como no_show.",
+                {"appointment_id": str(appointment.id), "status": "no_show"},
+            )
+
+    logger.info("Marked %d appointments as no_show", marked_count)
+    return marked_count
+
+
+@shared_task
+def generate_daily_summary():
+    """Send a daily summary to convenio admins."""
+    from apps.appointments.models import Appointment
+    from apps.convenios.models import Convenio
+    from apps.payments.models import Payment
+    from apps.users.models import CustomUser
+
+    from .services import NotificationService
+
+    today = timezone.localdate()
+    notified_admins = 0
+
+    convenios = Convenio.objects.filter(is_active=True)
+    for convenio in convenios:
+        appointments_qs = Appointment.objects.filter(convenio=convenio, scheduled_date=today)
+        completed_count = appointments_qs.filter(status="completed").count()
+        cancelled_count = appointments_qs.filter(status="cancelled").count()
+        no_show_count = appointments_qs.filter(status="no_show").count()
+        revenue = (
+            Payment.objects.filter(
+                appointment__convenio=convenio,
+                status="completed",
+                paid_at__date=today,
+            ).aggregate(total=Coalesce(Sum("amount"), Decimal("0.00")))["total"]
+            or 0
+        )
+        subject = f"Resumo diario - {convenio.name}"
+        body = (
+            f"Consultas realizadas: {completed_count} | Canceladas: {cancelled_count} | "
+            f"No-show: {no_show_count} | Receita: R$ {revenue}"
+        )
+
+        admins = CustomUser.objects.filter(role="convenio_admin", convenio=convenio, is_active=True)
+        for admin in admins:
+            NotificationService.create_notification(
+                user=admin,
+                notification_type="system",
+                title="Resumo diario",
+                body=body,
+                channel="email",
+                metadata={"date": today.isoformat(), "convenio_id": str(convenio.id)},
+            )
+            _safe_delay(send_email_notification, str(admin.id), subject, body)
+            notified_admins += 1
+
+    logger.info("Sent daily summaries to %d admins", notified_admins)
+    return notified_admins

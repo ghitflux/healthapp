@@ -1,27 +1,47 @@
-from drf_spectacular.utils import extend_schema
+from typing import cast
+
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import status
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.users.models import CustomUser
+
+from .filters import NotificationFilter
 from .models import Notification
 from .serializers import NotificationSerializer, UnreadCountSerializer
 from .services import NotificationService
 
 
-class NotificationListView(APIView):
+class NotificationListView(ListAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = NotificationSerializer
+    filterset_class = NotificationFilter
+    queryset = Notification.objects.none()
 
     @extend_schema(
         operation_id="listNotifications",
         tags=["notifications"],
         summary="List user notifications",
+        parameters=[
+            OpenApiParameter(name="type", type=str, required=False),
+            OpenApiParameter(name="is_read", type=bool, required=False),
+            OpenApiParameter(name="channel", type=str, required=False),
+            OpenApiParameter(name="page", type=int, required=False),
+            OpenApiParameter(name="page_size", type=int, required=False),
+        ],
         responses={200: NotificationSerializer(many=True)},
     )
-    def get(self, request):
-        notifications = Notification.objects.filter(user=request.user)[:50]
-        serializer = NotificationSerializer(notifications, many=True)
-        return Response({"status": "success", "data": serializer.data})
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return Notification.objects.none()
+        user = cast(CustomUser, self.request.user)
+        return Notification.objects.filter(user=user).order_by("-created_at")
 
 
 class MarkAsReadView(APIView):

@@ -46,4 +46,12 @@ export type DoctorList = {
      * @type boolean | undefined
     */
     is_available?: boolean;
+    /**
+     * @type string, date
+    */
+    readonly next_available_date: string | null;
+    /**
+     * @type string, time
+    */
+    readonly next_available_time: string | null;
 };
