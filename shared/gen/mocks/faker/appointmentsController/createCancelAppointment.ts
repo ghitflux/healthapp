@@ -4,14 +4,14 @@
 */
 
 import type { CancelAppointmentPathParams, CancelAppointment200, CancelAppointmentMutationRequest, CancelAppointmentMutationResponse } from "../../../types/appointmentsTypes/CancelAppointment.ts";
-import { faker } from "@faker-js/faker";
 import { createAppointment } from "../createAppointment.ts";
 import { createCancelAppointmentRequest } from "../createCancelAppointmentRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createCancelAppointmentPathParams(data?: Partial<CancelAppointmentPathParams>): CancelAppointmentPathParams {
 
   return {
-    ...{"id": faker.string.alpha()},
+    ...{"id": faker.string.uuid()},
     ...data || {}
   }
 }

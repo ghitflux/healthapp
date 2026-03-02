@@ -4,11 +4,15 @@
 */
 
 import { createPaymentIntentPaymentMethodEnumSchema } from "./createPaymentIntentPaymentMethodEnumSchema.ts";
+import { currencyEnumSchema } from "./currencyEnumSchema.ts";
 import { z } from "zod/v4";
 
 export const createPaymentIntentRequestSchema = z.object({
     "appointment_id": z.uuid(),
 get "payment_method"(){
                 return createPaymentIntentPaymentMethodEnumSchema.describe("* `credit_card` - credit_card\n* `debit_card` - debit_card")
+              },
+get "currency"(){
+                return currencyEnumSchema.default("BRL").optional()
               }
     })

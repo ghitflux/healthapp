@@ -4,10 +4,10 @@
 */
 
 import type { Profile } from "../../types/Profile.ts";
-import { faker } from "@faker-js/faker";
 import { createBlankEnum } from "./createBlankEnum.ts";
 import { createGenderEnum } from "./createGenderEnum.ts";
 import { createRoleEnum } from "./createRoleEnum.ts";
+import { faker } from "@faker-js/faker";
 
 export function createProfile(data?: Partial<Profile>): Profile {
 

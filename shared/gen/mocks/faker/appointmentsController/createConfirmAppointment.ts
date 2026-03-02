@@ -4,14 +4,14 @@
 */
 
 import type { ConfirmAppointmentPathParams, ConfirmAppointment200, ConfirmAppointmentMutationRequest, ConfirmAppointmentMutationResponse } from "../../../types/appointmentsTypes/ConfirmAppointment.ts";
-import { faker } from "@faker-js/faker";
 import { createAppointment } from "../createAppointment.ts";
 import { createAppointmentRequest } from "../createAppointmentRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createConfirmAppointmentPathParams(data?: Partial<ConfirmAppointmentPathParams>): ConfirmAppointmentPathParams {
 
   return {
-    ...{"id": faker.string.alpha()},
+    ...{"id": faker.string.uuid()},
     ...data || {}
   }
 }

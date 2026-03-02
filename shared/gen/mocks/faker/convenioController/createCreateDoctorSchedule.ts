@@ -4,9 +4,9 @@
 */
 
 import type { CreateDoctorSchedule201, CreateDoctorScheduleMutationRequest, CreateDoctorScheduleMutationResponse } from "../../../types/convenioTypes/CreateDoctorSchedule.ts";
-import { faker } from "@faker-js/faker";
 import { createDoctorSchedule } from "../createDoctorSchedule.ts";
 import { createDoctorScheduleRequest } from "../createDoctorScheduleRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createCreateDoctorSchedule201(data?: Partial<CreateDoctorSchedule201>): CreateDoctorSchedule201 {
 

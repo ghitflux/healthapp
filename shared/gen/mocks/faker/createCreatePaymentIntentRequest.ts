@@ -4,13 +4,14 @@
 */
 
 import type { CreatePaymentIntentRequest } from "../../types/CreatePaymentIntentRequest.ts";
-import { faker } from "@faker-js/faker";
 import { createCreatePaymentIntentPaymentMethodEnum } from "./createCreatePaymentIntentPaymentMethodEnum.ts";
+import { createCurrencyEnum } from "./createCurrencyEnum.ts";
+import { faker } from "@faker-js/faker";
 
 export function createCreatePaymentIntentRequest(data?: Partial<CreatePaymentIntentRequest>): CreatePaymentIntentRequest {
 
   return {
-    ...{"appointment_id": faker.string.uuid(),"payment_method": createCreatePaymentIntentPaymentMethodEnum()},
+    ...{"appointment_id": faker.string.uuid(),"payment_method": createCreatePaymentIntentPaymentMethodEnum(),"currency": createCurrencyEnum()},
     ...data || {}
   }
 }

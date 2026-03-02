@@ -6,7 +6,7 @@
 import { z } from "zod/v4";
 
 export const deleteScheduleExceptionPathParamsSchema = z.object({
-    "id": z.string()
+    "id": z.uuid().describe("A UUID string identifying this schedule exception.")
     })
 
 /**

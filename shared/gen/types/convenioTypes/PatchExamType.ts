@@ -8,7 +8,8 @@ import type { PatchedExamTypeRequest } from "../PatchedExamTypeRequest.ts";
 
 export type PatchExamTypePathParams = {
     /**
-     * @type string
+     * @description A UUID string identifying this exam type.
+     * @type string, uuid
     */
     id: string;
 };

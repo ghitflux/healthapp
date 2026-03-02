@@ -8,7 +8,8 @@ import type { CancelAppointmentRequest } from "../CancelAppointmentRequest.ts";
 
 export type CancelAppointmentPathParams = {
     /**
-     * @type string
+     * @description A UUID string identifying this appointment.
+     * @type string, uuid
     */
     id: string;
 };

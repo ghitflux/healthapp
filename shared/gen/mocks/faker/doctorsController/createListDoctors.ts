@@ -4,8 +4,8 @@
 */
 
 import type { ListDoctorsQueryParams, ListDoctors200, ListDoctorsQueryResponse } from "../../../types/doctorsTypes/ListDoctors.ts";
-import { faker } from "@faker-js/faker";
 import { createPaginatedDoctorListList } from "../createPaginatedDoctorListList.ts";
+import { faker } from "@faker-js/faker";
 
 export function createListDoctorsQueryParams(data?: Partial<ListDoctorsQueryParams>): ListDoctorsQueryParams {
 

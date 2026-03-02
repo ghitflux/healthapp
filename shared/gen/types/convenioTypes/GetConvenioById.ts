@@ -7,7 +7,8 @@ import type { Convenio } from "../Convenio.ts";
 
 export type GetConvenioByIdPathParams = {
     /**
-     * @type string
+     * @description A UUID string identifying this convenio.
+     * @type string, uuid
     */
     id: string;
 };

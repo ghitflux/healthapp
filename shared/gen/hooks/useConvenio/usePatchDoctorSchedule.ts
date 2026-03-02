@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { PatchDoctorScheduleMutationRequest, PatchDoctorScheduleMutationResponse, PatchDoctorSchedulePathParams } from "../../types/convenioTypes/PatchDoctorSchedule.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { PatchDoctorScheduleMutationRequest, PatchDoctorScheduleMutationResponse, PatchDoctorSchedulePathParams } from "../../types/convenioTypes/PatchDoctorSchedule.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { patchDoctorSchedule } from "../../clients/convenioClient/patchDoctorSchedule.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const patchDoctorScheduleMutationKey = () => [{ url: '/api/v1/schedules/:id/' }] as const
 

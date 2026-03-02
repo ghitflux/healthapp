@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { VerifyEmailMutationRequest, VerifyEmailMutationResponse } from "../../types/authTypes/VerifyEmail.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { VerifyEmailMutationRequest, VerifyEmailMutationResponse } from "../../types/authTypes/VerifyEmail.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { verifyEmail } from "../../clients/authClient/verifyEmail.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const verifyEmailMutationKey = () => [{ url: '/api/v1/auth/verify-email/' }] as const
 

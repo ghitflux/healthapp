@@ -1,9 +1,16 @@
 from rest_framework import serializers
 
+from apps.core.utils import validate_cnpj
+
 from .models import Convenio, ConvenioPlan, ExamType
 
 
 class ConvenioSerializer(serializers.ModelSerializer):
+    def validate_cnpj(self, value):
+        if not validate_cnpj(value):
+            raise serializers.ValidationError("Invalid CNPJ.")
+        return value
+
     class Meta:
         model = Convenio
         fields = [

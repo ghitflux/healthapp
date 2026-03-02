@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { ListExamTypesQueryResponse, ListExamTypesQueryParams } from "../../types/convenioTypes/ListExamTypes.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getListExamTypesUrl() {
   const res = { method: 'GET', url: `/api/v1/exam-types/` as const }

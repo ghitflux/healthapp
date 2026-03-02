@@ -6,7 +6,8 @@
 
 export type DeleteDoctorSchedulePathParams = {
     /**
-     * @type string
+     * @description A UUID string identifying this doctor schedule.
+     * @type string, uuid
     */
     id: string;
 };

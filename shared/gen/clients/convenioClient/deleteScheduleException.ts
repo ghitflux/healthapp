@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { DeleteScheduleExceptionMutationResponse, DeleteScheduleExceptionPathParams } from "../../types/convenioTypes/DeleteScheduleException.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getDeleteScheduleExceptionUrl(id: DeleteScheduleExceptionPathParams["id"]) {
   const res = { method: 'DELETE', url: `/api/v1/schedule-exceptions/${id}/` as const }

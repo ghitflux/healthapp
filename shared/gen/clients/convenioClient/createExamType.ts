@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { CreateExamTypeMutationRequest, CreateExamTypeMutationResponse } from "../../types/convenioTypes/CreateExamType.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getCreateExamTypeUrl() {
   const res = { method: 'POST', url: `/api/v1/exam-types/` as const }

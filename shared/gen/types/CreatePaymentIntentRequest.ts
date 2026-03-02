@@ -4,6 +4,7 @@
 */
 
 import type { CreatePaymentIntentPaymentMethodEnum } from "./CreatePaymentIntentPaymentMethodEnum.ts";
+import type { CurrencyEnum } from "./CurrencyEnum.ts";
 
 export type CreatePaymentIntentRequest = {
     /**
@@ -15,4 +16,8 @@ export type CreatePaymentIntentRequest = {
      * @type string
     */
     payment_method: CreatePaymentIntentPaymentMethodEnum;
+    /**
+     * @default "BRL"
+    */
+    currency?: CurrencyEnum;
 };

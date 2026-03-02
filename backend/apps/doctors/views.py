@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
 from rest_framework import viewsets
@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from apps.core.permissions import IsConvenioAdmin
+from apps.core.permissions import IsConvenioAdmin, IsOwnerOrConvenioAdmin
 
 from .filters import DoctorFilter
 from .models import Doctor, DoctorSchedule, ScheduleException
@@ -32,6 +32,9 @@ from .services import AvailabilityService
         ],
     ),
     retrieve=extend_schema(operation_id="getDoctorById", tags=["doctors"], summary="Get doctor details"),
+    create=extend_schema(operation_id="createDoctor", tags=["doctors"], summary="Create doctor"),
+    partial_update=extend_schema(operation_id="patchDoctor", tags=["doctors"], summary="Update doctor"),
+    destroy=extend_schema(operation_id="deleteDoctor", tags=["doctors"], summary="Delete doctor"),
 )
 class DoctorViewSet(viewsets.ModelViewSet):
     serializer_class = DoctorSerializer
@@ -43,7 +46,7 @@ class DoctorViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ["list", "retrieve", "slots", "search"]:
             return [AllowAny()]
-        return [IsConvenioAdmin()]
+        return [IsOwnerOrConvenioAdmin()]
 
     def get_queryset(self):
         return Doctor.objects.select_related("user", "convenio").filter(is_available=True)
@@ -72,19 +75,22 @@ class DoctorViewSet(viewsets.ModelViewSet):
                 status=400,
             )
         try:
-            date = datetime.strptime(date_str, "%Y-%m-%d").date()
+            selected_date = date.fromisoformat(date_str)
         except ValueError:
             return Response(
                 {"status": "error", "errors": [{"detail": "Invalid date format. Use YYYY-MM-DD"}]},
                 status=400,
             )
 
-        slots = AvailabilityService.get_available_slots(doctor, date)
+        slots = AvailabilityService.get_available_slots(doctor, selected_date)
         return Response({"status": "success", "data": slots})
 
 
 @extend_schema_view(
     list=extend_schema(operation_id="listDoctorSchedules", tags=["convenio"], summary="List doctor schedules"),
+    retrieve=extend_schema(
+        operation_id="getDoctorScheduleById", tags=["convenio"], summary="Get doctor schedule details"
+    ),
     create=extend_schema(operation_id="createDoctorSchedule", tags=["convenio"], summary="Create doctor schedule"),
     partial_update=extend_schema(
         operation_id="patchDoctorSchedule", tags=["convenio"], summary="Update doctor schedule"
@@ -100,6 +106,8 @@ class DoctorScheduleViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        if not user.is_authenticated:
+            return DoctorSchedule.objects.none()
         if user.convenio:
             return DoctorSchedule.objects.filter(doctor__convenio=user.convenio)
         return DoctorSchedule.objects.none()
@@ -108,6 +116,11 @@ class DoctorScheduleViewSet(viewsets.ModelViewSet):
 @extend_schema_view(
     list=extend_schema(
         operation_id="listScheduleExceptions", tags=["convenio"], summary="List schedule exceptions"
+    ),
+    retrieve=extend_schema(
+        operation_id="getScheduleExceptionById",
+        tags=["convenio"],
+        summary="Get schedule exception details",
     ),
     create=extend_schema(
         operation_id="createScheduleException", tags=["convenio"], summary="Create schedule exception"
@@ -123,6 +136,8 @@ class ScheduleExceptionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        if not user.is_authenticated:
+            return ScheduleException.objects.none()
         if user.convenio:
             return ScheduleException.objects.filter(doctor__convenio=user.convenio)
         return ScheduleException.objects.none()

@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { PatchUserProfileMutationRequest, PatchUserProfileMutationResponse } from "../../types/usersTypes/PatchUserProfile.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { PatchUserProfileMutationRequest, PatchUserProfileMutationResponse } from "../../types/usersTypes/PatchUserProfile.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { patchUserProfile } from "../../clients/usersClient/patchUserProfile.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const patchUserProfileMutationKey = () => [{ url: '/api/v1/users/me/' }] as const
 

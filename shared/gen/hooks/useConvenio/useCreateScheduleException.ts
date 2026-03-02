@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { CreateScheduleExceptionMutationRequest, CreateScheduleExceptionMutationResponse } from "../../types/convenioTypes/CreateScheduleException.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { CreateScheduleExceptionMutationRequest, CreateScheduleExceptionMutationResponse } from "../../types/convenioTypes/CreateScheduleException.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { createScheduleException } from "../../clients/convenioClient/createScheduleException.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const createScheduleExceptionMutationKey = () => [{ url: '/api/v1/schedule-exceptions/' }] as const
 

@@ -4,8 +4,8 @@
 */
 
 import type { MarkNotificationReadPathParams, MarkNotificationRead200, MarkNotificationReadMutationResponse } from "../../../types/notificationsTypes/MarkNotificationRead.ts";
-import { faker } from "@faker-js/faker";
 import { createNotification } from "../createNotification.ts";
+import { faker } from "@faker-js/faker";
 
 export function createMarkNotificationReadPathParams(data?: Partial<MarkNotificationReadPathParams>): MarkNotificationReadPathParams {
 

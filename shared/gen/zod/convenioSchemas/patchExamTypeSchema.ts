@@ -8,7 +8,7 @@ import { patchedExamTypeRequestSchema } from "../patchedExamTypeRequestSchema.ts
 import { z } from "zod/v4";
 
 export const patchExamTypePathParamsSchema = z.object({
-    "id": z.string()
+    "id": z.uuid().describe("A UUID string identifying this exam type.")
     })
 
 export const patchExamType200Schema = z.lazy(() => examTypeSchema)

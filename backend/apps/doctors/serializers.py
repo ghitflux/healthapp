@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from apps.core.utils import validate_crm, validate_uf
+
 from .models import Doctor, DoctorSchedule, ScheduleException
 
 
@@ -7,6 +9,23 @@ class DoctorSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source="user.full_name", read_only=True)
     user_email = serializers.CharField(source="user.email", read_only=True)
     convenio_name = serializers.CharField(source="convenio.name", read_only=True)
+
+    def validate_crm(self, value):
+        if not validate_crm(value):
+            raise serializers.ValidationError("CRM must contain 4 to 10 numeric digits.")
+        return value
+
+    def validate_crm_state(self, value):
+        if not validate_uf(value):
+            raise serializers.ValidationError("Invalid Brazilian state (UF).")
+        return value.upper()
+
+    def validate_consultation_duration(self, value):
+        if value < 15:
+            raise serializers.ValidationError("Minimum consultation duration is 15 minutes.")
+        if value > 120:
+            raise serializers.ValidationError("Maximum consultation duration is 120 minutes.")
+        return value
 
     class Meta:
         model = Doctor

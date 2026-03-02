@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { CreateAppointmentMutationRequest, CreateAppointmentMutationResponse } from "../../types/appointmentsTypes/CreateAppointment.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getCreateAppointmentUrl() {
   const res = { method: 'POST', url: `/api/v1/appointments/` as const }
@@ -13,7 +13,7 @@ function getCreateAppointmentUrl() {
 }
 
 /**
- * @summary Create appointment (with Redis lock)
+ * @summary Create appointment (with Redis lock) — patients only
  * {@link /api/v1/appointments/}
  */
 export async function createAppointment(data: CreateAppointmentMutationRequest, config: Partial<RequestConfig<CreateAppointmentMutationRequest>> & { client?: Client } = {}) {

@@ -4,8 +4,8 @@
 */
 
 import type { GetConvenioDashboard200, GetConvenioDashboardQueryResponse } from "../../../types/convenioTypes/GetConvenioDashboard.ts";
-import { faker } from "@faker-js/faker";
 import { createConvenioDashboard } from "../createConvenioDashboard.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGetConvenioDashboard200(data?: Partial<GetConvenioDashboard200>): GetConvenioDashboard200 {
 

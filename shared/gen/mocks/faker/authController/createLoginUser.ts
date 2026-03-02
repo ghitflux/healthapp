@@ -4,8 +4,8 @@
 */
 
 import type { LoginUser200, LoginUserMutationRequest, LoginUserMutationResponse } from "../../../types/authTypes/LoginUser.ts";
-import { faker } from "@faker-js/faker";
 import { createLoginRequest } from "../createLoginRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createLoginUser200(data?: Partial<LoginUser200>): LoginUser200 {
 

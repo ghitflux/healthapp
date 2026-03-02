@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { CreateDoctorScheduleMutationRequest, CreateDoctorScheduleMutationResponse } from "../../types/convenioTypes/CreateDoctorSchedule.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { CreateDoctorScheduleMutationRequest, CreateDoctorScheduleMutationResponse } from "../../types/convenioTypes/CreateDoctorSchedule.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { createDoctorSchedule } from "../../clients/convenioClient/createDoctorSchedule.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const createDoctorScheduleMutationKey = () => [{ url: '/api/v1/schedules/' }] as const
 

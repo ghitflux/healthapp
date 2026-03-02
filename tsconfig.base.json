@@ -3,11 +3,16 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "paths": {
       "@api/*": ["./shared/gen/*"]
     }
-  }
+  },
+  "exclude": [
+    "shared/gen/index.ts",
+    "shared/gen/mocks/faker/createBlankEnum.ts"
+  ]
 }

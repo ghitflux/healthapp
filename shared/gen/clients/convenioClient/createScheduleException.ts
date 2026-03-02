@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { CreateScheduleExceptionMutationRequest, CreateScheduleExceptionMutationResponse } from "../../types/convenioTypes/CreateScheduleException.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getCreateScheduleExceptionUrl() {
   const res = { method: 'POST', url: `/api/v1/schedule-exceptions/` as const }

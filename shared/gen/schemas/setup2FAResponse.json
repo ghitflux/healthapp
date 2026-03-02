@@ -1,0 +1,1 @@
+{"type":"object","properties":{"provisioning_uri":{"type":"string"},"key":{"type":"string"}},"required":["key","provisioning_uri"],"x-readme-ref-name":"Setup2FAResponse"}

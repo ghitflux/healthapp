@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { GetUnreadNotificationCountQueryResponse } from "../../types/notificationsTypes/GetUnreadNotificationCount.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
-import type { GetUnreadNotificationCountQueryResponse } from "../../types/notificationsTypes/GetUnreadNotificationCount.ts";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getUnreadNotificationCount } from "../../clients/notificationsClient/getUnreadNotificationCount.ts";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
 export const getUnreadNotificationCountSuspenseQueryKey = () => [{ url: '/api/v1/notifications/unread-count/' }] as const
 

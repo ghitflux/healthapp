@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { LoginUserMutationRequest, LoginUserMutationResponse } from "../../types/authTypes/LoginUser.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getLoginUserUrl() {
   const res = { method: 'POST', url: `/api/v1/auth/login/` as const }

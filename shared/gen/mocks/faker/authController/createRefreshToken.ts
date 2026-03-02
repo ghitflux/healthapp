@@ -3,7 +3,8 @@
 * Do not edit manually.
 */
 
-import type { RefreshToken200, RefreshTokenMutationResponse } from "../../../types/authTypes/RefreshToken.ts";
+import type { RefreshToken200, RefreshTokenMutationRequest, RefreshTokenMutationResponse } from "../../../types/authTypes/RefreshToken.ts";
+import { createRefreshTokenRequestRequest } from "../createRefreshTokenRequestRequest.ts";
 import { faker } from "@faker-js/faker";
 
 export function createRefreshToken200(data?: Partial<RefreshToken200>): RefreshToken200 {
@@ -12,6 +13,11 @@ export function createRefreshToken200(data?: Partial<RefreshToken200>): RefreshT
     ...{},
     ...data || {}
   }
+}
+
+export function createRefreshTokenMutationRequest(data?: Partial<RefreshTokenMutationRequest>): RefreshTokenMutationRequest {
+
+  return createRefreshTokenRequestRequest(data)
 }
 
 export function createRefreshTokenMutationResponse(data?: Partial<RefreshTokenMutationResponse>): RefreshTokenMutationResponse {

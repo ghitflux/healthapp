@@ -4,8 +4,8 @@
 */
 
 import type { PaginatedExamTypeList } from "../../types/PaginatedExamTypeList.ts";
-import { faker } from "@faker-js/faker";
 import { createExamType } from "./createExamType.ts";
+import { faker } from "@faker-js/faker";
 
 export function createPaginatedExamTypeList(data?: Partial<PaginatedExamTypeList>): PaginatedExamTypeList {
 

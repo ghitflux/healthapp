@@ -4,8 +4,8 @@
 */
 
 import type { GetPaymentStatusPathParams, GetPaymentStatus200, GetPaymentStatusQueryResponse } from "../../../types/paymentsTypes/GetPaymentStatus.ts";
-import { faker } from "@faker-js/faker";
 import { createPayment } from "../createPayment.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGetPaymentStatusPathParams(data?: Partial<GetPaymentStatusPathParams>): GetPaymentStatusPathParams {
 

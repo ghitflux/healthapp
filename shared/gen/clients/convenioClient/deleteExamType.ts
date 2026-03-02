@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { DeleteExamTypeMutationResponse, DeleteExamTypePathParams } from "../../types/convenioTypes/DeleteExamType.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getDeleteExamTypeUrl(id: DeleteExamTypePathParams["id"]) {
   const res = { method: 'DELETE', url: `/api/v1/exam-types/${id}/` as const }

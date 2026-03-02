@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { GetUserProfileQueryResponse } from "../../types/usersTypes/GetUserProfile.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import type { GetUserProfileQueryResponse } from "../../types/usersTypes/GetUserProfile.ts";
-import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getUserProfile } from "../../clients/usersClient/getUserProfile.ts";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getUserProfileQueryKey = () => [{ url: '/api/v1/users/me/' }] as const
 

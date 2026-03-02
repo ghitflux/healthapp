@@ -10,6 +10,8 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 100
 
     def get_paginated_response(self, data):
+        assert self.page is not None
+        assert self.request is not None
         return Response(
             {
                 "status": "success",

@@ -9,7 +9,7 @@ import { faker } from "@faker-js/faker";
 export function createDeleteScheduleExceptionPathParams(data?: Partial<DeleteScheduleExceptionPathParams>): DeleteScheduleExceptionPathParams {
 
   return {
-    ...{"id": faker.string.alpha()},
+    ...{"id": faker.string.uuid()},
     ...data || {}
   }
 }

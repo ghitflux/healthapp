@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { MarkAllNotificationsReadMutationResponse } from "../../types/notificationsTypes/MarkAllNotificationsRead.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { MarkAllNotificationsReadMutationResponse } from "../../types/notificationsTypes/MarkAllNotificationsRead.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { markAllNotificationsRead } from "../../clients/notificationsClient/markAllNotificationsRead.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const markAllNotificationsReadMutationKey = () => [{ url: '/api/v1/notifications/read-all/' }] as const
 

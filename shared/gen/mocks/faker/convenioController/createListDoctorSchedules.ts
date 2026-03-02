@@ -4,8 +4,8 @@
 */
 
 import type { ListDoctorSchedulesQueryParams, ListDoctorSchedules200, ListDoctorSchedulesQueryResponse } from "../../../types/convenioTypes/ListDoctorSchedules.ts";
-import { faker } from "@faker-js/faker";
 import { createPaginatedDoctorScheduleList } from "../createPaginatedDoctorScheduleList.ts";
+import { faker } from "@faker-js/faker";
 
 export function createListDoctorSchedulesQueryParams(data?: Partial<ListDoctorSchedulesQueryParams>): ListDoctorSchedulesQueryParams {
 

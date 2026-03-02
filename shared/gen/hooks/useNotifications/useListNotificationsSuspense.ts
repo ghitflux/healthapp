@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { ListNotificationsQueryResponse } from "../../types/notificationsTypes/ListNotifications.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
-import type { ListNotificationsQueryResponse } from "../../types/notificationsTypes/ListNotifications.ts";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { listNotifications } from "../../clients/notificationsClient/listNotifications.ts";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
 export const listNotificationsSuspenseQueryKey = () => [{ url: '/api/v1/notifications/' }] as const
 

@@ -4,13 +4,13 @@
 */
 
 import type { GetAppointmentByIdPathParams, GetAppointmentById200, GetAppointmentByIdQueryResponse } from "../../../types/appointmentsTypes/GetAppointmentById.ts";
-import { faker } from "@faker-js/faker";
 import { createAppointment } from "../createAppointment.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGetAppointmentByIdPathParams(data?: Partial<GetAppointmentByIdPathParams>): GetAppointmentByIdPathParams {
 
   return {
-    ...{"id": faker.string.alpha()},
+    ...{"id": faker.string.uuid()},
     ...data || {}
   }
 }

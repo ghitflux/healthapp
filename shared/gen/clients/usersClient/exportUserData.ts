@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { ExportUserDataMutationResponse } from "../../types/usersTypes/ExportUserData.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getExportUserDataUrl() {
   const res = { method: 'POST', url: `/api/v1/users/me/export-data/` as const }

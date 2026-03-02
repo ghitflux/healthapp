@@ -14,7 +14,7 @@ from faker import Faker
 
 from apps.appointments.models import Appointment, Rating
 from apps.convenios.models import Convenio, ConvenioPlan, ExamType
-from apps.doctors.models import Doctor, DoctorSchedule, ScheduleException
+from apps.doctors.models import Doctor, DoctorSchedule
 from apps.notifications.models import Notification
 from apps.payments.models import Payment
 from apps.users.models import CustomUser

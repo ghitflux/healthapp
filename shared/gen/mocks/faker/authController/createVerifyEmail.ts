@@ -4,8 +4,8 @@
 */
 
 import type { VerifyEmail200, VerifyEmailMutationRequest, VerifyEmailMutationResponse } from "../../../types/authTypes/VerifyEmail.ts";
-import { faker } from "@faker-js/faker";
 import { createVerifyEmailRequest } from "../createVerifyEmailRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createVerifyEmail200(data?: Partial<VerifyEmail200>): VerifyEmail200 {
 

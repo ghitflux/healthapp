@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { CreateConvenioMutationRequest, CreateConvenioMutationResponse } from "../../types/ownerTypes/CreateConvenio.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getCreateConvenioUrl() {
   const res = { method: 'POST', url: `/api/v1/convenios/` as const }

@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { ListNotificationsQueryResponse } from "../../types/notificationsTypes/ListNotifications.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getListNotificationsUrl() {
   const res = { method: 'GET', url: `/api/v1/notifications/` as const }

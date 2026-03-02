@@ -4,8 +4,8 @@
 */
 
 import type { GetDoctorByIdPathParams, GetDoctorById200, GetDoctorByIdQueryResponse } from "../../../types/doctorsTypes/GetDoctorById.ts";
-import { faker } from "@faker-js/faker";
 import { createDoctor } from "../createDoctor.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGetDoctorByIdPathParams(data?: Partial<GetDoctorByIdPathParams>): GetDoctorByIdPathParams {
 

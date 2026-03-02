@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { DeleteUserAccountMutationResponse } from "../../types/usersTypes/DeleteUserAccount.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { DeleteUserAccountMutationResponse } from "../../types/usersTypes/DeleteUserAccount.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { deleteUserAccount } from "../../clients/usersClient/deleteUserAccount.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const deleteUserAccountMutationKey = () => [{ url: '/api/v1/users/me/' }] as const
 

@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { ChangePasswordMutationRequest, ChangePasswordMutationResponse } from "../../types/usersTypes/ChangePassword.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getChangePasswordUrl() {
   const res = { method: 'POST', url: `/api/v1/users/me/change-password/` as const }

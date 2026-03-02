@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { GeneratePIXMutationRequest, GeneratePIXMutationResponse } from "../../types/paymentsTypes/GeneratePIX.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { GeneratePIXMutationRequest, GeneratePIXMutationResponse } from "../../types/paymentsTypes/GeneratePIX.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { generatePIX } from "../../clients/paymentsClient/generatePIX.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const generatePIXMutationKey = () => [{ url: '/api/v1/payments/pix/generate/' }] as const
 

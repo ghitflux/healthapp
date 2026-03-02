@@ -1,0 +1,15 @@
+export { authClient } from "./authClient.ts";
+export { disable2FA } from "./disable2FA.ts";
+export { forgotPassword } from "./forgotPassword.ts";
+export { login2FA } from "./login2FA.ts";
+export { loginUser } from "./loginUser.ts";
+export { logoutUser } from "./logoutUser.ts";
+export { refreshToken } from "./refreshToken.ts";
+export { registerUser } from "./registerUser.ts";
+export { resendEmailOTP } from "./resendEmailOTP.ts";
+export { resendPhoneOTP } from "./resendPhoneOTP.ts";
+export { resetPassword } from "./resetPassword.ts";
+export { setup2FA } from "./setup2FA.ts";
+export { verify2FA } from "./verify2FA.ts";
+export { verifyEmail } from "./verifyEmail.ts";
+export { verifyPhone } from "./verifyPhone.ts";

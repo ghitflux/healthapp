@@ -1,0 +1,1 @@
+{"type":"object","properties":{"temp_token":{"type":"string","minLength":1},"totp_code":{"type":"string","minLength":6,"maxLength":6}},"required":["temp_token","totp_code"],"x-readme-ref-name":"Login2FARequest"}

@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { DeleteUserAccountMutationResponse } from "../../types/usersTypes/DeleteUserAccount.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getDeleteUserAccountUrl() {
   const res = { method: 'DELETE', url: `/api/v1/users/me/` as const }

@@ -4,8 +4,8 @@
 */
 
 import type { PaginatedDoctorScheduleList } from "../../types/PaginatedDoctorScheduleList.ts";
-import { faker } from "@faker-js/faker";
 import { createDoctorSchedule } from "./createDoctorSchedule.ts";
+import { faker } from "@faker-js/faker";
 
 export function createPaginatedDoctorScheduleList(data?: Partial<PaginatedDoctorScheduleList>): PaginatedDoctorScheduleList {
 

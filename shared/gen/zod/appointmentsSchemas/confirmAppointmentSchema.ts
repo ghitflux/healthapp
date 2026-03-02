@@ -8,7 +8,7 @@ import { appointmentSchema } from "../appointmentSchema.ts";
 import { z } from "zod/v4";
 
 export const confirmAppointmentPathParamsSchema = z.object({
-    "id": z.string()
+    "id": z.uuid().describe("A UUID string identifying this appointment.")
     })
 
 export const confirmAppointment200Schema = z.lazy(() => appointmentSchema)

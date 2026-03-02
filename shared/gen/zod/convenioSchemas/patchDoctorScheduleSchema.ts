@@ -8,7 +8,7 @@ import { patchedDoctorScheduleRequestSchema } from "../patchedDoctorScheduleRequ
 import { z } from "zod/v4";
 
 export const patchDoctorSchedulePathParamsSchema = z.object({
-    "id": z.string()
+    "id": z.uuid().describe("A UUID string identifying this doctor schedule.")
     })
 
 export const patchDoctorSchedule200Schema = z.lazy(() => doctorScheduleSchema)

@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { PatchConvenioSettingsMutationRequest, PatchConvenioSettingsMutationResponse, PatchConvenioSettingsPathParams } from "../../types/convenioTypes/PatchConvenioSettings.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getPatchConvenioSettingsUrl(id: PatchConvenioSettingsPathParams["id"]) {
   const res = { method: 'PATCH', url: `/api/v1/convenios/${id}/` as const }

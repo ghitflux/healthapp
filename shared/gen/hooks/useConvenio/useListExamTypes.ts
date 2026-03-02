@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { ListExamTypesQueryResponse, ListExamTypesQueryParams } from "../../types/convenioTypes/ListExamTypes.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import type { ListExamTypesQueryResponse, ListExamTypesQueryParams } from "../../types/convenioTypes/ListExamTypes.ts";
-import { queryOptions, useQuery } from "@tanstack/react-query";
 import { listExamTypes } from "../../clients/convenioClient/listExamTypes.ts";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const listExamTypesQueryKey = (params: ListExamTypesQueryParams = {}) => [{ url: '/api/v1/exam-types/' }, ...(params ? [params] : [])] as const
 

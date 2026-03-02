@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { ListAppointmentsQueryResponse, ListAppointmentsQueryParams } from "../../types/appointmentsTypes/ListAppointments.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import type { ListAppointmentsQueryResponse, ListAppointmentsQueryParams } from "../../types/appointmentsTypes/ListAppointments.ts";
-import { queryOptions, useQuery } from "@tanstack/react-query";
 import { listAppointments } from "../../clients/appointmentsClient/listAppointments.ts";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const listAppointmentsQueryKey = (params: ListAppointmentsQueryParams = {}) => [{ url: '/api/v1/appointments/' }, ...(params ? [params] : [])] as const
 

@@ -3,10 +3,13 @@
 * Do not edit manually.
 */
 
+import { refreshTokenRequestRequestSchema } from "../refreshTokenRequestRequestSchema.ts";
 import { z } from "zod/v4";
 
 export const refreshToken200Schema = z.object({
     
     }).catchall(z.any())
+
+export const refreshTokenMutationRequestSchema = z.lazy(() => refreshTokenRequestRequestSchema)
 
 export const refreshTokenMutationResponseSchema = z.lazy(() => refreshToken200Schema)

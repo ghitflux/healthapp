@@ -4,9 +4,9 @@
 */
 
 import type { Notification } from "../../types/Notification.ts";
-import { faker } from "@faker-js/faker";
 import { createChannelEnum } from "./createChannelEnum.ts";
 import { createTypeEnum } from "./createTypeEnum.ts";
+import { faker } from "@faker-js/faker";
 
 export function createNotification(data?: Partial<Notification>): Notification {
 

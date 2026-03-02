@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { ResetPasswordMutationRequest, ResetPasswordMutationResponse } from "../../types/authTypes/ResetPassword.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { ResetPasswordMutationRequest, ResetPasswordMutationResponse } from "../../types/authTypes/ResetPassword.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { resetPassword } from "../../clients/authClient/resetPassword.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const resetPasswordMutationKey = () => [{ url: '/api/v1/auth/reset-password/' }] as const
 

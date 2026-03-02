@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { PatchExamTypeMutationRequest, PatchExamTypeMutationResponse, PatchExamTypePathParams } from "../../types/convenioTypes/PatchExamType.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getPatchExamTypeUrl(id: PatchExamTypePathParams["id"]) {
   const res = { method: 'PATCH', url: `/api/v1/exam-types/${id}/` as const }

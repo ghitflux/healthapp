@@ -7,6 +7,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.core.permissions import IsOwnerOrConvenioAdmin, IsPatient
+
 from .models import Payment
 from .serializers import (
     CreatePaymentIntentSerializer,
@@ -20,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 
 class CreatePaymentIntentView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsPatient]
 
     @extend_schema(
         operation_id="createPaymentIntent",
@@ -60,7 +62,7 @@ class CreatePaymentIntentView(APIView):
 
 
 class PIXGenerateView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsPatient]
 
     @extend_schema(
         operation_id="generatePIX",
@@ -109,8 +111,15 @@ class PaymentStatusView(APIView):
         responses={200: PaymentSerializer},
     )
     def get(self, request, pk):
+        queryset = Payment.objects.filter(id=pk)
+        if request.user.role == "patient":
+            queryset = queryset.filter(user=request.user)
+        elif request.user.role == "convenio_admin" and request.user.convenio_id:
+            queryset = queryset.filter(appointment__convenio_id=request.user.convenio_id)
+        elif request.user.role != "owner":
+            queryset = Payment.objects.none()
         try:
-            payment = Payment.objects.get(id=pk, user=request.user)
+            payment = queryset.get()
         except Payment.DoesNotExist:
             return Response(
                 {"status": "error", "errors": [{"detail": "Payment not found."}]},
@@ -120,7 +129,7 @@ class PaymentStatusView(APIView):
 
 
 class RefundView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsOwnerOrConvenioAdmin]
 
     @extend_schema(
         operation_id="refundPayment",
@@ -130,8 +139,13 @@ class RefundView(APIView):
         responses={200: PaymentSerializer},
     )
     def post(self, request, pk):
+        queryset = Payment.objects.filter(id=pk)
+        if request.user.role == "convenio_admin" and request.user.convenio_id:
+            queryset = queryset.filter(appointment__convenio_id=request.user.convenio_id)
+        elif request.user.role != "owner":
+            queryset = Payment.objects.none()
         try:
-            payment = Payment.objects.get(id=pk, user=request.user)
+            payment = queryset.get()
         except Payment.DoesNotExist:
             return Response(
                 {"status": "error", "errors": [{"detail": "Payment not found."}]},
@@ -163,6 +177,7 @@ class StripeWebhookView(APIView):
         operation_id="stripeWebhook",
         tags=["payments"],
         summary="Stripe webhook handler",
+        request=None,
         responses={200: dict},
     )
     def post(self, request):
@@ -173,7 +188,7 @@ class StripeWebhookView(APIView):
 
         try:
             event = stripe.Webhook.construct_event(payload, sig_header, settings.STRIPE_WEBHOOK_SECRET)
-        except (ValueError, stripe.error.SignatureVerificationError):
+        except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         StripeService.process_webhook_event(event)

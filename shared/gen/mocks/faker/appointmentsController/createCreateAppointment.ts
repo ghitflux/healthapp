@@ -4,9 +4,9 @@
 */
 
 import type { CreateAppointment201, CreateAppointmentMutationRequest, CreateAppointmentMutationResponse } from "../../../types/appointmentsTypes/CreateAppointment.ts";
-import { faker } from "@faker-js/faker";
 import { createAppointment } from "../createAppointment.ts";
 import { createAppointmentCreateRequest } from "../createAppointmentCreateRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createCreateAppointment201(data?: Partial<CreateAppointment201>): CreateAppointment201 {
 

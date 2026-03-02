@@ -4,14 +4,14 @@
 */
 
 import type { PatchConvenioSettingsPathParams, PatchConvenioSettings200, PatchConvenioSettingsMutationRequest, PatchConvenioSettingsMutationResponse } from "../../../types/convenioTypes/PatchConvenioSettings.ts";
-import { faker } from "@faker-js/faker";
 import { createConvenio } from "../createConvenio.ts";
 import { createPatchedConvenioRequest } from "../createPatchedConvenioRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createPatchConvenioSettingsPathParams(data?: Partial<PatchConvenioSettingsPathParams>): PatchConvenioSettingsPathParams {
 
   return {
-    ...{"id": faker.string.alpha()},
+    ...{"id": faker.string.uuid()},
     ...data || {}
   }
 }

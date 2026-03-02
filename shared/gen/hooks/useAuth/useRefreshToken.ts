@@ -4,23 +4,23 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { RefreshTokenMutationRequest, RefreshTokenMutationResponse } from "../../types/authTypes/RefreshToken.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { RefreshTokenMutationResponse } from "../../types/authTypes/RefreshToken.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { refreshToken } from "../../clients/authClient/refreshToken.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const refreshTokenMutationKey = () => [{ url: '/api/v1/auth/token/refresh/' }] as const
 
 export type RefreshTokenMutationKey = ReturnType<typeof refreshTokenMutationKey>
 
-export function refreshTokenMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function refreshTokenMutationOptions<TContext = unknown>(config: Partial<RequestConfig<RefreshTokenMutationRequest>> & { client?: Client } = {}) {
 
         const mutationKey = refreshTokenMutationKey()
-        return mutationOptions<RefreshTokenMutationResponse, ResponseErrorConfig<Error>, void, TContext>({
+        return mutationOptions<RefreshTokenMutationResponse, ResponseErrorConfig<Error>, {data: RefreshTokenMutationRequest}, TContext>({
           mutationKey,
-          mutationFn: async() => {
-            return refreshToken(config)
+          mutationFn: async({ data }) => {
+            return refreshToken(data, config)
           },
         })
 
@@ -32,8 +32,8 @@ export function refreshTokenMutationOptions<TContext = unknown>(config: Partial<
  */
 export function useRefreshToken<TContext>(options: 
 {
-  mutation?: UseMutationOptions<RefreshTokenMutationResponse, ResponseErrorConfig<Error>, void, TContext> & { client?: QueryClient },
-  client?: Partial<RequestConfig> & { client?: Client },
+  mutation?: UseMutationOptions<RefreshTokenMutationResponse, ResponseErrorConfig<Error>, {data: RefreshTokenMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<RefreshTokenMutationRequest>> & { client?: Client },
 }
  = {}) {
 
@@ -41,13 +41,13 @@ export function useRefreshToken<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? refreshTokenMutationKey()
 
-          const baseOptions = refreshTokenMutationOptions(config) as UseMutationOptions<RefreshTokenMutationResponse, ResponseErrorConfig<Error>, void, TContext>
+          const baseOptions = refreshTokenMutationOptions(config) as UseMutationOptions<RefreshTokenMutationResponse, ResponseErrorConfig<Error>, {data: RefreshTokenMutationRequest}, TContext>
           
 
-          return useMutation<RefreshTokenMutationResponse, ResponseErrorConfig<Error>, void, TContext>({
+          return useMutation<RefreshTokenMutationResponse, ResponseErrorConfig<Error>, {data: RefreshTokenMutationRequest}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<RefreshTokenMutationResponse, ResponseErrorConfig<Error>, void, TContext>
+          }, queryClient) as UseMutationResult<RefreshTokenMutationResponse, ResponseErrorConfig<Error>, {data: RefreshTokenMutationRequest}, TContext>
       
 }

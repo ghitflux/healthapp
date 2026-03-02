@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { GetPaymentHistoryQueryResponse } from "../../types/paymentsTypes/GetPaymentHistory.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
-import type { GetPaymentHistoryQueryResponse } from "../../types/paymentsTypes/GetPaymentHistory.ts";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getPaymentHistory } from "../../clients/paymentsClient/getPaymentHistory.ts";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
 export const getPaymentHistorySuspenseQueryKey = () => [{ url: '/api/v1/payments/history/' }] as const
 

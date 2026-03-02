@@ -1,4 +1,3 @@
-import pytest
 
 from apps.core.utils import generate_otp, mask_cpf, mask_email, validate_cpf
 

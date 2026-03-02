@@ -4,9 +4,9 @@
 */
 
 import type { CreateScheduleException201, CreateScheduleExceptionMutationRequest, CreateScheduleExceptionMutationResponse } from "../../../types/convenioTypes/CreateScheduleException.ts";
-import { faker } from "@faker-js/faker";
 import { createScheduleException } from "../createScheduleException.ts";
 import { createScheduleExceptionRequest } from "../createScheduleExceptionRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createCreateScheduleException201(data?: Partial<CreateScheduleException201>): CreateScheduleException201 {
 

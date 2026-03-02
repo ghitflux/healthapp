@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { CancelAppointmentMutationRequest, CancelAppointmentMutationResponse, CancelAppointmentPathParams } from "../../types/appointmentsTypes/CancelAppointment.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getCancelAppointmentUrl(id: CancelAppointmentPathParams["id"]) {
   const res = { method: 'POST', url: `/api/v1/appointments/${id}/cancel/` as const }

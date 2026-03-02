@@ -3,7 +3,6 @@ from django.db import models
 
 from apps.core.models import BaseModel
 
-
 APPOINTMENT_TYPE_CHOICES = [
     ("consultation", "Consultation"),
     ("exam", "Exam"),

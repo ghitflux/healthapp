@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { GetUserProfileQueryResponse } from "../../types/usersTypes/GetUserProfile.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
-import type { GetUserProfileQueryResponse } from "../../types/usersTypes/GetUserProfile.ts";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getUserProfile } from "../../clients/usersClient/getUserProfile.ts";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
 export const getUserProfileSuspenseQueryKey = () => [{ url: '/api/v1/users/me/' }] as const
 

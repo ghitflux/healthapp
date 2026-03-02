@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { ConfirmAppointmentMutationRequest, ConfirmAppointmentMutationResponse, ConfirmAppointmentPathParams } from "../../types/appointmentsTypes/ConfirmAppointment.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getConfirmAppointmentUrl(id: ConfirmAppointmentPathParams["id"]) {
   const res = { method: 'POST', url: `/api/v1/appointments/${id}/confirm/` as const }

@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { StripeWebhookMutationResponse } from "../../types/paymentsTypes/StripeWebhook.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getStripeWebhookUrl() {
   const res = { method: 'POST', url: `/api/v1/webhooks/stripe/` as const }

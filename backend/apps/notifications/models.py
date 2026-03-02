@@ -2,7 +2,6 @@ from django.db import models
 
 from apps.core.models import BaseModel
 
-
 NOTIFICATION_TYPE_CHOICES = [
     ("appointment", "Appointment"),
     ("payment", "Payment"),

@@ -4,8 +4,8 @@
 */
 
 import type { ListAppointmentsQueryParams, ListAppointments200, ListAppointmentsQueryResponse } from "../../../types/appointmentsTypes/ListAppointments.ts";
-import { faker } from "@faker-js/faker";
 import { createPaginatedAppointmentListList } from "../createPaginatedAppointmentListList.ts";
+import { faker } from "@faker-js/faker";
 
 export function createListAppointmentsQueryParams(data?: Partial<ListAppointmentsQueryParams>): ListAppointmentsQueryParams {
 

@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { ListDoctorSchedulesQueryResponse, ListDoctorSchedulesQueryParams } from "../../types/convenioTypes/ListDoctorSchedules.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import type { ListDoctorSchedulesQueryResponse, ListDoctorSchedulesQueryParams } from "../../types/convenioTypes/ListDoctorSchedules.ts";
-import { queryOptions, useQuery } from "@tanstack/react-query";
 import { listDoctorSchedules } from "../../clients/convenioClient/listDoctorSchedules.ts";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const listDoctorSchedulesQueryKey = (params: ListDoctorSchedulesQueryParams = {}) => [{ url: '/api/v1/schedules/' }, ...(params ? [params] : [])] as const
 

@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { GetPaymentStatusQueryResponse, GetPaymentStatusPathParams } from "../../types/paymentsTypes/GetPaymentStatus.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getGetPaymentStatusUrl(id: GetPaymentStatusPathParams["id"]) {
   const res = { method: 'GET', url: `/api/v1/payments/${id}/status/` as const }

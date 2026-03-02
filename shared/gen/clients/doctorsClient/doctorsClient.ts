@@ -3,10 +3,13 @@
 * Do not edit manually.
 */
 
+import { createDoctor } from "./createDoctor.ts";
+import { deleteDoctor } from "./deleteDoctor.ts";
 import { getDoctorById } from "./getDoctorById.ts";
 import { getDoctorSlots } from "./getDoctorSlots.ts";
 import { listDoctors } from "./listDoctors.ts";
+import { patchDoctor } from "./patchDoctor.ts";
 
 export function doctorsClient() {
-  return { listDoctors, getDoctorById, getDoctorSlots }
+  return { listDoctors, createDoctor, getDoctorById, patchDoctor, deleteDoctor, getDoctorSlots }
 }

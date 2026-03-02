@@ -3,14 +3,21 @@
 * Do not edit manually.
 */
 
+import { disable2FA } from "./disable2FA.ts";
 import { forgotPassword } from "./forgotPassword.ts";
+import { login2FA } from "./login2FA.ts";
 import { loginUser } from "./loginUser.ts";
+import { logoutUser } from "./logoutUser.ts";
 import { refreshToken } from "./refreshToken.ts";
 import { registerUser } from "./registerUser.ts";
+import { resendEmailOTP } from "./resendEmailOTP.ts";
+import { resendPhoneOTP } from "./resendPhoneOTP.ts";
 import { resetPassword } from "./resetPassword.ts";
+import { setup2FA } from "./setup2FA.ts";
+import { verify2FA } from "./verify2FA.ts";
 import { verifyEmail } from "./verifyEmail.ts";
 import { verifyPhone } from "./verifyPhone.ts";
 
 export function authClient() {
-  return { forgotPassword, loginUser, registerUser, resetPassword, refreshToken, verifyEmail, verifyPhone }
+  return { disable2FA, login2FA, setup2FA, verify2FA, forgotPassword, loginUser, logoutUser, registerUser, resendEmailOTP, resendPhoneOTP, resetPassword, refreshToken, verifyEmail, verifyPhone }
 }

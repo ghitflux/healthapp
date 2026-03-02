@@ -2,7 +2,6 @@ from django.db import models
 
 from apps.core.models import BaseModel
 
-
 PAYMENT_METHOD_CHOICES = [
     ("pix", "PIX"),
     ("credit_card", "Credit Card"),

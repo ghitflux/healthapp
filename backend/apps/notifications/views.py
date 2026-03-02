@@ -31,6 +31,7 @@ class MarkAsReadView(APIView):
         operation_id="markNotificationRead",
         tags=["notifications"],
         summary="Mark notification as read",
+        request=None,
         responses={200: NotificationSerializer},
     )
     def patch(self, request, pk):
@@ -52,6 +53,7 @@ class MarkAllAsReadView(APIView):
         operation_id="markAllNotificationsRead",
         tags=["notifications"],
         summary="Mark all notifications as read",
+        request=None,
         responses={200: dict},
     )
     def post(self, request):

@@ -1,0 +1,2 @@
+export { createCreateConvenio201, createCreateConvenioMutationRequest, createCreateConvenioMutationResponse } from "./createCreateConvenio.ts";
+export { createDeleteConvenioPathParams, createDeleteConvenio204, createDeleteConvenioMutationResponse } from "./createDeleteConvenio.ts";

@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { CreatePaymentIntentMutationRequest, CreatePaymentIntentMutationResponse } from "../../types/paymentsTypes/CreatePaymentIntent.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getCreatePaymentIntentUrl() {
   const res = { method: 'POST', url: `/api/v1/payments/create-intent/` as const }

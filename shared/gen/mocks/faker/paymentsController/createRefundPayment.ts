@@ -4,9 +4,9 @@
 */
 
 import type { RefundPaymentPathParams, RefundPayment200, RefundPaymentMutationRequest, RefundPaymentMutationResponse } from "../../../types/paymentsTypes/RefundPayment.ts";
-import { faker } from "@faker-js/faker";
 import { createPayment } from "../createPayment.ts";
 import { createRefundRequest } from "../createRefundRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createRefundPaymentPathParams(data?: Partial<RefundPaymentPathParams>): RefundPaymentPathParams {
 

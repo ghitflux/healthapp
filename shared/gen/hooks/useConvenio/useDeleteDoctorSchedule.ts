@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { DeleteDoctorScheduleMutationResponse, DeleteDoctorSchedulePathParams } from "../../types/convenioTypes/DeleteDoctorSchedule.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { DeleteDoctorScheduleMutationResponse, DeleteDoctorSchedulePathParams } from "../../types/convenioTypes/DeleteDoctorSchedule.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { deleteDoctorSchedule } from "../../clients/convenioClient/deleteDoctorSchedule.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const deleteDoctorScheduleMutationKey = () => [{ url: '/api/v1/schedules/:id/' }] as const
 

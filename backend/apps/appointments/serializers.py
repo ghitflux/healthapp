@@ -1,4 +1,7 @@
+from django.utils import timezone
 from rest_framework import serializers
+
+from apps.doctors.models import DoctorSchedule
 
 from .models import Appointment, Rating
 
@@ -54,6 +57,55 @@ class AppointmentCreateSerializer(serializers.ModelSerializer):
             "scheduled_time",
             "notes",
         ]
+
+    def validate_scheduled_date(self, value):
+        if value < timezone.localdate():
+            raise serializers.ValidationError("Scheduled date cannot be in the past.")
+        return value
+
+    def validate(self, attrs):
+        doctor = attrs.get("doctor")
+        scheduled_date = attrs.get("scheduled_date")
+        scheduled_time = attrs.get("scheduled_time")
+        exam_type = attrs.get("exam_type")
+
+        if not doctor or not scheduled_date or not scheduled_time:
+            return attrs
+
+        has_schedule = DoctorSchedule.objects.filter(
+            doctor=doctor,
+            weekday=scheduled_date.weekday(),
+            is_active=True,
+            start_time__lte=scheduled_time,
+            end_time__gt=scheduled_time,
+        ).exists()
+        if not has_schedule:
+            raise serializers.ValidationError(
+                {"scheduled_time": "Scheduled time is outside doctor's available hours."}
+            )
+
+        request = self.context.get("request")
+        if request and request.user and request.user.is_authenticated:
+            patient_has_conflict = (
+                Appointment.objects.filter(
+                    patient=request.user,
+                    scheduled_date=scheduled_date,
+                    scheduled_time=scheduled_time,
+                )
+                .exclude(status="cancelled")
+                .exists()
+            )
+            if patient_has_conflict:
+                raise serializers.ValidationError(
+                    {"scheduled_time": "You already have an appointment at this time."}
+                )
+
+        if exam_type and exam_type.convenio_id != doctor.convenio_id:
+            raise serializers.ValidationError(
+                {"exam_type": "Exam type does not belong to the doctor's convenio."}
+            )
+
+        return attrs
 
 
 class AppointmentListSerializer(serializers.ModelSerializer):

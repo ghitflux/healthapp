@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { CreateAppointmentMutationRequest, CreateAppointmentMutationResponse } from "../../types/appointmentsTypes/CreateAppointment.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { CreateAppointmentMutationRequest, CreateAppointmentMutationResponse } from "../../types/appointmentsTypes/CreateAppointment.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { createAppointment } from "../../clients/appointmentsClient/createAppointment.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const createAppointmentMutationKey = () => [{ url: '/api/v1/appointments/' }] as const
 
@@ -27,7 +27,7 @@ export function createAppointmentMutationOptions<TContext = unknown>(config: Par
 }
 
 /**
- * @summary Create appointment (with Redis lock)
+ * @summary Create appointment (with Redis lock) — patients only
  * {@link /api/v1/appointments/}
  */
 export function useCreateAppointment<TContext>(options: 

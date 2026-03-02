@@ -4,8 +4,8 @@
 */
 
 import type { VerifyPhone200, VerifyPhoneMutationRequest, VerifyPhoneMutationResponse } from "../../../types/authTypes/VerifyPhone.ts";
-import { faker } from "@faker-js/faker";
 import { createVerifyPhoneRequest } from "../createVerifyPhoneRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createVerifyPhone200(data?: Partial<VerifyPhone200>): VerifyPhone200 {
 

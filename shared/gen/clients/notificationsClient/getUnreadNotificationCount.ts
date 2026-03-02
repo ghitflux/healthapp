@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { GetUnreadNotificationCountQueryResponse } from "../../types/notificationsTypes/GetUnreadNotificationCount.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getGetUnreadNotificationCountUrl() {
   const res = { method: 'GET', url: `/api/v1/notifications/unread-count/` as const }

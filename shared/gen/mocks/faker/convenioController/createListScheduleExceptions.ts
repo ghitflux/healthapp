@@ -4,8 +4,8 @@
 */
 
 import type { ListScheduleExceptionsQueryParams, ListScheduleExceptions200, ListScheduleExceptionsQueryResponse } from "../../../types/convenioTypes/ListScheduleExceptions.ts";
-import { faker } from "@faker-js/faker";
 import { createPaginatedScheduleExceptionList } from "../createPaginatedScheduleExceptionList.ts";
+import { faker } from "@faker-js/faker";
 
 export function createListScheduleExceptionsQueryParams(data?: Partial<ListScheduleExceptionsQueryParams>): ListScheduleExceptionsQueryParams {
 

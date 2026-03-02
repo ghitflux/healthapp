@@ -33,9 +33,9 @@ class StripeService:
                 "client_secret": intent.client_secret,
                 "payment_intent_id": intent.id,
             }
-        except Exception as e:
-            logger.error("Stripe error creating payment intent: %s", e)
-            raise BusinessLogicError(f"Payment processing error: {e}")
+        except Exception as exc:
+            logger.error("Stripe error creating payment intent: %s", exc)
+            raise BusinessLogicError(f"Payment processing error: {exc}") from exc
 
     @staticmethod
     def create_pix_payment(payment: Payment) -> dict:
@@ -58,9 +58,9 @@ class StripeService:
                 "payment_intent_id": intent.id,
                 "client_secret": intent.client_secret,
             }
-        except Exception as e:
-            logger.error("Stripe error creating PIX payment: %s", e)
-            raise BusinessLogicError(f"PIX payment error: {e}")
+        except Exception as exc:
+            logger.error("Stripe error creating PIX payment: %s", exc)
+            raise BusinessLogicError(f"PIX payment error: {exc}") from exc
 
     @staticmethod
     def process_webhook_event(event) -> None:
@@ -96,6 +96,6 @@ class StripeService:
             payment.save(update_fields=["status", "refunded_at", "refund_amount", "updated_at"])
             logger.info("Payment %s refunded", payment.id)
             return payment
-        except Exception as e:
-            logger.error("Stripe refund error: %s", e)
-            raise BusinessLogicError(f"Refund error: {e}")
+        except Exception as exc:
+            logger.error("Stripe refund error: %s", exc)
+            raise BusinessLogicError(f"Refund error: {exc}") from exc

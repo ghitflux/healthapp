@@ -8,7 +8,7 @@ import { patchedConvenioRequestSchema } from "../patchedConvenioRequestSchema.ts
 import { z } from "zod/v4";
 
 export const patchConvenioSettingsPathParamsSchema = z.object({
-    "id": z.string()
+    "id": z.uuid().describe("A UUID string identifying this convenio.")
     })
 
 export const patchConvenioSettings200Schema = z.lazy(() => convenioSchema)

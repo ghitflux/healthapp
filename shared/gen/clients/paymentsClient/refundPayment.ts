@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { RefundPaymentMutationRequest, RefundPaymentMutationResponse, RefundPaymentPathParams } from "../../types/paymentsTypes/RefundPayment.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getRefundPaymentUrl(id: RefundPaymentPathParams["id"]) {
   const res = { method: 'POST', url: `/api/v1/payments/${id}/refund/` as const }

@@ -9,7 +9,7 @@ import { faker } from "@faker-js/faker";
 export function createDeleteExamTypePathParams(data?: Partial<DeleteExamTypePathParams>): DeleteExamTypePathParams {
 
   return {
-    ...{"id": faker.string.alpha()},
+    ...{"id": faker.string.uuid()},
     ...data || {}
   }
 }

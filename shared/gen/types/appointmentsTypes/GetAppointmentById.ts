@@ -7,7 +7,8 @@ import type { Appointment } from "../Appointment.ts";
 
 export type GetAppointmentByIdPathParams = {
     /**
-     * @type string
+     * @description A UUID string identifying this appointment.
+     * @type string, uuid
     */
     id: string;
 };

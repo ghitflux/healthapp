@@ -8,7 +8,8 @@ import type { RatingCreateRequest } from "../RatingCreateRequest.ts";
 
 export type RateAppointmentPathParams = {
     /**
-     * @type string
+     * @description A UUID string identifying this appointment.
+     * @type string, uuid
     */
     id: string;
 };

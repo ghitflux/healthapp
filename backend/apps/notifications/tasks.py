@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from celery import shared_task
 
@@ -20,7 +21,7 @@ def send_email_notification(user_id: str, subject: str, body: str):
 
 
 @shared_task
-def send_push_notification(user_id: str, title: str, body: str, data: dict = None):
+def send_push_notification(user_id: str, title: str, body: str, data: dict[str, Any] | None = None):
     """Send push notification (lightweight — django.tasks candidate)."""
     from apps.users.models import CustomUser
 
@@ -58,7 +59,7 @@ def send_bulk_reminders():
     for apt in appointments_24h:
         NotificationService.create_notification(
             user=apt.patient,
-            type="reminder",
+            notification_type="reminder",
             title="Lembrete de consulta",
             body=f"Sua consulta com Dr. {apt.doctor.user.full_name} é amanhã às {apt.scheduled_time}.",
             metadata={"appointment_id": str(apt.id)},

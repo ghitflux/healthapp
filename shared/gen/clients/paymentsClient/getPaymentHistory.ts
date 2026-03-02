@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { GetPaymentHistoryQueryResponse } from "../../types/paymentsTypes/GetPaymentHistory.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getGetPaymentHistoryUrl() {
   const res = { method: 'GET', url: `/api/v1/payments/history/` as const }

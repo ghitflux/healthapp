@@ -4,9 +4,9 @@
 */
 
 import type { CreateExamType201, CreateExamTypeMutationRequest, CreateExamTypeMutationResponse } from "../../../types/convenioTypes/CreateExamType.ts";
-import { faker } from "@faker-js/faker";
 import { createExamType } from "../createExamType.ts";
 import { createExamTypeRequest } from "../createExamTypeRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createCreateExamType201(data?: Partial<CreateExamType201>): CreateExamType201 {
 

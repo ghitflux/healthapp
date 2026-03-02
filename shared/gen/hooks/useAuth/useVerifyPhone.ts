@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { VerifyPhoneMutationRequest, VerifyPhoneMutationResponse } from "../../types/authTypes/VerifyPhone.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { VerifyPhoneMutationRequest, VerifyPhoneMutationResponse } from "../../types/authTypes/VerifyPhone.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { verifyPhone } from "../../clients/authClient/verifyPhone.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const verifyPhoneMutationKey = () => [{ url: '/api/v1/auth/verify-phone/' }] as const
 

@@ -4,8 +4,8 @@
 */
 
 import type { GetDoctorSlotsPathParams, GetDoctorSlotsQueryParams, GetDoctorSlots200, GetDoctorSlotsQueryResponse } from "../../../types/doctorsTypes/GetDoctorSlots.ts";
-import { faker } from "@faker-js/faker";
 import { createPaginatedAvailableSlotList } from "../createPaginatedAvailableSlotList.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGetDoctorSlotsPathParams(data?: Partial<GetDoctorSlotsPathParams>): GetDoctorSlotsPathParams {
 

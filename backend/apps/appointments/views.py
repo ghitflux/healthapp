@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from apps.core.permissions import IsOwnerOrConvenioAdmin
+from apps.core.permissions import IsOwnerOrConvenioAdmin, IsPatient
 
 from .models import Appointment, Rating
 from .serializers import (
@@ -26,24 +26,39 @@ from .services import BookingService
     create=extend_schema(
         operation_id="createAppointment",
         tags=["appointments"],
-        summary="Create appointment (with Redis lock)",
+        summary="Create appointment (with Redis lock) — patients only",
         request=AppointmentCreateSerializer,
         responses={201: AppointmentSerializer},
     ),
 )
 class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
-    permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post"]
+
+    def get_permissions(self):
+        if self.action == "create":
+            return [IsPatient()]
+        if self.action == "confirm":
+            return [IsOwnerOrConvenioAdmin()]
+        if self.action == "rate":
+            return [IsPatient()]
+        return [IsAuthenticated()]
 
     def get_queryset(self):
         user = self.request.user
-        if user.role in ("owner", "convenio_admin"):
-            if user.convenio:
-                return Appointment.objects.filter(convenio=user.convenio).select_related(
-                    "patient", "doctor__user", "convenio"
-                )
+        if not user.is_authenticated:
+            return Appointment.objects.none()
+        if user.role == "owner":
             return Appointment.objects.all().select_related("patient", "doctor__user", "convenio")
+        if user.role == "convenio_admin" and user.convenio:
+            return Appointment.objects.filter(convenio=user.convenio).select_related(
+                "patient", "doctor__user", "convenio"
+            )
+        if user.role == "doctor":
+            return Appointment.objects.filter(doctor__user=user).select_related(
+                "patient", "doctor__user", "convenio"
+            )
+        # patient — sees only their own
         return Appointment.objects.filter(patient=user).select_related("patient", "doctor__user", "convenio")
 
     def get_serializer_class(self):

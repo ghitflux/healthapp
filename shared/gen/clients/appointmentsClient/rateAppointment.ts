@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { RateAppointmentMutationRequest, RateAppointmentMutationResponse, RateAppointmentPathParams } from "../../types/appointmentsTypes/RateAppointment.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getRateAppointmentUrl(id: RateAppointmentPathParams["id"]) {
   const res = { method: 'POST', url: `/api/v1/appointments/${id}/rate/` as const }

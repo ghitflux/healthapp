@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { GetConvenioDashboardQueryResponse } from "../../types/convenioTypes/GetConvenioDashboard.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
-import type { GetConvenioDashboardQueryResponse } from "../../types/convenioTypes/GetConvenioDashboard.ts";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getConvenioDashboard } from "../../clients/convenioClient/getConvenioDashboard.ts";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
 export const getConvenioDashboardSuspenseQueryKey = () => [{ url: '/api/v1/convenios/dashboard/' }] as const
 

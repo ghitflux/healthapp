@@ -4,14 +4,14 @@
 */
 
 import type { PatchExamTypePathParams, PatchExamType200, PatchExamTypeMutationRequest, PatchExamTypeMutationResponse } from "../../../types/convenioTypes/PatchExamType.ts";
-import { faker } from "@faker-js/faker";
 import { createExamType } from "../createExamType.ts";
 import { createPatchedExamTypeRequest } from "../createPatchedExamTypeRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createPatchExamTypePathParams(data?: Partial<PatchExamTypePathParams>): PatchExamTypePathParams {
 
   return {
-    ...{"id": faker.string.alpha()},
+    ...{"id": faker.string.uuid()},
     ...data || {}
   }
 }

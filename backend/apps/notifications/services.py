@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from django.utils import timezone
 
@@ -11,10 +12,17 @@ class NotificationService:
     """Service for creating and managing notifications."""
 
     @staticmethod
-    def create_notification(user, type: str, title: str, body: str, channel: str = "push", metadata: dict = None):
+    def create_notification(
+        user,
+        notification_type: str,
+        title: str,
+        body: str,
+        channel: str = "push",
+        metadata: dict[str, Any] | None = None,
+    ):
         return Notification.objects.create(
             user=user,
-            type=type,
+            type=notification_type,
             title=title,
             body=body,
             channel=channel,
@@ -43,7 +51,7 @@ class PushService:
     """Service for sending push notifications via Firebase."""
 
     @staticmethod
-    def send_push(user, title: str, body: str, data: dict = None):
+    def send_push(user, title: str, body: str, data: dict[str, Any] | None = None):
         # TODO: Implement Firebase push notification
         logger.info("Push notification sent to %s: %s", user.id, title)
 

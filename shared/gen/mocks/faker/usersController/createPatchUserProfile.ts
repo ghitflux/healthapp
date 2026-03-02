@@ -4,9 +4,9 @@
 */
 
 import type { PatchUserProfile200, PatchUserProfileMutationRequest, PatchUserProfileMutationResponse } from "../../../types/usersTypes/PatchUserProfile.ts";
-import { faker } from "@faker-js/faker";
 import { createPatchedProfileRequest } from "../createPatchedProfileRequest.ts";
 import { createProfile } from "../createProfile.ts";
+import { faker } from "@faker-js/faker";
 
 export function createPatchUserProfile200(data?: Partial<PatchUserProfile200>): PatchUserProfile200 {
 

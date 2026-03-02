@@ -9,6 +9,7 @@ class UsersConfig(AppConfig):
     def ready(self):
         from auditlog.registry import auditlog
 
-        from .models import CustomUser
+        from .models import ConsentRecord, CustomUser
 
         auditlog.register(CustomUser)
+        auditlog.register(ConsentRecord)

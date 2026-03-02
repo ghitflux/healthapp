@@ -1,6 +1,7 @@
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from apps.core.permissions import IsConvenioAdmin, IsOwner, IsOwnerOrConvenioAdmin
@@ -21,6 +22,7 @@ from .serializers import (
     partial_update=extend_schema(
         operation_id="patchConvenioSettings", tags=["convenio"], summary="Update convenio settings"
     ),
+    destroy=extend_schema(operation_id="deleteConvenio", tags=["owner"], summary="Delete convenio"),
 )
 class ConvenioViewSet(viewsets.ModelViewSet):
     serializer_class = ConvenioSerializer
@@ -33,9 +35,11 @@ class ConvenioViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        if not user.is_authenticated:
+            return Convenio.objects.none()
         if user.role == "owner":
             return Convenio.objects.all()
-        if user.role == "convenio_admin" and user.convenio:
+        if user.role == "convenio_admin" and user.convenio_id is not None:
             return Convenio.objects.filter(id=user.convenio_id)
         return Convenio.objects.none()
 
@@ -65,6 +69,7 @@ class ConvenioViewSet(viewsets.ModelViewSet):
 
 @extend_schema_view(
     list=extend_schema(operation_id="listExamTypes", tags=["convenio"], summary="List exam types"),
+    retrieve=extend_schema(operation_id="getExamTypeById", tags=["convenio"], summary="Get exam type details"),
     create=extend_schema(operation_id="createExamType", tags=["convenio"], summary="Create exam type"),
     partial_update=extend_schema(operation_id="patchExamType", tags=["convenio"], summary="Update exam type"),
     destroy=extend_schema(operation_id="deleteExamType", tags=["convenio"], summary="Delete exam type"),
@@ -76,9 +81,14 @@ class ExamTypeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        if not user.is_authenticated:
+            return ExamType.objects.none()
         if user.convenio:
             return ExamType.objects.filter(convenio=user.convenio)
         return ExamType.objects.none()
 
     def perform_create(self, serializer):
-        serializer.save(convenio=self.request.user.convenio)
+        user = self.request.user
+        if not user.is_authenticated or user.convenio is None:
+            raise PermissionDenied("Convenio admin without convenio cannot create exam types.")
+        serializer.save(convenio=user.convenio)

@@ -1,4 +1,5 @@
 import logging
+import uuid
 
 from django.core.cache import cache
 from django.utils import timezone
@@ -12,6 +13,10 @@ logger = logging.getLogger(__name__)
 OTP_EXPIRY_SECONDS = 300  # 5 minutes
 OTP_PREFIX_EMAIL = "otp:email:"
 OTP_PREFIX_PHONE = "otp:phone:"
+PWD_RESET_PREFIX = "pwd_reset:"
+PWD_RESET_TTL = 1800  # 30 minutes
+TWO_FA_TEMP_PREFIX = "2fa:temp:"
+TWO_FA_TEMP_TTL = 300  # 5 minutes
 
 
 class OTPService:
@@ -66,6 +71,45 @@ class AuthService:
         user.last_login = timezone.now()
         user.save(update_fields=["last_login"])
 
+    @staticmethod
+    def generate_password_reset_token(user: CustomUser) -> str:
+        """Generate a single-use password reset token stored in Redis (30 min TTL)."""
+        token = str(uuid.uuid4())
+        cache.set(f"{PWD_RESET_PREFIX}{token}", str(user.id), timeout=PWD_RESET_TTL)
+        logger.info("Password reset token generated for user %s", user.id)
+        return token
+
+    @staticmethod
+    def verify_password_reset_token(token: str) -> CustomUser | None:
+        """Verify and consume a password reset token. Returns user or None."""
+        user_id = cache.get(f"{PWD_RESET_PREFIX}{token}")
+        if not user_id:
+            return None
+        cache.delete(f"{PWD_RESET_PREFIX}{token}")
+        try:
+            return CustomUser.objects.get(id=user_id, is_active=True)
+        except CustomUser.DoesNotExist:
+            return None
+
+    @staticmethod
+    def generate_2fa_temp_token(user: CustomUser) -> str:
+        """Generate a short-lived temp token for 2FA login flow."""
+        token = str(uuid.uuid4())
+        cache.set(f"{TWO_FA_TEMP_PREFIX}{token}", str(user.id), timeout=TWO_FA_TEMP_TTL)
+        return token
+
+    @staticmethod
+    def verify_2fa_temp_token(token: str) -> CustomUser | None:
+        """Verify and consume a 2FA temp token. Returns user or None."""
+        user_id = cache.get(f"{TWO_FA_TEMP_PREFIX}{token}")
+        if not user_id:
+            return None
+        cache.delete(f"{TWO_FA_TEMP_PREFIX}{token}")
+        try:
+            return CustomUser.objects.get(id=user_id, is_active=True)
+        except CustomUser.DoesNotExist:
+            return None
+
 
 class UserService:
     """Service for user management operations."""
@@ -88,6 +132,13 @@ class UserService:
     @staticmethod
     def export_user_data(user: CustomUser) -> dict:
         """Export all personal data for LGPD compliance."""
+        from apps.appointments.models import Appointment
+
+        appointments = list(
+            Appointment.objects.filter(patient=user).values(
+                "id", "scheduled_date", "scheduled_time", "status", "price"
+            )
+        )
         return {
             "personal_info": {
                 "full_name": user.full_name,
@@ -98,5 +149,6 @@ class UserService:
                 "role": user.role,
                 "date_joined": user.date_joined.isoformat(),
             },
+            "appointments": appointments,
             "exported_at": timezone.now().isoformat(),
         }

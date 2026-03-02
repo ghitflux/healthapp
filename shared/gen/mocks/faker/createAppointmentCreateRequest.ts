@@ -4,8 +4,8 @@
 */
 
 import type { AppointmentCreateRequest } from "../../types/AppointmentCreateRequest.ts";
-import { faker } from "@faker-js/faker";
 import { createAppointmentTypeEnum } from "./createAppointmentTypeEnum.ts";
+import { faker } from "@faker-js/faker";
 
 export function createAppointmentCreateRequest(data?: Partial<AppointmentCreateRequest>): AppointmentCreateRequest {
 

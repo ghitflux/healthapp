@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { CreatePaymentIntentMutationRequest, CreatePaymentIntentMutationResponse } from "../../types/paymentsTypes/CreatePaymentIntent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { CreatePaymentIntentMutationRequest, CreatePaymentIntentMutationResponse } from "../../types/paymentsTypes/CreatePaymentIntent.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { createPaymentIntent } from "../../clients/paymentsClient/createPaymentIntent.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const createPaymentIntentMutationKey = () => [{ url: '/api/v1/payments/create-intent/' }] as const
 

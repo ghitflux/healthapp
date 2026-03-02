@@ -4,8 +4,8 @@
 */
 
 import type { ChangePassword200, ChangePasswordMutationRequest, ChangePasswordMutationResponse } from "../../../types/usersTypes/ChangePassword.ts";
-import { faker } from "@faker-js/faker";
 import { createChangePasswordRequest } from "../createChangePasswordRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createChangePassword200(data?: Partial<ChangePassword200>): ChangePassword200 {
 

@@ -9,7 +9,7 @@ import { faker } from "@faker-js/faker";
 export function createDeleteDoctorSchedulePathParams(data?: Partial<DeleteDoctorSchedulePathParams>): DeleteDoctorSchedulePathParams {
 
   return {
-    ...{"id": faker.string.alpha()},
+    ...{"id": faker.string.uuid()},
     ...data || {}
   }
 }

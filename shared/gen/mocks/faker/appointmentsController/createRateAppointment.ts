@@ -4,14 +4,14 @@
 */
 
 import type { RateAppointmentPathParams, RateAppointment201, RateAppointmentMutationRequest, RateAppointmentMutationResponse } from "../../../types/appointmentsTypes/RateAppointment.ts";
-import { faker } from "@faker-js/faker";
 import { createRating } from "../createRating.ts";
 import { createRatingCreateRequest } from "../createRatingCreateRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createRateAppointmentPathParams(data?: Partial<RateAppointmentPathParams>): RateAppointmentPathParams {
 
   return {
-    ...{"id": faker.string.alpha()},
+    ...{"id": faker.string.uuid()},
     ...data || {}
   }
 }

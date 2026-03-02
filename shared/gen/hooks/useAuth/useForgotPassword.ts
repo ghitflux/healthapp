@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { ForgotPasswordMutationRequest, ForgotPasswordMutationResponse } from "../../types/authTypes/ForgotPassword.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { ForgotPasswordMutationRequest, ForgotPasswordMutationResponse } from "../../types/authTypes/ForgotPassword.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { forgotPassword } from "../../clients/authClient/forgotPassword.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const forgotPasswordMutationKey = () => [{ url: '/api/v1/auth/forgot-password/' }] as const
 

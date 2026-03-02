@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { GetDoctorByIdQueryResponse, GetDoctorByIdPathParams } from "../../types/doctorsTypes/GetDoctorById.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getGetDoctorByIdUrl(id: GetDoctorByIdPathParams["id"]) {
   const res = { method: 'GET', url: `/api/v1/doctors/${id}/` as const }

@@ -1,7 +1,6 @@
 import logging
 
 from django.core.cache import cache
-from django.utils import timezone
 
 from apps.core.exceptions import BusinessLogicError, ConflictError
 

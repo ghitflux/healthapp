@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { DeleteScheduleExceptionMutationResponse, DeleteScheduleExceptionPathParams } from "../../types/convenioTypes/DeleteScheduleException.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { DeleteScheduleExceptionMutationResponse, DeleteScheduleExceptionPathParams } from "../../types/convenioTypes/DeleteScheduleException.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { deleteScheduleException } from "../../clients/convenioClient/deleteScheduleException.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const deleteScheduleExceptionMutationKey = () => [{ url: '/api/v1/schedule-exceptions/:id/' }] as const
 

@@ -4,8 +4,8 @@
 */
 
 import type { GeneratePIX201, GeneratePIXMutationRequest, GeneratePIXMutationResponse } from "../../../types/paymentsTypes/GeneratePIX.ts";
-import { faker } from "@faker-js/faker";
 import { createPIXGenerateRequest } from "../createPIXGenerateRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGeneratePIX201(data?: Partial<GeneratePIX201>): GeneratePIX201 {
 

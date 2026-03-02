@@ -6,7 +6,8 @@
 
 export type DeleteExamTypePathParams = {
     /**
-     * @type string
+     * @description A UUID string identifying this exam type.
+     * @type string, uuid
     */
     id: string;
 };

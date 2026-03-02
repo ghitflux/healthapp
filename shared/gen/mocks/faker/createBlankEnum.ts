@@ -4,9 +4,6 @@
 */
 
 import type { BlankEnum } from "../../types/BlankEnum.ts";
-import { faker } from "@faker-js/faker";
-
 export function createBlankEnum(data?: Partial<BlankEnum>): BlankEnum {
-
-  return data || faker.helpers.arrayElement<BlankEnum>([""])
+  return (data as BlankEnum) ?? (undefined as never)
 }

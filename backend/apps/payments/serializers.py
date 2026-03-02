@@ -40,6 +40,15 @@ class PaymentSerializer(serializers.ModelSerializer):
 class CreatePaymentIntentSerializer(serializers.Serializer):
     appointment_id = serializers.UUIDField()
     payment_method = serializers.ChoiceField(choices=["credit_card", "debit_card"])
+    currency = serializers.ChoiceField(choices=["BRL"], default="BRL")
+
+    def validate_amount(self, value):
+        from decimal import Decimal
+        if value < Decimal("1.00"):
+            raise serializers.ValidationError("Minimum amount is R$ 1.00.")
+        if value > Decimal("50000.00"):
+            raise serializers.ValidationError("Maximum amount is R$ 50,000.00.")
+        return value
 
 
 class PIXGenerateSerializer(serializers.Serializer):

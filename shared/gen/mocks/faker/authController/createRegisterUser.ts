@@ -4,9 +4,9 @@
 */
 
 import type { RegisterUser201, RegisterUserMutationRequest, RegisterUserMutationResponse } from "../../../types/authTypes/RegisterUser.ts";
-import { faker } from "@faker-js/faker";
 import { createRegisterRequest } from "../createRegisterRequest.ts";
 import { createUser } from "../createUser.ts";
+import { faker } from "@faker-js/faker";
 
 export function createRegisterUser201(data?: Partial<RegisterUser201>): RegisterUser201 {
 

@@ -4,9 +4,9 @@
 */
 
 import type { RegisterRequest } from "../../types/RegisterRequest.ts";
-import { faker } from "@faker-js/faker";
 import { createBlankEnum } from "./createBlankEnum.ts";
 import { createGenderEnum } from "./createGenderEnum.ts";
+import { faker } from "@faker-js/faker";
 
 export function createRegisterRequest(data?: Partial<RegisterRequest>): RegisterRequest {
 

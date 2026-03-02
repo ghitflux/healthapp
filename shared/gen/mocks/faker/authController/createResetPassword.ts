@@ -4,8 +4,8 @@
 */
 
 import type { ResetPassword200, ResetPasswordMutationRequest, ResetPasswordMutationResponse } from "../../../types/authTypes/ResetPassword.ts";
-import { faker } from "@faker-js/faker";
 import { createResetPasswordRequest } from "../createResetPasswordRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createResetPassword200(data?: Partial<ResetPassword200>): ResetPassword200 {
 

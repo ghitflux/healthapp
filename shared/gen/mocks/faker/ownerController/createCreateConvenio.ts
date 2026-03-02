@@ -4,9 +4,9 @@
 */
 
 import type { CreateConvenio201, CreateConvenioMutationRequest, CreateConvenioMutationResponse } from "../../../types/ownerTypes/CreateConvenio.ts";
-import { faker } from "@faker-js/faker";
 import { createConvenio } from "../createConvenio.ts";
 import { createConvenioRequest } from "../createConvenioRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createCreateConvenio201(data?: Partial<CreateConvenio201>): CreateConvenio201 {
 

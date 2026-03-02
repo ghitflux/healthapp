@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { ListScheduleExceptionsQueryResponse, ListScheduleExceptionsQueryParams } from "../../types/convenioTypes/ListScheduleExceptions.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
-import type { ListScheduleExceptionsQueryResponse, ListScheduleExceptionsQueryParams } from "../../types/convenioTypes/ListScheduleExceptions.ts";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { listScheduleExceptions } from "../../clients/convenioClient/listScheduleExceptions.ts";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
 export const listScheduleExceptionsSuspenseQueryKey = (params: ListScheduleExceptionsQueryParams = {}) => [{ url: '/api/v1/schedule-exceptions/' }, ...(params ? [params] : [])] as const
 

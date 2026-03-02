@@ -4,8 +4,8 @@
 */
 
 import type { GetUnreadNotificationCount200, GetUnreadNotificationCountQueryResponse } from "../../../types/notificationsTypes/GetUnreadNotificationCount.ts";
-import { faker } from "@faker-js/faker";
 import { createUnreadCount } from "../createUnreadCount.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGetUnreadNotificationCount200(data?: Partial<GetUnreadNotificationCount200>): GetUnreadNotificationCount200 {
 

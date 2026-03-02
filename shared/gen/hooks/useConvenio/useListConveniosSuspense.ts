@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { ListConveniosQueryResponse, ListConveniosQueryParams } from "../../types/convenioTypes/ListConvenios.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
-import type { ListConveniosQueryResponse, ListConveniosQueryParams } from "../../types/convenioTypes/ListConvenios.ts";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { listConvenios } from "../../clients/convenioClient/listConvenios.ts";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
 export const listConveniosSuspenseQueryKey = (params: ListConveniosQueryParams = {}) => [{ url: '/api/v1/convenios/' }, ...(params ? [params] : [])] as const
 

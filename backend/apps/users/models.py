@@ -6,7 +6,6 @@ from encrypted_model_fields.fields import EncryptedCharField
 
 from apps.core.models import SoftDeleteManager
 
-
 ROLE_CHOICES = [
     ("patient", "Patient"),
     ("doctor", "Doctor"),
@@ -29,7 +28,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("The Email field must be set")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)
+        user.set_password(password)  # type: ignore[attr-defined]
         user.save(using=self._db)
         return user
 
@@ -120,3 +119,37 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     @property
     def is_owner(self) -> bool:
         return self.role == "owner"
+
+
+CONSENT_PURPOSE_CHOICES = [
+    ("appointment_booking", "Agendamento de Consultas"),
+    ("notifications_email", "Notificações por Email"),
+    ("notifications_push", "Notificações Push"),
+    ("notifications_sms", "Notificações SMS"),
+    ("marketing", "Comunicações de Marketing"),
+    ("data_analytics", "Uso de Dados para Analytics"),
+]
+
+
+class ConsentRecord(models.Model):
+    """LGPD consent record — tracks user consent per purpose."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="consents")
+    purpose = models.CharField(max_length=50, choices=CONSENT_PURPOSE_CHOICES)
+    granted = models.BooleanField(default=False)
+    granted_at = models.DateTimeField(null=True, blank=True)
+    revoked_at = models.DateTimeField(null=True, blank=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.CharField(max_length=512, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ("user", "purpose")
+        verbose_name = "consent record"
+        verbose_name_plural = "consent records"
+
+    def __str__(self):
+        status = "granted" if self.granted else "revoked"
+        return f"{self.user.email} — {self.purpose} ({status})"

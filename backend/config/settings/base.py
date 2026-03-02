@@ -200,6 +200,8 @@ REST_FRAMEWORK = {
         "user": "100/min",
         "login": "5/min",
         "reset_password": "3/min",
+        "register": "10/min",
+        "otp_resend": "3/15min",
     },
     "EXCEPTION_HANDLER": "apps.core.exceptions.custom_exception_handler",
 }

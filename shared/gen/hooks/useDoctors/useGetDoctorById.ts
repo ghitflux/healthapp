@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { GetDoctorByIdQueryResponse, GetDoctorByIdPathParams } from "../../types/doctorsTypes/GetDoctorById.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import type { GetDoctorByIdQueryResponse, GetDoctorByIdPathParams } from "../../types/doctorsTypes/GetDoctorById.ts";
-import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getDoctorById } from "../../clients/doctorsClient/getDoctorById.ts";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getDoctorByIdQueryKey = (id: GetDoctorByIdPathParams["id"]) => [{ url: '/api/v1/doctors/:id/', params: {id:id} }] as const
 

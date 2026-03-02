@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { ListConveniosQueryResponse, ListConveniosQueryParams } from "../../types/convenioTypes/ListConvenios.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getListConveniosUrl() {
   const res = { method: 'GET', url: `/api/v1/convenios/` as const }

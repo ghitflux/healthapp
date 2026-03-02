@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { ForgotPasswordMutationRequest, ForgotPasswordMutationResponse } from "../../types/authTypes/ForgotPassword.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getForgotPasswordUrl() {
   const res = { method: 'POST', url: `/api/v1/auth/forgot-password/` as const }

@@ -4,13 +4,14 @@
   "description": "HealthApp Monorepo — API Code Generation with Kubb",
   "private": true,
   "scripts": {
-    "schema:export": "cd backend && python manage.py spectacular --color --file ../shared/schema.yaml --validate",
-    "generate:api": "kubb generate",
+    "schema:export": "cd backend && .venv/Scripts/python.exe manage.py spectacular --color --file ../shared/schema.yaml --validate",
+    "generate:api": "kubb generate && node scripts/fix-kubb-generated.mjs",
     "generate:watch": "kubb generate --watch",
     "api:sync": "npm run schema:export && npm run generate:api",
     "generate:debug": "kubb generate --logLevel info"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.3.0",
     "@kubb/cli": "^4.27.2",
     "@kubb/core": "^4.27.2",
     "@kubb/plugin-client": "^4.27.2",
@@ -20,6 +21,9 @@
     "@kubb/plugin-react-query": "^4.27.2",
     "@kubb/plugin-ts": "^4.27.2",
     "@kubb/plugin-zod": "^4.27.2",
-    "typescript": "^5.9.3"
+    "@tanstack/react-query": "^5.90.21",
+    "msw": "^2.12.10",
+    "typescript": "^5.9.3",
+    "zod": "^4.3.6"
   }
 }

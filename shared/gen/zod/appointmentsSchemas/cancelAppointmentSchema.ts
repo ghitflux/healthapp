@@ -8,7 +8,7 @@ import { cancelAppointmentRequestSchema } from "../cancelAppointmentRequestSchem
 import { z } from "zod/v4";
 
 export const cancelAppointmentPathParamsSchema = z.object({
-    "id": z.string()
+    "id": z.uuid().describe("A UUID string identifying this appointment.")
     })
 
 export const cancelAppointment200Schema = z.lazy(() => appointmentSchema)

@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { GetAppointmentByIdQueryResponse, GetAppointmentByIdPathParams } from "../../types/appointmentsTypes/GetAppointmentById.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getGetAppointmentByIdUrl(id: GetAppointmentByIdPathParams["id"]) {
   const res = { method: 'GET', url: `/api/v1/appointments/${id}/` as const }

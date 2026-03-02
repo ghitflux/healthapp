@@ -7,7 +7,7 @@ import { convenioSchema } from "../convenioSchema.ts";
 import { z } from "zod/v4";
 
 export const getConvenioByIdPathParamsSchema = z.object({
-    "id": z.string()
+    "id": z.uuid().describe("A UUID string identifying this convenio.")
     })
 
 export const getConvenioById200Schema = z.lazy(() => convenioSchema)

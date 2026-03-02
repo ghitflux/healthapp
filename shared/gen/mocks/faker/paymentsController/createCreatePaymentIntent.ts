@@ -4,8 +4,8 @@
 */
 
 import type { CreatePaymentIntent201, CreatePaymentIntentMutationRequest, CreatePaymentIntentMutationResponse } from "../../../types/paymentsTypes/CreatePaymentIntent.ts";
-import { faker } from "@faker-js/faker";
 import { createCreatePaymentIntentRequest } from "../createCreatePaymentIntentRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createCreatePaymentIntent201(data?: Partial<CreatePaymentIntent201>): CreatePaymentIntent201 {
 

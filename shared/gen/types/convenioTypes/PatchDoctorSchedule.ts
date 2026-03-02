@@ -8,7 +8,8 @@ import type { PatchedDoctorScheduleRequest } from "../PatchedDoctorScheduleReque
 
 export type PatchDoctorSchedulePathParams = {
     /**
-     * @type string
+     * @description A UUID string identifying this doctor schedule.
+     * @type string, uuid
     */
     id: string;
 };

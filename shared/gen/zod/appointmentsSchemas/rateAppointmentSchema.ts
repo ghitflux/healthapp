@@ -8,7 +8,7 @@ import { ratingSchema } from "../ratingSchema.ts";
 import { z } from "zod/v4";
 
 export const rateAppointmentPathParamsSchema = z.object({
-    "id": z.string()
+    "id": z.uuid().describe("A UUID string identifying this appointment.")
     })
 
 export const rateAppointment201Schema = z.lazy(() => ratingSchema)

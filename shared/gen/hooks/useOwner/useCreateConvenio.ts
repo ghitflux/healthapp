@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { CreateConvenioMutationRequest, CreateConvenioMutationResponse } from "../../types/ownerTypes/CreateConvenio.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { CreateConvenioMutationRequest, CreateConvenioMutationResponse } from "../../types/ownerTypes/CreateConvenio.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { createConvenio } from "../../clients/ownerClient/createConvenio.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const createConvenioMutationKey = () => [{ url: '/api/v1/convenios/' }] as const
 

@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { RefreshTokenMutationRequest, RefreshTokenMutationResponse } from "../../types/authTypes/RefreshToken.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
-import type { RefreshTokenMutationResponse } from "../../types/authTypes/RefreshToken.ts";
 
 function getRefreshTokenUrl() {
   const res = { method: 'POST', url: `/api/v1/auth/token/refresh/` as const }
@@ -16,11 +16,11 @@ function getRefreshTokenUrl() {
  * @summary Refresh access token
  * {@link /api/v1/auth/token/refresh/}
  */
-export async function refreshToken(config: Partial<RequestConfig> & { client?: Client } = {}) {
+export async function refreshToken(data: RefreshTokenMutationRequest, config: Partial<RequestConfig<RefreshTokenMutationRequest>> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config
 
+  const requestData = data
 
-
-  const res = await request<RefreshTokenMutationResponse, ResponseErrorConfig<Error>, unknown>({ method : "POST", url : getRefreshTokenUrl().url.toString(), ... requestConfig })
+  const res = await request<RefreshTokenMutationResponse, ResponseErrorConfig<Error>, RefreshTokenMutationRequest>({ method : "POST", url : getRefreshTokenUrl().url.toString(), data : requestData, ... requestConfig })
   return res.data
 }

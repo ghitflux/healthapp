@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { MarkNotificationReadMutationResponse, MarkNotificationReadPathParams } from "../../types/notificationsTypes/MarkNotificationRead.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getMarkNotificationReadUrl(id: MarkNotificationReadPathParams["id"]) {
   const res = { method: 'PATCH', url: `/api/v1/notifications/${id}/read/` as const }

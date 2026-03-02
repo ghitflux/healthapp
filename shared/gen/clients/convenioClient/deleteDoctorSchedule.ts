@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { DeleteDoctorScheduleMutationResponse, DeleteDoctorSchedulePathParams } from "../../types/convenioTypes/DeleteDoctorSchedule.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getDeleteDoctorScheduleUrl(id: DeleteDoctorSchedulePathParams["id"]) {
   const res = { method: 'DELETE', url: `/api/v1/schedules/${id}/` as const }

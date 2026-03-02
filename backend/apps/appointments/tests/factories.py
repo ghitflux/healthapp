@@ -2,7 +2,6 @@ import factory
 from faker import Faker
 
 from apps.appointments.models import Appointment, Rating
-from apps.convenios.tests.factories import ConvenioFactory
 from apps.doctors.tests.factories import DoctorFactory
 from apps.users.tests.factories import PatientFactory
 

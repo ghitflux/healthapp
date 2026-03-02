@@ -1,16 +1,23 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import date, datetime, time, timedelta
+from typing import TypedDict
 
 from .models import Doctor, DoctorSchedule, ScheduleException
 
 logger = logging.getLogger(__name__)
 
 
+class SlotDict(TypedDict):
+    time: time
+    duration_minutes: int
+    is_available: bool
+
+
 class AvailabilityService:
     """Service for computing doctor slot availability."""
 
     @staticmethod
-    def get_available_slots(doctor: Doctor, date: datetime.date) -> list[dict]:
+    def get_available_slots(doctor: Doctor, date: date) -> list[SlotDict]:
         """
         Calculate available slots for a doctor on a given date.
 
@@ -43,7 +50,7 @@ class AvailabilityService:
         if not schedules.exists():
             return []
 
-        slots = []
+        slots: list[SlotDict] = []
         for schedule in schedules:
             slot_time = datetime.combine(date, schedule.start_time)
             end_time = datetime.combine(date, schedule.end_time)
@@ -80,7 +87,7 @@ class AvailabilityService:
         )
         exception_ranges = [(exc.start_time, exc.end_time) for exc in partial_exceptions]
 
-        available_slots = []
+        available_slots: list[SlotDict] = []
         for slot in slots:
             if slot["time"] in booked_times:
                 slot["is_available"] = False

@@ -3,14 +3,18 @@
 * Do not edit manually.
 */
 
+import type { RefreshTokenRequestRequest } from "../RefreshTokenRequestRequest.ts";
 
 export type RefreshToken200 = {
     [key: string]: any;
 };
 
+export type RefreshTokenMutationRequest = RefreshTokenRequestRequest;
+
 export type RefreshTokenMutationResponse = RefreshToken200;
 
 export type RefreshTokenMutation = {
     Response: RefreshToken200;
+    Request: RefreshTokenMutationRequest;
     Errors: any;
 };

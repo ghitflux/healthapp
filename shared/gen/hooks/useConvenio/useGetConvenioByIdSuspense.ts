@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { GetConvenioByIdQueryResponse, GetConvenioByIdPathParams } from "../../types/convenioTypes/GetConvenioById.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
-import type { GetConvenioByIdQueryResponse, GetConvenioByIdPathParams } from "../../types/convenioTypes/GetConvenioById.ts";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getConvenioById } from "../../clients/convenioClient/getConvenioById.ts";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
 export const getConvenioByIdSuspenseQueryKey = (id: GetConvenioByIdPathParams["id"]) => [{ url: '/api/v1/convenios/:id/', params: {id:id} }] as const
 

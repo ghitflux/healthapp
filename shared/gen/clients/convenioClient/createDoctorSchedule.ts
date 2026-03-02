@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { CreateDoctorScheduleMutationRequest, CreateDoctorScheduleMutationResponse } from "../../types/convenioTypes/CreateDoctorSchedule.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getCreateDoctorScheduleUrl() {
   const res = { method: 'POST', url: `/api/v1/schedules/` as const }

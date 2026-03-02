@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { RegisterUserMutationRequest, RegisterUserMutationResponse } from "../../types/authTypes/RegisterUser.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { RegisterUserMutationRequest, RegisterUserMutationResponse } from "../../types/authTypes/RegisterUser.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { registerUser } from "../../clients/authClient/registerUser.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const registerUserMutationKey = () => [{ url: '/api/v1/auth/register/' }] as const
 

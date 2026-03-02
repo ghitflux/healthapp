@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { GetDoctorSlotsQueryResponse, GetDoctorSlotsPathParams, GetDoctorSlotsQueryParams } from "../../types/doctorsTypes/GetDoctorSlots.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import type { GetDoctorSlotsQueryResponse, GetDoctorSlotsPathParams, GetDoctorSlotsQueryParams } from "../../types/doctorsTypes/GetDoctorSlots.ts";
-import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getDoctorSlots } from "../../clients/doctorsClient/getDoctorSlots.ts";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getDoctorSlotsQueryKey = (id: GetDoctorSlotsPathParams["id"], params: GetDoctorSlotsQueryParams) => [{ url: '/api/v1/doctors/:id/slots/', params: {id:id} }, ...(params ? [params] : [])] as const
 

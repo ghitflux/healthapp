@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { ConfirmAppointmentMutationRequest, ConfirmAppointmentMutationResponse, ConfirmAppointmentPathParams } from "../../types/appointmentsTypes/ConfirmAppointment.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { ConfirmAppointmentMutationRequest, ConfirmAppointmentMutationResponse, ConfirmAppointmentPathParams } from "../../types/appointmentsTypes/ConfirmAppointment.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { confirmAppointment } from "../../clients/appointmentsClient/confirmAppointment.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const confirmAppointmentMutationKey = () => [{ url: '/api/v1/appointments/:id/confirm/' }] as const
 

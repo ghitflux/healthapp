@@ -4,8 +4,8 @@
 */
 
 import type { PaginatedConvenioListList } from "../../types/PaginatedConvenioListList.ts";
-import { faker } from "@faker-js/faker";
 import { createConvenioList } from "./createConvenioList.ts";
+import { faker } from "@faker-js/faker";
 
 export function createPaginatedConvenioListList(data?: Partial<PaginatedConvenioListList>): PaginatedConvenioListList {
 

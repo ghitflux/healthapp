@@ -12,23 +12,18 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     email = factory.LazyAttribute(lambda _: fake.unique.email())
     full_name = factory.LazyAttribute(lambda _: fake.name())
-    phone = factory.LazyAttribute(lambda _: fake.unique.phone_number())
+    phone = factory.Sequence(lambda n: f"+5511{90000000 + n:08d}")
+    cpf = None  # Encrypted — skip by default in tests
     role = "patient"
     is_active = True
     email_verified = False
     phone_verified = False
-
-    @factory.lazy_attribute
-    def password(self):
-        return "TestPass123!"
+    password = "TestPass123!"
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         password = kwargs.pop("password", "TestPass123!")
-        user = model_class(**kwargs)
-        user.set_password(password)
-        user.save()
-        return user
+        return model_class.objects.create_user(password=password, **kwargs)
 
 
 class PatientFactory(UserFactory):

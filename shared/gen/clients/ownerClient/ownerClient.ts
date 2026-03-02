@@ -4,7 +4,8 @@
 */
 
 import { createConvenio } from "./createConvenio.ts";
+import { deleteConvenio } from "./deleteConvenio.ts";
 
 export function ownerClient() {
-  return { createConvenio }
+  return { createConvenio, deleteConvenio }
 }

@@ -4,8 +4,8 @@
 */
 
 import type { GetUserProfile200, GetUserProfileQueryResponse } from "../../../types/usersTypes/GetUserProfile.ts";
-import { faker } from "@faker-js/faker";
 import { createProfile } from "../createProfile.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGetUserProfile200(data?: Partial<GetUserProfile200>): GetUserProfile200 {
 

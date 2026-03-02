@@ -4,9 +4,9 @@
 */
 
 import type { PatchedProfileRequest } from "../../types/PatchedProfileRequest.ts";
-import { faker } from "@faker-js/faker";
 import { createBlankEnum } from "./createBlankEnum.ts";
 import { createGenderEnum } from "./createGenderEnum.ts";
+import { faker } from "@faker-js/faker";
 
 export function createPatchedProfileRequest(data?: Partial<PatchedProfileRequest>): PatchedProfileRequest {
 

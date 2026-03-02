@@ -7,8 +7,10 @@ import { changePassword } from "./changePassword.ts";
 import { deleteUserAccount } from "./deleteUserAccount.ts";
 import { exportUserData } from "./exportUserData.ts";
 import { getUserProfile } from "./getUserProfile.ts";
+import { listConsents } from "./listConsents.ts";
 import { patchUserProfile } from "./patchUserProfile.ts";
+import { updateConsents } from "./updateConsents.ts";
 
 export function usersClient() {
-  return { getUserProfile, patchUserProfile, deleteUserAccount, changePassword, exportUserData }
+  return { getUserProfile, patchUserProfile, deleteUserAccount, changePassword, listConsents, updateConsents, exportUserData }
 }

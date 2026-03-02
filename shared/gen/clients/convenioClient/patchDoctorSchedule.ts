@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { PatchDoctorScheduleMutationRequest, PatchDoctorScheduleMutationResponse, PatchDoctorSchedulePathParams } from "../../types/convenioTypes/PatchDoctorSchedule.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getPatchDoctorScheduleUrl(id: PatchDoctorSchedulePathParams["id"]) {
   const res = { method: 'PATCH', url: `/api/v1/schedules/${id}/` as const }

@@ -4,8 +4,8 @@
 */
 
 import type { PaginatedAvailableSlotList } from "../../types/PaginatedAvailableSlotList.ts";
-import { faker } from "@faker-js/faker";
 import { createAvailableSlot } from "./createAvailableSlot.ts";
+import { faker } from "@faker-js/faker";
 
 export function createPaginatedAvailableSlotList(data?: Partial<PaginatedAvailableSlotList>): PaginatedAvailableSlotList {
 

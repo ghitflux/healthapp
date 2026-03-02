@@ -4,8 +4,8 @@
 */
 
 import type { ListConveniosQueryParams, ListConvenios200, ListConveniosQueryResponse } from "../../../types/convenioTypes/ListConvenios.ts";
-import { faker } from "@faker-js/faker";
 import { createPaginatedConvenioListList } from "../createPaginatedConvenioListList.ts";
+import { faker } from "@faker-js/faker";
 
 export function createListConveniosQueryParams(data?: Partial<ListConveniosQueryParams>): ListConveniosQueryParams {
 

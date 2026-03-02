@@ -1,0 +1,1 @@
+{"type":"object","properties":{"token":{"type":"string","minLength":6,"maxLength":6}},"required":["token"],"x-readme-ref-name":"Verify2FARequest"}

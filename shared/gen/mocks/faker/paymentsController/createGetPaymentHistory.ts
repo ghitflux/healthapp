@@ -4,8 +4,8 @@
 */
 
 import type { GetPaymentHistory200, GetPaymentHistoryQueryResponse } from "../../../types/paymentsTypes/GetPaymentHistory.ts";
-import { faker } from "@faker-js/faker";
 import { createPayment } from "../createPayment.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGetPaymentHistory200(data?: GetPaymentHistory200): GetPaymentHistory200 {
 

@@ -1,0 +1,18 @@
+export type { CreateDoctorSchedule201, CreateDoctorScheduleMutationRequest, CreateDoctorScheduleMutationResponse, CreateDoctorScheduleMutation } from "./CreateDoctorSchedule.ts";
+export type { CreateExamType201, CreateExamTypeMutationRequest, CreateExamTypeMutationResponse, CreateExamTypeMutation } from "./CreateExamType.ts";
+export type { CreateScheduleException201, CreateScheduleExceptionMutationRequest, CreateScheduleExceptionMutationResponse, CreateScheduleExceptionMutation } from "./CreateScheduleException.ts";
+export type { DeleteDoctorSchedulePathParams, DeleteDoctorSchedule204, DeleteDoctorScheduleMutationResponse, DeleteDoctorScheduleMutation } from "./DeleteDoctorSchedule.ts";
+export type { DeleteExamTypePathParams, DeleteExamType204, DeleteExamTypeMutationResponse, DeleteExamTypeMutation } from "./DeleteExamType.ts";
+export type { DeleteScheduleExceptionPathParams, DeleteScheduleException204, DeleteScheduleExceptionMutationResponse, DeleteScheduleExceptionMutation } from "./DeleteScheduleException.ts";
+export type { GetConvenioByIdPathParams, GetConvenioById200, GetConvenioByIdQueryResponse, GetConvenioByIdQuery } from "./GetConvenioById.ts";
+export type { GetConvenioDashboard200, GetConvenioDashboardQueryResponse, GetConvenioDashboardQuery } from "./GetConvenioDashboard.ts";
+export type { GetDoctorScheduleByIdPathParams, GetDoctorScheduleById200, GetDoctorScheduleByIdQueryResponse, GetDoctorScheduleByIdQuery } from "./GetDoctorScheduleById.ts";
+export type { GetExamTypeByIdPathParams, GetExamTypeById200, GetExamTypeByIdQueryResponse, GetExamTypeByIdQuery } from "./GetExamTypeById.ts";
+export type { GetScheduleExceptionByIdPathParams, GetScheduleExceptionById200, GetScheduleExceptionByIdQueryResponse, GetScheduleExceptionByIdQuery } from "./GetScheduleExceptionById.ts";
+export type { ListConveniosQueryParams, ListConvenios200, ListConveniosQueryResponse, ListConveniosQuery } from "./ListConvenios.ts";
+export type { ListDoctorSchedulesQueryParams, ListDoctorSchedules200, ListDoctorSchedulesQueryResponse, ListDoctorSchedulesQuery } from "./ListDoctorSchedules.ts";
+export type { ListExamTypesQueryParams, ListExamTypes200, ListExamTypesQueryResponse, ListExamTypesQuery } from "./ListExamTypes.ts";
+export type { ListScheduleExceptionsQueryParams, ListScheduleExceptions200, ListScheduleExceptionsQueryResponse, ListScheduleExceptionsQuery } from "./ListScheduleExceptions.ts";
+export type { PatchConvenioSettingsPathParams, PatchConvenioSettings200, PatchConvenioSettingsMutationRequest, PatchConvenioSettingsMutationResponse, PatchConvenioSettingsMutation } from "./PatchConvenioSettings.ts";
+export type { PatchDoctorSchedulePathParams, PatchDoctorSchedule200, PatchDoctorScheduleMutationRequest, PatchDoctorScheduleMutationResponse, PatchDoctorScheduleMutation } from "./PatchDoctorSchedule.ts";
+export type { PatchExamTypePathParams, PatchExamType200, PatchExamTypeMutationRequest, PatchExamTypeMutationResponse, PatchExamTypeMutation } from "./PatchExamType.ts";

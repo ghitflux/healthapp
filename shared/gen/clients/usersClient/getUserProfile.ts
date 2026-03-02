@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { GetUserProfileQueryResponse } from "../../types/usersTypes/GetUserProfile.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getGetUserProfileUrl() {
   const res = { method: 'GET', url: `/api/v1/users/me/` as const }

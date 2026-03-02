@@ -4,8 +4,8 @@
 */
 
 import type { PaginatedScheduleExceptionList } from "../../types/PaginatedScheduleExceptionList.ts";
-import { faker } from "@faker-js/faker";
 import { createScheduleException } from "./createScheduleException.ts";
+import { faker } from "@faker-js/faker";
 
 export function createPaginatedScheduleExceptionList(data?: Partial<PaginatedScheduleExceptionList>): PaginatedScheduleExceptionList {
 

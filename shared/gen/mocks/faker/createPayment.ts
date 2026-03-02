@@ -4,9 +4,9 @@
 */
 
 import type { Payment } from "../../types/Payment.ts";
-import { faker } from "@faker-js/faker";
 import { createPaymentPaymentMethodEnum } from "./createPaymentPaymentMethodEnum.ts";
 import { createPaymentStatusEnum } from "./createPaymentStatusEnum.ts";
+import { faker } from "@faker-js/faker";
 
 export function createPayment(data?: Partial<Payment>): Payment {
 

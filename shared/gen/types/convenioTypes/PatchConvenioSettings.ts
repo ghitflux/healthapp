@@ -8,7 +8,8 @@ import type { PatchedConvenioRequest } from "../PatchedConvenioRequest.ts";
 
 export type PatchConvenioSettingsPathParams = {
     /**
-     * @type string
+     * @description A UUID string identifying this convenio.
+     * @type string, uuid
     */
     id: string;
 };

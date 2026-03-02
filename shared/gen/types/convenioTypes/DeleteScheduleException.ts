@@ -6,7 +6,8 @@
 
 export type DeleteScheduleExceptionPathParams = {
     /**
-     * @type string
+     * @description A UUID string identifying this schedule exception.
+     * @type string, uuid
     */
     id: string;
 };

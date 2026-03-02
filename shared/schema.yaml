@@ -47,7 +47,7 @@ paths:
           description: ''
     post:
       operationId: createAppointment
-      summary: Create appointment (with Redis lock)
+      summary: Create appointment (with Redis lock) — patients only
       tags:
       - appointments
       requestBody:
@@ -81,6 +81,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this appointment.
         required: true
       tags:
       - appointments
@@ -103,6 +105,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this appointment.
         required: true
       tags:
       - appointments
@@ -136,6 +140,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this appointment.
         required: true
       tags:
       - appointments
@@ -170,6 +176,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this appointment.
         required: true
       tags:
       - appointments
@@ -194,6 +202,110 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Rating'
+          description: ''
+  /api/v1/auth/2fa/disable/:
+    post:
+      operationId: disable2FA
+      summary: Disable 2FA (requires password confirmation)
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Disable2FARequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Disable2FARequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Disable2FARequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/auth/2fa/login/:
+    post:
+      operationId: login2FA
+      summary: Complete 2FA login with temp token + TOTP code
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login2FARequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login2FARequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login2FARequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/auth/2fa/setup/:
+    post:
+      operationId: setup2FA
+      summary: Setup TOTP 2FA — returns provisioning URI
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Setup2FAResponse'
+          description: ''
+  /api/v1/auth/2fa/verify/:
+    post:
+      operationId: verify2FA
+      summary: Verify TOTP token to activate 2FA
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Verify2FARequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Verify2FARequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Verify2FARequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
           description: ''
   /api/v1/auth/forgot-password/:
     post:
@@ -255,6 +367,35 @@ paths:
                 type: object
                 additionalProperties: {}
           description: ''
+  /api/v1/auth/logout/:
+    post:
+      operationId: logoutUser
+      summary: Logout and blacklist the refresh token
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
   /api/v1/auth/register/:
     post:
       operationId: registerUser
@@ -283,6 +424,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+          description: ''
+  /api/v1/auth/resend-email-otp/:
+    post:
+      operationId: resendEmailOTP
+      summary: Resend email verification OTP
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/auth/resend-phone-otp/:
+    post:
+      operationId: resendPhoneOTP
+      summary: Resend phone verification OTP
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
           description: ''
   /api/v1/auth/reset-password/:
     post:
@@ -320,6 +495,18 @@ paths:
       summary: Refresh access token
       tags:
       - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequestRequest'
+        required: true
       security:
       - jwtAuth: []
       - bearerAuth: []
@@ -467,6 +654,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this convenio.
         required: true
       tags:
       - convenio
@@ -488,6 +677,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this convenio.
         required: true
       tags:
       - convenio
@@ -513,15 +704,18 @@ paths:
                 $ref: '#/components/schemas/Convenio'
           description: ''
     delete:
-      operationId: api_v1_convenios_destroy
+      operationId: deleteConvenio
+      summary: Delete convenio
       parameters:
       - in: path
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this convenio.
         required: true
       tags:
-      - api
+      - owner
       security:
       - jwtAuth: []
       - bearerAuth: []
@@ -618,9 +812,10 @@ paths:
                 $ref: '#/components/schemas/PaginatedDoctorListList'
           description: ''
     post:
-      operationId: api_v1_doctors_create
+      operationId: createDoctor
+      summary: Create doctor
       tags:
-      - api
+      - doctors
       requestBody:
         content:
           application/json:
@@ -669,7 +864,8 @@ paths:
                 $ref: '#/components/schemas/Doctor'
           description: ''
     patch:
-      operationId: api_v1_doctors_partial_update
+      operationId: patchDoctor
+      summary: Update doctor
       parameters:
       - in: path
         name: id
@@ -679,7 +875,7 @@ paths:
         description: A UUID string identifying this doctor.
         required: true
       tags:
-      - api
+      - doctors
       requestBody:
         content:
           application/json:
@@ -702,7 +898,8 @@ paths:
                 $ref: '#/components/schemas/Doctor'
           description: ''
     delete:
-      operationId: api_v1_doctors_destroy
+      operationId: deleteDoctor
+      summary: Delete doctor
       parameters:
       - in: path
         name: id
@@ -712,7 +909,7 @@ paths:
         description: A UUID string identifying this doctor.
         required: true
       tags:
-      - api
+      - doctors
       security:
       - jwtAuth: []
       - bearerAuth: []
@@ -873,15 +1070,18 @@ paths:
           description: ''
   /api/v1/exam-types/{id}/:
     get:
-      operationId: api_v1_exam_types_retrieve
+      operationId: getExamTypeById
+      summary: Get exam type details
       parameters:
       - in: path
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this exam type.
         required: true
       tags:
-      - api
+      - convenio
       security:
       - jwtAuth: []
       - bearerAuth: []
@@ -900,6 +1100,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this exam type.
         required: true
       tags:
       - convenio
@@ -932,6 +1134,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this exam type.
         required: true
       tags:
       - convenio
@@ -1218,15 +1422,18 @@ paths:
           description: ''
   /api/v1/schedule-exceptions/{id}/:
     get:
-      operationId: api_v1_schedule_exceptions_retrieve
+      operationId: getScheduleExceptionById
+      summary: Get schedule exception details
       parameters:
       - in: path
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this schedule exception.
         required: true
       tags:
-      - api
+      - convenio
       security:
       - jwtAuth: []
       - bearerAuth: []
@@ -1245,6 +1452,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this schedule exception.
         required: true
       tags:
       - convenio
@@ -1324,15 +1533,18 @@ paths:
           description: ''
   /api/v1/schedules/{id}/:
     get:
-      operationId: api_v1_schedules_retrieve
+      operationId: getDoctorScheduleById
+      summary: Get doctor schedule details
       parameters:
       - in: path
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this doctor schedule.
         required: true
       tags:
-      - api
+      - convenio
       security:
       - jwtAuth: []
       - bearerAuth: []
@@ -1351,6 +1563,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this doctor schedule.
         required: true
       tags:
       - convenio
@@ -1383,6 +1597,8 @@ paths:
         name: id
         schema:
           type: string
+          format: uuid
+        description: A UUID string identifying this doctor schedule.
         required: true
       tags:
       - convenio
@@ -1473,6 +1689,52 @@ paths:
               schema:
                 type: object
                 additionalProperties: {}
+          description: ''
+  /api/v1/users/me/consents/:
+    get:
+      operationId: listConsents
+      summary: List LGPD consent records for authenticated user
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConsentRecord'
+          description: ''
+    patch:
+      operationId: updateConsents
+      summary: Update LGPD consent records
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateConsentsRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateConsentsRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateConsentsRequest'
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConsentRecord'
           description: ''
   /api/v1/users/me/export-data/:
     post:
@@ -1754,6 +2016,62 @@ components:
         * `email` - Email
         * `push` - Push
         * `sms` - SMS
+    ConsentRecord:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        purpose:
+          $ref: '#/components/schemas/ConsentRecordPurposeEnum'
+        purpose_display:
+          type: string
+          readOnly: true
+        granted:
+          type: boolean
+        granted_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        revoked_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - granted_at
+      - id
+      - purpose
+      - purpose_display
+      - revoked_at
+      - updated_at
+    ConsentRecordPurposeEnum:
+      enum:
+      - appointment_booking
+      - notifications_email
+      - notifications_push
+      - notifications_sms
+      - marketing
+      - data_analytics
+      type: string
+      description: |-
+        * `appointment_booking` - Agendamento de Consultas
+        * `notifications_email` - Notificações por Email
+        * `notifications_push` - Notificações Push
+        * `notifications_sms` - Notificações SMS
+        * `marketing` - Comunicações de Marketing
+        * `data_analytics` - Uso de Dados para Analytics
     Convenio:
       type: object
       properties:
@@ -1930,9 +2248,27 @@ components:
           format: uuid
         payment_method:
           $ref: '#/components/schemas/CreatePaymentIntentPaymentMethodEnum'
+        currency:
+          allOf:
+          - $ref: '#/components/schemas/CurrencyEnum'
+          default: BRL
       required:
       - appointment_id
       - payment_method
+    CurrencyEnum:
+      enum:
+      - BRL
+      type: string
+      description: '* `BRL` - BRL'
+    Disable2FARequest:
+      type: object
+      properties:
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - password
     Doctor:
       type: object
       properties:
@@ -2254,6 +2590,19 @@ components:
         * `M` - Male
         * `F` - Female
         * `O` - Other
+    Login2FARequest:
+      type: object
+      properties:
+        temp_token:
+          type: string
+          minLength: 1
+        totp_code:
+          type: string
+          minLength: 6
+          maxLength: 6
+      required:
+      - temp_token
+      - totp_code
     LoginRequest:
       type: object
       properties:
@@ -2268,6 +2617,14 @@ components:
       required:
       - email
       - password
+    LogoutRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
     Notification:
       type: object
       properties:
@@ -2678,6 +3035,13 @@ components:
           type: string
           format: uri
           maxLength: 200
+    PatchedUpdateConsentsRequest:
+      type: object
+      properties:
+        consents:
+          type: array
+          items:
+            $ref: '#/components/schemas/UpdateConsentItemRequest'
     Payment:
       type: object
       properties:
@@ -2891,6 +3255,14 @@ components:
           type: boolean
       required:
       - score
+    RefreshTokenRequestRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
     RefundRequest:
       type: object
       properties:
@@ -3026,6 +3398,16 @@ components:
       required:
       - date
       - doctor
+    Setup2FAResponse:
+      type: object
+      properties:
+        provisioning_uri:
+          type: string
+        key:
+          type: string
+      required:
+      - key
+      - provisioning_uri
     Status308Enum:
       enum:
       - pending
@@ -3061,6 +3443,32 @@ components:
           type: integer
       required:
       - count
+    UpdateConsentItemPurposeEnum:
+      enum:
+      - appointment_booking
+      - notifications_email
+      - notifications_push
+      - notifications_sms
+      - marketing
+      - data_analytics
+      type: string
+      description: |-
+        * `appointment_booking` - appointment_booking
+        * `notifications_email` - notifications_email
+        * `notifications_push` - notifications_push
+        * `notifications_sms` - notifications_sms
+        * `marketing` - marketing
+        * `data_analytics` - data_analytics
+    UpdateConsentItemRequest:
+      type: object
+      properties:
+        purpose:
+          $ref: '#/components/schemas/UpdateConsentItemPurposeEnum'
+        granted:
+          type: boolean
+      required:
+      - granted
+      - purpose
     User:
       type: object
       properties:
@@ -3124,6 +3532,15 @@ components:
       - phone_verified
       - role
       - updated_at
+    Verify2FARequest:
+      type: object
+      properties:
+        token:
+          type: string
+          minLength: 6
+          maxLength: 6
+      required:
+      - token
     VerifyEmailRequest:
       type: object
       properties:

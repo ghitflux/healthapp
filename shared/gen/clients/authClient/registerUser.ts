@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { RegisterUserMutationRequest, RegisterUserMutationResponse } from "../../types/authTypes/RegisterUser.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getRegisterUserUrl() {
   const res = { method: 'POST', url: `/api/v1/auth/register/` as const }

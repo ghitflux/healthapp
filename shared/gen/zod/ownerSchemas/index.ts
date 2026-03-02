@@ -1,0 +1,2 @@
+export { createConvenio201Schema, createConvenioMutationRequestSchema, createConvenioMutationResponseSchema } from "./createConvenioSchema.ts";
+export { deleteConvenioPathParamsSchema, deleteConvenio204Schema, deleteConvenioMutationResponseSchema } from "./deleteConvenioSchema.ts";

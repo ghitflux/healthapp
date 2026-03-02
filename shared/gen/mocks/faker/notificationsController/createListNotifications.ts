@@ -4,8 +4,8 @@
 */
 
 import type { ListNotifications200, ListNotificationsQueryResponse } from "../../../types/notificationsTypes/ListNotifications.ts";
-import { faker } from "@faker-js/faker";
 import { createNotification } from "../createNotification.ts";
+import { faker } from "@faker-js/faker";
 
 export function createListNotifications200(data?: ListNotifications200): ListNotifications200 {
 

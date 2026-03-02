@@ -4,8 +4,8 @@
 */
 
 import type { ListExamTypesQueryParams, ListExamTypes200, ListExamTypesQueryResponse } from "../../../types/convenioTypes/ListExamTypes.ts";
-import { faker } from "@faker-js/faker";
 import { createPaginatedExamTypeList } from "../createPaginatedExamTypeList.ts";
+import { faker } from "@faker-js/faker";
 
 export function createListExamTypesQueryParams(data?: Partial<ListExamTypesQueryParams>): ListExamTypesQueryParams {
 

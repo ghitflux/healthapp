@@ -4,14 +4,14 @@
 */
 
 import type { PatchDoctorSchedulePathParams, PatchDoctorSchedule200, PatchDoctorScheduleMutationRequest, PatchDoctorScheduleMutationResponse } from "../../../types/convenioTypes/PatchDoctorSchedule.ts";
-import { faker } from "@faker-js/faker";
 import { createDoctorSchedule } from "../createDoctorSchedule.ts";
 import { createPatchedDoctorScheduleRequest } from "../createPatchedDoctorScheduleRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createPatchDoctorSchedulePathParams(data?: Partial<PatchDoctorSchedulePathParams>): PatchDoctorSchedulePathParams {
 
   return {
-    ...{"id": faker.string.alpha()},
+    ...{"id": faker.string.uuid()},
     ...data || {}
   }
 }

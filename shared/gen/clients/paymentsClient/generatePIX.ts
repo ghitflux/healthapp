@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { GeneratePIXMutationRequest, GeneratePIXMutationResponse } from "../../types/paymentsTypes/GeneratePIX.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getGeneratePIXUrl() {
   const res = { method: 'POST', url: `/api/v1/payments/pix/generate/` as const }

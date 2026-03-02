@@ -4,10 +4,10 @@
 */
 
 import type { User } from "../../types/User.ts";
-import { faker } from "@faker-js/faker";
 import { createBlankEnum } from "./createBlankEnum.ts";
 import { createGenderEnum } from "./createGenderEnum.ts";
 import { createRoleEnum } from "./createRoleEnum.ts";
+import { faker } from "@faker-js/faker";
 
 export function createUser(data?: Partial<User>): User {
 

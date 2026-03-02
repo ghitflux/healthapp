@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { PatchExamTypeMutationRequest, PatchExamTypeMutationResponse, PatchExamTypePathParams } from "../../types/convenioTypes/PatchExamType.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import type { PatchExamTypeMutationRequest, PatchExamTypeMutationResponse, PatchExamTypePathParams } from "../../types/convenioTypes/PatchExamType.ts";
-import { mutationOptions, useMutation } from "@tanstack/react-query";
 import { patchExamType } from "../../clients/convenioClient/patchExamType.ts";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const patchExamTypeMutationKey = () => [{ url: '/api/v1/exam-types/:id/' }] as const
 

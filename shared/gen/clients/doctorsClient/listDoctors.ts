@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { ListDoctorsQueryResponse, ListDoctorsQueryParams } from "../../types/doctorsTypes/ListDoctors.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getListDoctorsUrl() {
   const res = { method: 'GET', url: `/api/v1/doctors/` as const }

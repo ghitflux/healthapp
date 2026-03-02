@@ -4,8 +4,8 @@
 */
 
 import type { ForgotPassword200, ForgotPasswordMutationRequest, ForgotPasswordMutationResponse } from "../../../types/authTypes/ForgotPassword.ts";
-import { faker } from "@faker-js/faker";
 import { createForgotPasswordRequest } from "../createForgotPasswordRequest.ts";
+import { faker } from "@faker-js/faker";
 
 export function createForgotPassword200(data?: Partial<ForgotPassword200>): ForgotPassword200 {
 

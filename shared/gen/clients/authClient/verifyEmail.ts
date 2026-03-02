@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { VerifyEmailMutationRequest, VerifyEmailMutationResponse } from "../../types/authTypes/VerifyEmail.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getVerifyEmailUrl() {
   const res = { method: 'POST', url: `/api/v1/auth/verify-email/` as const }

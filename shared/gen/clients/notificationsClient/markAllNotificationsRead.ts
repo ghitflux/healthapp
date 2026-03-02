@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { MarkAllNotificationsReadMutationResponse } from "../../types/notificationsTypes/MarkAllNotificationsRead.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getMarkAllNotificationsReadUrl() {
   const res = { method: 'POST', url: `/api/v1/notifications/read-all/` as const }

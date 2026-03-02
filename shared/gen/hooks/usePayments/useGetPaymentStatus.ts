@@ -4,11 +4,11 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
+import type { GetPaymentStatusQueryResponse, GetPaymentStatusPathParams } from "../../types/paymentsTypes/GetPaymentStatus.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import type { GetPaymentStatusQueryResponse, GetPaymentStatusPathParams } from "../../types/paymentsTypes/GetPaymentStatus.ts";
-import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getPaymentStatus } from "../../clients/paymentsClient/getPaymentStatus.ts";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getPaymentStatusQueryKey = (id: GetPaymentStatusPathParams["id"]) => [{ url: '/api/v1/payments/:id/status/', params: {id:id} }] as const
 

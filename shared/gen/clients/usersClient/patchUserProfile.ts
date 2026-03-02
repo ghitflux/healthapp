@@ -4,8 +4,8 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { PatchUserProfileMutationRequest, PatchUserProfileMutationResponse } from "../../types/usersTypes/PatchUserProfile.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 
 function getPatchUserProfileUrl() {
   const res = { method: 'PATCH', url: `/api/v1/users/me/` as const }

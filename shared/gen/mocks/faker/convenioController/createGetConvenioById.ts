@@ -4,13 +4,13 @@
 */
 
 import type { GetConvenioByIdPathParams, GetConvenioById200, GetConvenioByIdQueryResponse } from "../../../types/convenioTypes/GetConvenioById.ts";
-import { faker } from "@faker-js/faker";
 import { createConvenio } from "../createConvenio.ts";
+import { faker } from "@faker-js/faker";
 
 export function createGetConvenioByIdPathParams(data?: Partial<GetConvenioByIdPathParams>): GetConvenioByIdPathParams {
 
   return {
-    ...{"id": faker.string.alpha()},
+    ...{"id": faker.string.uuid()},
     ...data || {}
   }
 }
