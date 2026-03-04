@@ -1,8 +1,16 @@
 import type { Metadata } from 'next';
-import { PagePlaceholder } from '@/components/feedback/page-placeholder';
+import dynamicImport from 'next/dynamic';
+
+const OwnerConveniosPageContent = dynamicImport(
+  () => import('@/features/owner').then((module) => module.OwnerConveniosPageContent),
+  {
+    loading: () => <div className="h-80 animate-pulse rounded-md border bg-muted/40" />,
+  }
+);
 
 export const metadata: Metadata = { title: 'Convênios — HealthApp Owner' };
+export const dynamic = 'force-dynamic';
 
 export default function ConveniosPage() {
-  return <PagePlaceholder title="Convênios" description="Gerencie todos os convênios da plataforma" />;
+  return <OwnerConveniosPageContent />;
 }

@@ -105,7 +105,7 @@ export function LoginForm() {
                 <FormLabel>Senha</FormLabel>
                 <a
                   href="/forgot-password"
-                  className="text-xs text-primary-600 hover:underline hover:text-primary-700"
+                  className="text-xs text-primary-600 underline-offset-4 hover:text-primary-700 hover:underline"
                 >
                   Esqueceu a senha?
                 </a>
@@ -124,7 +124,7 @@ export function LoginForm() {
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm text-neutral-400 transition-[color,transform] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-neutral-600 motion-safe:hover:scale-110"
                     tabIndex={-1}
                     aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                   >

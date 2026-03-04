@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   LayoutDashboardIcon,
   StethoscopeIcon,
@@ -28,6 +29,7 @@ import { Badge } from '@/components/ui/badge';
 import { authService } from '@/lib/auth';
 import { useAuthStore } from '@/stores/auth-store';
 import { Separator } from '@/components/ui/separator';
+import { prefetchOwnerData } from '@/lib/owner-prefetch';
 
 interface NavItem {
   label: string;
@@ -68,6 +70,8 @@ interface SidebarProps {
 
 export function Sidebar({ variant }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
   const navItems = createNavItems(variant);
@@ -75,6 +79,13 @@ export function Sidebar({ variant }: SidebarProps) {
   async function handleLogout() {
     await authService.logout();
     logout();
+  }
+
+  function handlePrefetch(href: string) {
+    void router.prefetch(href);
+    if (variant === 'owner') {
+      prefetchOwnerData(queryClient, href);
+    }
   }
 
   const userInitials = user?.full_name
@@ -110,14 +121,16 @@ export function Sidebar({ variant }: SidebarProps) {
               <Link
                 key={item.href}
                 href={item.href}
+                onMouseEnter={() => handlePrefetch(item.href)}
+                onFocus={() => handlePrefetch(item.href)}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+                  'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-[background-color,color,transform,box-shadow] duration-[var(--duration-base)] ease-[var(--ease-standard)]',
                   isActive
-                    ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
-                    : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+                    ? 'bg-primary-100 text-primary-700 shadow-xs dark:bg-primary-900/30 dark:text-primary-400'
+                    : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground motion-safe:hover:translate-x-0.5'
                 )}
               >
-                <item.icon className="h-4 w-4 shrink-0" />
+                <item.icon className="h-4 w-4 shrink-0 transition-transform duration-[var(--duration-fast)] ease-[var(--ease-standard)] motion-safe:group-hover:scale-110" />
                 {item.label}
               </Link>
             );
@@ -142,7 +155,7 @@ export function Sidebar({ variant }: SidebarProps) {
           variant="ghost"
           size="sm"
           onClick={handleLogout}
-          className="w-full justify-start text-muted-foreground hover:text-foreground"
+          className="w-full justify-start text-muted-foreground hover:text-foreground motion-safe:hover:translate-x-0.5"
         >
           <LogOutIcon className="h-4 w-4 mr-2" />
           Sair

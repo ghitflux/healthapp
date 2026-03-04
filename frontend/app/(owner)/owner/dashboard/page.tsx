@@ -1,21 +1,14 @@
-'use client';
+import dynamicImport from 'next/dynamic';
 
-import { OwnerDashboardKPIs } from '@/features/owner/dashboard-kpis';
-import { RevenueChart } from '@/components/charts/revenue-chart';
-import { DashboardTemplate } from '@/components/templates/dashboard-template';
+const OwnerDashboardPageContent = dynamicImport(
+  () => import('@/features/owner').then((module) => module.OwnerDashboardPageContent),
+  {
+    loading: () => <div className="h-80 animate-pulse rounded-md border bg-muted/40" />,
+  }
+);
+
+export const dynamic = 'force-dynamic';
 
 export default function OwnerDashboardPage() {
-  return (
-    <DashboardTemplate
-      title="Dashboard Executivo"
-      description="Visão global da plataforma HealthApp"
-      kpis={<OwnerDashboardKPIs />}
-      charts={
-        <RevenueChart
-          endpoint="/v1/admin-panel/dashboard/"
-          title="Receita Global"
-        />
-      }
-    />
-  );
+  return <OwnerDashboardPageContent />;
 }

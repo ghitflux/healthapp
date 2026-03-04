@@ -75,7 +75,7 @@ export function SearchFieldDebounced({
         <button
           type="button"
           onClick={handleClear}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm text-muted-foreground transition-[color,transform] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-foreground motion-safe:hover:scale-110"
           aria-label="Limpar busca"
         >
           <XIcon className="h-4 w-4" />

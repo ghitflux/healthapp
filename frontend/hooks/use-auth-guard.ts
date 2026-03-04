@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { authService } from '@/lib/auth';
 
 /**
@@ -10,28 +11,32 @@ import { authService } from '@/lib/auth';
  */
 export function useAuthGuard(allowedRoles: string[]) {
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!authService.isAuthenticated()) {
-      router.push('/login');
+      router.replace('/login');
       return;
     }
 
     if (authService.isTokenExpired()) {
-      router.push('/login');
+      toast.error('Sessão expirada. Faça login novamente.');
+      router.replace('/login');
       return;
     }
 
     const role = authService.getUserRole();
     if (role && !allowedRoles.includes(role)) {
-      // Redirecionar para o dashboard do role atual
-      const redirectPath = authService.getRedirectPath();
-      router.push(redirectPath);
+      toast.error('Acesso negado para esta área.');
+      router.replace(`/access-denied?from=${encodeURIComponent(pathname)}`);
     }
-  }, [allowedRoles, router]);
+  }, [allowedRoles, pathname, router]);
+
+  const role = authService.getUserRole();
 
   return {
     isAuthenticated: authService.isAuthenticated(),
-    role: authService.getUserRole(),
+    role,
+    isAuthorized: !!role && allowedRoles.includes(role),
   };
 }

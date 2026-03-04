@@ -217,10 +217,10 @@ export function SchedulesPageContent() {
                         key={doctor.id}
                         type="button"
                         onClick={() => handleSelectDoctor(doctor.id)}
-                        className={`w-full text-left rounded-md px-3 py-2.5 transition-colors group ${
+                        className={`group w-full rounded-md px-3 py-2.5 text-left transition-[background-color,color,transform,box-shadow] duration-[var(--duration-fast)] ease-[var(--ease-standard)] ${
                           isSelected
-                            ? 'bg-primary text-primary-foreground'
-                            : 'hover:bg-muted'
+                            ? 'bg-primary text-primary-foreground shadow-xs'
+                            : 'hover:bg-muted motion-safe:hover:translate-x-[2px]'
                         }`}
                       >
                         <div className="flex items-start gap-2">

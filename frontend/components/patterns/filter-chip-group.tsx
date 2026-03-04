@@ -54,10 +54,10 @@ export function FilterChipGroup<T extends string = string>({
             onClick={() => handleToggle(option.value)}
             aria-pressed={isSelected}
             className={cn(
-              'inline-flex items-center rounded-full px-3 py-1 text-sm font-medium border transition-colors',
+              'inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium transition-[background-color,color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--ease-standard)] motion-safe:hover:-translate-y-px motion-safe:active:scale-[0.985]',
               isSelected
-                ? 'bg-primary-600 text-white border-primary-600 hover:bg-primary-700'
-                : 'bg-background text-foreground border-border hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                ? 'border-primary-600 bg-primary-600 text-white shadow-xs hover:bg-primary-700 hover:shadow-sm'
+                : 'border-border bg-background text-foreground hover:bg-neutral-100 hover:border-primary-300 hover:shadow-xs dark:hover:bg-neutral-800'
             )}
           >
             {option.label}
@@ -68,7 +68,7 @@ export function FilterChipGroup<T extends string = string>({
         <button
           type="button"
           onClick={handleClear}
-          className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+          className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium text-muted-foreground transition-[color,background-color,transform] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:bg-muted hover:text-foreground motion-safe:hover:-translate-y-px"
           aria-label="Limpar todos os filtros"
         >
           <XIcon className="h-3 w-3" />

@@ -208,6 +208,12 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  a {
+    transition-property: color, text-decoration-color, opacity;
+    transition-duration: var(--duration-fast);
+    transition-timing-function: var(--ease-standard);
+  }
+
   /* Acessibilidade: respeitar preferência de redução de movimento */
   @media (prefers-reduced-motion: reduce) {
     *,

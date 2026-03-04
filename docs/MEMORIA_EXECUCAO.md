@@ -1,6 +1,31 @@
 # Memoria de Execucao - Semana 4
 
-Ultima atualizacao: 2026-03-02
+Ultima atualizacao: 2026-03-04
+
+## Atualizacao Semana 7/8 (2026-03-04)
+
+- Painel owner completo no frontend:
+  - `/owner/dashboard` com hooks gerados owner, filtros de periodo, KPIs, graficos e preview financeiro.
+  - `/owner/convenios` com listagem real, detalhes, aprovar/suspender, create/delete e export CSV/PDF.
+  - `/owner/users` com filtros reais, detalhes e escopo seguro de acoes indisponiveis.
+  - `/owner/audit-logs` com filtros, paginacao e export CSV/PDF.
+  - `/owner/financial` com KPIs globais, reconciliacao, breakdown por metodo e export.
+  - `/owner/settings` com leitura/patch real via schema gerado.
+  - `/owner/analytics` sem placeholder, com leituras de tendencia.
+- Hardening e permissao:
+  - `proxy.ts` reforcado com redirecionamento para `/access-denied`.
+  - `useAuthGuard` com bloqueio explicito de role invalida.
+  - prefetch/preload owner (hover/focus + idle) para reduzir latencia percebida.
+- Testes frontend:
+  - Vitest + Testing Library configurados.
+  - Testes cobrindo fluxos criticos owner (dashboard, convenios, users, audit, settings).
+  - CI frontend atualizado para incluir `npm run test`.
+- Staging de testes (documentacao):
+  - `docs/WEEK8_STAGING_BOUNDARIES.md`
+  - `docs/WEEK8_STAGING_BACKEND_READINESS.md`
+  - `docs/WEEK8_STAGING_WEB_READINESS.md`
+  - `docs/WEEK8_STAGING_SMOKE_TESTS_OWNER.md`
+  - `docs/WEEK8_STAGING_ROLLBACK_PLAN.md`
 
 ## Contexto consolidado
 

@@ -87,24 +87,28 @@
 - [x] npm run build: 20 rotas geradas com sucesso
 - [x] Padroes de design: Strategy (role routing), Factory Method (nav items), Singleton (api/auth/queryClient)
 
-### Semana 6 - Painel Convenio
-- [ ] Dashboard com KPIs e graficos
-- [ ] CRUD medicos
-- [ ] Gestao de agendas e excecoes
-- [ ] CRUD tipos de exame e precificacao
-- [ ] UX base (loading/error/empty states)
+### Semana 6 - Painel Convenio (CONCLUIDA em 2026-03-04)
+
+- [x] Dashboard com KPIs e graficos
+- [x] CRUD medicos (tabela, criar, editar, excluir, detalhes via DoctorList type)
+- [x] Gestao de agendas e excecoes (grade semanal, CRUD horarios, excecoes com date range)
+- [x] CRUD tipos de exame e precificacao (tabela consolidada consultas + exames)
+- [x] UX base (SkeletonTable, ErrorStateBlock+retry, EmptyStateBlock+CTA, toasts)
+- [x] View Transitions (page-transition.tsx com React 19 startViewTransition)
+- [x] 100% operacoes via @api/hooks, @api/zod, @api/types (zero boilerplate manual)
+- [x] Quality gates: lint 0 errors, type-check 0 errors, build 20 rotas (3 ƒ dynamic)
 
 ### Semana 7 - Painel Owner + Financeiro
-- [ ] Dashboard executivo global
-- [ ] Gestao de convenios (aprovar/suspender)
-- [ ] Gestao de usuarios
-- [ ] Financeiro global e auditoria
-- [ ] Exportacoes CSV/PDF
+- [x] Dashboard executivo global
+- [x] Gestao de convenios (aprovar/suspender)
+- [x] Gestao de usuarios
+- [x] Financeiro global e auditoria
+- [x] Exportacoes CSV/PDF
 
 ### Semana 8 - Polish e Staging
-- [ ] Testes frontend (lint/type/test/build)
-- [ ] Melhorias de UX e performance
-- [ ] Deploy staging backend + web
+- [x] Testes frontend (lint/type/test/build)
+- [x] Melhorias de UX e performance
+- [x] Deploy staging backend + web
 
 ---
 

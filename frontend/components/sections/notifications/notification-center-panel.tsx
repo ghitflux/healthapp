@@ -54,7 +54,7 @@ function NotificationItem({ notification, onMarkRead }: NotificationItemProps) {
   return (
     <div
       className={cn(
-        'flex gap-3 p-4 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors',
+        'flex gap-3 p-4 transition-[background-color,transform] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:bg-neutral-50 motion-safe:hover:translate-x-[2px] dark:hover:bg-neutral-800/50',
         !notification.is_read && 'bg-primary-50/50 dark:bg-primary-900/10'
       )}
     >
@@ -72,7 +72,7 @@ function NotificationItem({ notification, onMarkRead }: NotificationItemProps) {
             <button
               type="button"
               onClick={() => onMarkRead(notification.id)}
-              className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+              className="shrink-0 rounded-sm text-muted-foreground transition-[color,transform] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:text-foreground motion-safe:hover:scale-110"
               aria-label="Marcar como lida"
             >
               <CheckIcon className="h-3.5 w-3.5" />
@@ -181,7 +181,7 @@ export function NotificationCenterPanel() {
       <div className="p-3 text-center">
         <a
           href="/notifications"
-          className="text-xs text-primary-600 hover:underline"
+          className="text-xs text-primary-600 underline-offset-4 hover:underline"
         >
           Ver todas as notificações
         </a>
