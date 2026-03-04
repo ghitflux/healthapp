@@ -335,7 +335,7 @@ Vercel (plataforma nativa). Deploy automático via push na main. Analytics e Web
 **Semana 8: Polish e Deploy Staging**
 - Relatórios financeiros nos painéis
 - Telas de configurações
-- Testes frontend (Vitest + React Testing Library)
+- Testes frontend (Next Js + React Testing Library)
 - UX polish: loading states, error handling, toasts, empty states
 - Activity component para pre-carregar tabs pesadas
 - Backend deploy staging + Web deploy Vercel staging

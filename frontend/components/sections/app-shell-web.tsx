@@ -9,6 +9,7 @@
 
 import { Sidebar } from '@/components/navigation/sidebar';
 import { Header } from '@/components/navigation/header';
+import { PageTransition } from './page-transition';
 
 export interface AppShellWebProps {
   variant: 'convenio' | 'owner';
@@ -26,7 +27,7 @@ export function AppShellWeb({ variant, children }: AppShellWebProps) {
           className="flex-1 overflow-auto p-6"
           tabIndex={-1}
         >
-          {children}
+          <PageTransition>{children}</PageTransition>
         </main>
       </div>
     </div>

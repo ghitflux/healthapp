@@ -20,10 +20,27 @@ import { api } from '@/lib/api';
 import { formatCurrency } from '@/lib/formatters';
 
 interface OwnerDashboardData {
-  total_users?: number;
-  active_convenios?: number;
-  total_appointments?: number;
-  total_revenue?: number;
+  total_users?: {
+    patients: number;
+    doctors: number;
+    convenio_admins: number;
+    owners: number;
+  };
+  total_convenios?: {
+    active: number;
+    inactive: number;
+    pending_approval: number;
+  };
+  total_appointments?: {
+    current_month: number;
+    previous_month: number;
+    growth: number;
+  };
+  total_revenue?: {
+    current_month: number;
+    previous_month: number;
+    growth: number;
+  };
   average_ticket?: number;
   payment_success_rate?: number;
 }
@@ -58,34 +75,40 @@ export function OwnerDashboardKPIs() {
     );
   }
 
+  const totalUsers =
+    (data?.total_users?.patients ?? 0) +
+    (data?.total_users?.doctors ?? 0) +
+    (data?.total_users?.convenio_admins ?? 0) +
+    (data?.total_users?.owners ?? 0);
+
   const kpis = [
     {
       title: 'Total de Usuários',
-      value: (data?.total_users ?? 0).toLocaleString('pt-BR'),
+      value: totalUsers.toLocaleString('pt-BR'),
       icon: UsersIcon,
       iconColor: 'text-primary-600',
       description: 'Usuários cadastrados na plataforma',
     },
     {
       title: 'Convênios Ativos',
-      value: data?.active_convenios ?? 0,
+      value: data?.total_convenios?.active ?? 0,
       icon: Building2Icon,
       iconColor: 'text-success-600',
       description: 'Convênios com assinatura ativa',
     },
     {
-      title: 'Agendamentos Total',
-      value: (data?.total_appointments ?? 0).toLocaleString('pt-BR'),
+      title: 'Agendamentos (Mês)',
+      value: (data?.total_appointments?.current_month ?? 0).toLocaleString('pt-BR'),
       icon: CalendarCheckIcon,
       iconColor: 'text-warning-600',
-      description: 'Total de agendamentos realizados',
+      description: 'Agendamentos no mês atual',
     },
     {
-      title: 'Receita Total',
-      value: formatCurrency(data?.total_revenue ?? 0),
+      title: 'Receita (Mês)',
+      value: formatCurrency(data?.total_revenue?.current_month ?? 0),
       icon: DollarSignIcon,
       iconColor: 'text-success-600',
-      description: 'Receita acumulada da plataforma',
+      description: 'Receita do mês atual',
     },
     {
       title: 'Ticket Médio',

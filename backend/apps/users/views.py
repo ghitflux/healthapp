@@ -100,6 +100,8 @@ class LoginView(APIView):
             )
 
         refresh = cast(RefreshToken, RefreshToken.for_user(user))
+        refresh["role"] = user.role
+        refresh.access_token["role"] = user.role
         return Response(
             {
                 "status": "success",
@@ -504,6 +506,8 @@ class Login2FAView(APIView):
         if not device.verify_token(serializer.validated_data["totp_code"]):
             raise ValidationError({"totp_code": "Invalid TOTP code."})
         refresh = cast(RefreshToken, RefreshToken.for_user(user))
+        refresh["role"] = user.role
+        refresh.access_token["role"] = user.role
         return Response(
             {
                 "status": "success",

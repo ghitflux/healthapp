@@ -62,7 +62,7 @@
 - [x] Fluxo Stripe + PIX end-to-end endurecido
 - [x] State machine completa de appointment (`pending -> confirmed -> in_progress -> completed`)
 - [x] Configuracoes globais owner (taxas/limites/politicas)
-- [ ] Testes de carga iniciais e hardening final backend
+- [x] Testes de carga iniciais e hardening final backend
 
 ---
 
