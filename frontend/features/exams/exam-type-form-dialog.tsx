@@ -24,7 +24,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { DecimalInput } from '@/components/ui/decimal-input';
 import { Input } from '@/components/ui/input';
+import { IntegerInput } from '@/components/ui/integer-input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
@@ -156,12 +158,10 @@ export function ExamTypeFormDialog({
                   <FormItem>
                     <FormLabel>Duração (min)</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min={1}
+                      <IntegerInput
                         aria-label="Duração em minutos"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
+                        value={field.value}
+                        onValueChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
@@ -176,15 +176,11 @@ export function ExamTypeFormDialog({
                   <FormItem>
                     <FormLabel>Preço (R$)</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="0.00"
+                      <DecimalInput
+                        placeholder="0,00"
                         aria-label="Preço do exame"
-                        {...field}
-                        onChange={(e) => {
-                          const v = e.target.value;
-                          if (parseFloat(v) < 0) return;
-                          field.onChange(v);
-                        }}
+                        value={field.value ?? ''}
+                        onValueChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
@@ -197,7 +193,7 @@ export function ExamTypeFormDialog({
               control={form.control}
               name="is_active"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between rounded-md border px-4 py-3">
+                <FormItem className="flex items-center justify-between rounded-md border bg-muted/20 px-4 py-3">
                   <FormLabel className="cursor-pointer">Ativo</FormLabel>
                   <FormControl>
                     <Switch

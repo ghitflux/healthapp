@@ -17,7 +17,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { DecimalInput } from '@/components/ui/decimal-input';
+import { IntegerInput } from '@/components/ui/integer-input';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { EmptyStateBlock } from '@/components/patterns/empty-state-block';
@@ -139,7 +140,11 @@ export function OwnerSettingsPageContent() {
                   <FormItem>
                     <FormLabel>Taxa da plataforma (%)</FormLabel>
                     <FormControl>
-                      <Input placeholder="0.00" {...field} />
+                      <DecimalInput
+                        placeholder="0,00"
+                        value={field.value ?? ''}
+                        onValueChange={field.onChange}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -153,7 +158,11 @@ export function OwnerSettingsPageContent() {
                   <FormItem>
                     <FormLabel>Taxa de cancelamento (%)</FormLabel>
                     <FormControl>
-                      <Input placeholder="0.00" {...field} />
+                      <DecimalInput
+                        placeholder="0,00"
+                        value={field.value ?? ''}
+                        onValueChange={field.onChange}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -167,12 +176,7 @@ export function OwnerSettingsPageContent() {
                   <FormItem>
                     <FormLabel>Antecedência máxima (dias)</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min={0}
-                        {...field}
-                        onChange={(event) => field.onChange(Number(event.target.value))}
-                      />
+                      <IntegerInput value={field.value} onValueChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -186,12 +190,7 @@ export function OwnerSettingsPageContent() {
                   <FormItem>
                     <FormLabel>Cancelamento mínimo (horas)</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min={0}
-                        {...field}
-                        onChange={(event) => field.onChange(Number(event.target.value))}
-                      />
+                      <IntegerInput value={field.value} onValueChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -212,12 +211,7 @@ export function OwnerSettingsPageContent() {
                   <FormItem>
                     <FormLabel>TTL de lock (min)</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min={1}
-                        {...field}
-                        onChange={(event) => field.onChange(Number(event.target.value))}
-                      />
+                      <IntegerInput value={field.value} onValueChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -231,12 +225,7 @@ export function OwnerSettingsPageContent() {
                   <FormItem>
                     <FormLabel>Timeout de pagamento (min)</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min={1}
-                        {...field}
-                        onChange={(event) => field.onChange(Number(event.target.value))}
-                      />
+                      <IntegerInput value={field.value} onValueChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -250,12 +239,7 @@ export function OwnerSettingsPageContent() {
                   <FormItem>
                     <FormLabel>Máx. agendamentos/dia por paciente</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min={1}
-                        {...field}
-                        onChange={(event) => field.onChange(Number(event.target.value))}
-                      />
+                      <IntegerInput value={field.value} onValueChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -273,7 +257,7 @@ export function OwnerSettingsPageContent() {
                 control={form.control}
                 name="pix_enabled"
                 render={({ field }) => (
-                  <FormItem className="flex items-center justify-between rounded-md border p-3">
+                  <FormItem className="flex items-center justify-between rounded-md border bg-muted/20 p-3">
                     <FormLabel>PIX habilitado</FormLabel>
                     <FormControl>
                       <Switch checked={field.value ?? false} onCheckedChange={field.onChange} />
@@ -286,7 +270,7 @@ export function OwnerSettingsPageContent() {
                 control={form.control}
                 name="credit_card_enabled"
                 render={({ field }) => (
-                  <FormItem className="flex items-center justify-between rounded-md border p-3">
+                  <FormItem className="flex items-center justify-between rounded-md border bg-muted/20 p-3">
                     <FormLabel>Cartão de crédito habilitado</FormLabel>
                     <FormControl>
                       <Switch checked={field.value ?? false} onCheckedChange={field.onChange} />
@@ -299,7 +283,7 @@ export function OwnerSettingsPageContent() {
                 control={form.control}
                 name="maintenance_mode"
                 render={({ field }) => (
-                  <FormItem className="flex items-center justify-between rounded-md border p-3">
+                  <FormItem className="flex items-center justify-between rounded-md border bg-muted/20 p-3">
                     <FormLabel>Modo de manutenção</FormLabel>
                     <FormControl>
                       <Switch checked={field.value ?? false} onCheckedChange={field.onChange} />

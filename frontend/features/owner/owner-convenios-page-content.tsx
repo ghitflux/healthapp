@@ -91,6 +91,7 @@ import {
 import { queryClient } from '@/lib/query-client';
 import { useOwnerConveniosList, useOwnerMutations } from '@/hooks/owner';
 import { asNumber } from '@/hooks/owner/utils';
+import { maskCnpjInput, maskPhoneInput } from '@/lib/input-masks';
 
 type CreateConvenioValues = z.infer<typeof createConvenioMutationRequestSchema>;
 
@@ -435,7 +436,12 @@ export function OwnerConveniosPageContent() {
                     <FormItem>
                       <FormLabel>CNPJ</FormLabel>
                       <FormControl>
-                        <Input placeholder="00.000.000/0000-00" {...field} />
+                        <Input
+                          placeholder="00.000.000/0000-00"
+                          {...field}
+                          value={maskCnpjInput(field.value ?? '')}
+                          onChange={(event) => field.onChange(maskCnpjInput(event.target.value))}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -464,7 +470,12 @@ export function OwnerConveniosPageContent() {
                     <FormItem>
                       <FormLabel>Telefone</FormLabel>
                       <FormControl>
-                        <Input placeholder="(00) 00000-0000" {...field} />
+                        <Input
+                          placeholder="(00) 00000-0000"
+                          {...field}
+                          value={maskPhoneInput(field.value ?? '')}
+                          onChange={(event) => field.onChange(maskPhoneInput(event.target.value))}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

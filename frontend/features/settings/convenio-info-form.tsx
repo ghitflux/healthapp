@@ -20,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { LoaderIcon, SaveIcon } from '@/lib/icons';
+import { maskCnpjInput, maskPhoneInput, maskZipCodeInput } from '@/lib/input-masks';
 
 type BaseFormValues = z.infer<typeof patchedConvenioRequestSchema>;
 
@@ -126,7 +127,7 @@ export function ConvenioInfoForm({
                   <FormItem>
                     <FormLabel>CNPJ</FormLabel>
                     <FormControl>
-                      <Input {...field} disabled />
+                      <Input {...field} value={maskCnpjInput(field.value ?? '')} disabled />
                     </FormControl>
                   </FormItem>
                 )}
@@ -153,7 +154,11 @@ export function ConvenioInfoForm({
                   <FormItem>
                     <FormLabel>Telefone de contato</FormLabel>
                     <FormControl>
-                      <Input {...field} value={field.value ?? ''} />
+                      <Input
+                        {...field}
+                        value={maskPhoneInput(field.value ?? '')}
+                        onChange={(event) => field.onChange(maskPhoneInput(event.target.value))}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -183,7 +188,11 @@ export function ConvenioInfoForm({
                   <FormItem>
                     <FormLabel>Rua</FormLabel>
                     <FormControl>
-                      <Input {...field} value={field.value ?? ''} />
+                      <Input
+                        {...field}
+                        value={maskZipCodeInput(field.value ?? '')}
+                        onChange={(event) => field.onChange(maskZipCodeInput(event.target.value))}
+                      />
                     </FormControl>
                   </FormItem>
                 )}

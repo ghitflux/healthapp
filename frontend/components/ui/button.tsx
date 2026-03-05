@@ -13,9 +13,9 @@ const buttonVariants = cva(
         destructive:
           'bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 hover:shadow-md motion-safe:hover:-translate-y-px motion-safe:active:translate-y-0 motion-safe:active:scale-[0.985]',
         outline:
-          'border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground hover:border-primary-300 hover:shadow-sm motion-safe:hover:-translate-y-px motion-safe:active:translate-y-0 motion-safe:active:scale-[0.985]',
+          'border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground hover:border-primary-300 hover:shadow-sm motion-safe:hover:-translate-y-px motion-safe:active:translate-y-0 motion-safe:active:scale-[0.985] dark:bg-neutral-900',
         secondary:
-          'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 hover:shadow-sm motion-safe:hover:-translate-y-px motion-safe:active:translate-y-0 motion-safe:active:scale-[0.985]',
+          'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 hover:shadow-sm motion-safe:hover:-translate-y-px motion-safe:active:translate-y-0 motion-safe:active:scale-[0.985] dark:bg-neutral-800',
         ghost:
           'hover:bg-accent hover:text-accent-foreground hover:shadow-xs motion-safe:hover:-translate-y-px motion-safe:active:translate-y-0 motion-safe:active:scale-[0.985]',
         link:

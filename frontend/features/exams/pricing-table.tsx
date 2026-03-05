@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { DecimalInput } from '@/components/ui/decimal-input';
 import {
   Select,
   SelectContent,
@@ -281,12 +281,9 @@ export function PricingTable({
             </p>
             <div>
               <label className="text-sm font-medium">Novo Preço (R$)</label>
-              <Input
-                type="number"
-                min={0}
-                step="0.01"
+              <DecimalInput
                 value={editValue}
-                onChange={(e) => setEditValue(e.target.value)}
+                onValueChange={setEditValue}
                 className="mt-1"
                 aria-label="Novo preço"
               />

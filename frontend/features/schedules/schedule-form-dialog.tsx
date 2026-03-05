@@ -32,6 +32,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import { IntegerInput } from '@/components/ui/integer-input';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { LoaderIcon } from '@/lib/icons';
@@ -199,12 +200,10 @@ export function ScheduleFormDialog({
                 <FormItem>
                   <FormLabel>Duração do Slot (min)</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      min={5}
+                    <IntegerInput
                       aria-label="Duração do slot em minutos"
-                      {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
+                      value={field.value}
+                      onValueChange={field.onChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -217,7 +216,7 @@ export function ScheduleFormDialog({
               control={form.control}
               name="is_active"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between rounded-md border px-4 py-3">
+                <FormItem className="flex items-center justify-between rounded-md border bg-muted/20 px-4 py-3">
                   <FormLabel className="cursor-pointer">Horário Ativo</FormLabel>
                   <FormControl>
                     <Switch

@@ -24,7 +24,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { DecimalInput } from '@/components/ui/decimal-input';
 import { Input } from '@/components/ui/input';
+import { IntegerInput } from '@/components/ui/integer-input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
@@ -32,6 +34,7 @@ import { LoaderIcon } from '@/lib/icons';
 import { doctorRequestSchema } from '@api/zod/doctorRequestSchema';
 import { patchedDoctorRequestSchema } from '@api/zod/patchedDoctorRequestSchema';
 import type { DoctorList } from '@api/types/DoctorList';
+import { normalizeIntegerInput } from '@/lib/input-masks';
 
 type CreateValues = z.infer<typeof doctorRequestSchema>;
 type PatchValues = z.infer<typeof patchedDoctorRequestSchema>;
@@ -134,7 +137,14 @@ export function DoctorFormDialog({
                   <FormItem>
                     <FormLabel>CRM</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: 123456" aria-label="CRM" {...field} />
+                      <Input
+                        placeholder="Ex: 123456"
+                        aria-label="CRM"
+                        {...field}
+                        onChange={(event) =>
+                          field.onChange(normalizeIntegerInput(event.target.value, 10))
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -152,6 +162,7 @@ export function DoctorFormDialog({
                         maxLength={2}
                         aria-label="Estado do CRM"
                         {...field}
+                        onChange={(event) => field.onChange(event.target.value.toUpperCase())}
                       />
                     </FormControl>
                     <FormMessage />
@@ -186,12 +197,10 @@ export function DoctorFormDialog({
                   <FormItem>
                     <FormLabel>Duração (min)</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min={1}
+                      <IntegerInput
                         aria-label="Duração da consulta em minutos"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
+                        value={field.value}
+                        onValueChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
@@ -205,10 +214,11 @@ export function DoctorFormDialog({
                   <FormItem>
                     <FormLabel>Preço Consulta (R$)</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="0.00"
+                      <DecimalInput
+                        placeholder="0,00"
                         aria-label="Preço da consulta"
-                        {...field}
+                        value={field.value ?? ''}
+                        onValueChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
@@ -240,7 +250,7 @@ export function DoctorFormDialog({
               control={form.control}
               name="is_available"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between rounded-md border px-4 py-3">
+                <FormItem className="flex items-center justify-between rounded-md border bg-muted/20 px-4 py-3">
                   <FormLabel className="cursor-pointer">Disponível para agendamento</FormLabel>
                   <FormControl>
                     <Switch

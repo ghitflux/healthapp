@@ -117,7 +117,7 @@ export function ScheduleExceptionFormDialog({
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             {/* Range mode toggle */}
             {onSubmitRange && (
-              <div className="flex items-center justify-between rounded-md border px-4 py-3 bg-muted/30">
+              <div className="flex items-center justify-between rounded-md border bg-muted/20 px-4 py-3">
                 <span className="text-sm font-medium">Aplicar por período</span>
                 <Switch
                   checked={isRangeMode}
@@ -175,7 +175,7 @@ export function ScheduleExceptionFormDialog({
               control={form.control}
               name="is_full_day"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between rounded-md border px-4 py-3">
+                <FormItem className="flex items-center justify-between rounded-md border bg-muted/20 px-4 py-3">
                   <FormLabel className="cursor-pointer">Dia Inteiro</FormLabel>
                   <FormControl>
                     <Switch
@@ -235,7 +235,7 @@ export function ScheduleExceptionFormDialog({
               control={form.control}
               name="is_available"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between rounded-md border px-4 py-3">
+                <FormItem className="flex items-center justify-between rounded-md border bg-muted/20 px-4 py-3">
                   <div>
                     <FormLabel className="cursor-pointer">Disponível</FormLabel>
                     <p className="text-xs text-muted-foreground mt-0.5">

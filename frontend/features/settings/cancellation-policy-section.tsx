@@ -5,7 +5,8 @@ import { useForm } from 'react-hook-form';
 import type { PatchedConvenioRequest } from '@api/types/PatchedConvenioRequest';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { DecimalInput } from '@/components/ui/decimal-input';
+import { IntegerInput } from '@/components/ui/integer-input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
@@ -90,27 +91,32 @@ export function CancellationPolicySection({
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="min-cancellation-hours">Prazo minimo (horas)</Label>
-              <Input
+              <IntegerInput
                 id="min-cancellation-hours"
-                type="number"
-                min={0}
-                {...form.register('minCancellationHours', { valueAsNumber: true })}
+                value={form.watch('minCancellationHours')}
+                onValueChange={(value) =>
+                  form.setValue('minCancellationHours', value ?? 0, { shouldDirty: true })
+                }
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="cancellation-refund-percentage">Reembolso antecipado (%)</Label>
-              <Input
+              <DecimalInput
                 id="cancellation-refund-percentage"
-                type="number"
-                min={0}
-                max={100}
-                {...form.register('cancellationRefundPercentage', { valueAsNumber: true })}
+                value={form.watch('cancellationRefundPercentage')}
+                onValueChange={(value) =>
+                  form.setValue(
+                    'cancellationRefundPercentage',
+                    value === '' ? 0 : Number.parseFloat(value),
+                    { shouldDirty: true }
+                  )
+                }
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-between rounded-lg border p-3">
+          <div className="flex items-center justify-between rounded-lg border bg-muted/20 p-3">
             <div>
               <p className="text-sm font-medium">Permitir cancelamento pelo paciente</p>
               <p className="text-xs text-muted-foreground">
