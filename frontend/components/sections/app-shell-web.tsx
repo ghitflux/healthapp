@@ -21,7 +21,7 @@ export function AppShellWeb({ variant, children }: AppShellWebProps) {
     <div className="flex h-screen bg-neutral-50 dark:bg-neutral-950 overflow-hidden">
       <Sidebar variant={variant} />
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <Header />
+        <Header variant={variant} />
         <main
           id="main-content"
           className="flex-1 overflow-auto p-6"

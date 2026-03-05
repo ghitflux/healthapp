@@ -92,14 +92,14 @@ export function ScheduleExceptionsList({
         </Button>
       </div>
 
-      <div className="rounded-md border">
+      <div className="overflow-x-auto rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Data</TableHead>
               <TableHead>Horário</TableHead>
-              <TableHead>Dia Inteiro</TableHead>
-              <TableHead>Disponível</TableHead>
+              <TableHead className="hidden md:table-cell">Dia Inteiro</TableHead>
+              <TableHead className="hidden sm:table-cell">Disponivel</TableHead>
               <TableHead>Motivo</TableHead>
               <TableHead className="w-12" />
             </TableRow>
@@ -123,7 +123,7 @@ export function ScheduleExceptionsList({
                   )}
                 </TableCell>
 
-                <TableCell>
+                <TableCell className="hidden md:table-cell">
                   {exc.is_full_day ? (
                     <Badge variant="secondary">Sim</Badge>
                   ) : (
@@ -131,7 +131,7 @@ export function ScheduleExceptionsList({
                   )}
                 </TableCell>
 
-                <TableCell>
+                <TableCell className="hidden sm:table-cell">
                   {exc.is_available ? (
                     <Badge className="bg-green-100 text-green-800 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400">
                       Disponível

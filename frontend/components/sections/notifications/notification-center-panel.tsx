@@ -6,31 +6,24 @@
  * Exibe lista de notificações com ações de leitura.
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
+import {
+  getUnreadNotificationCountQueryKey,
+  listNotificationsQueryKey,
+  useListNotifications,
+  useMarkAllNotificationsRead,
+  useMarkNotificationRead,
+} from '@api/hooks/useNotifications';
+import type { Notification } from '@api/types/Notification';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
 import { BellIcon, CheckIcon, InfoIcon } from '@/lib/icons';
 import { StatusPill } from '@/components/ds/status-pill';
 import { DateTimeText } from '@/components/ds/datetime-text';
 import { EmptyStateBlock } from '@/components/patterns/empty-state-block';
-import { api } from '@/lib/api';
+import { queryClient } from '@/lib/query-client';
 import { cn } from '@/lib/utils';
-
-interface Notification {
-  id: string;
-  type: string;
-  title: string;
-  body: string;
-  is_read: boolean;
-  created_at: string;
-}
-
-interface NotificationsResponse {
-  results?: Notification[];
-  count?: number;
-}
 
 function NotificationItemSkeleton() {
   return (
@@ -92,35 +85,41 @@ function NotificationItem({ notification, onMarkRead }: NotificationItemProps) {
 }
 
 export function NotificationCenterPanel() {
-  const queryClient = useQueryClient();
+  const reactQueryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery<NotificationsResponse>({
-    queryKey: ['notifications'],
-    queryFn: async () => {
-      const response = await api.get('/v1/notifications/?page_size=20');
-      return response.data.data ?? response.data;
-    },
-    staleTime: 1000 * 60,
-  });
+  const notificationsQuery = useListNotifications(
+    { page_size: 20, ordering: '-created_at' },
+    {
+      query: {
+        client: queryClient,
+        staleTime: 60_000,
+      },
+    }
+  );
 
-  const markReadMutation = useMutation({
-    mutationFn: (id: string) => api.patch(`/v1/notifications/${id}/read/`),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['notifications'] });
-      void queryClient.invalidateQueries({ queryKey: ['notifications-unread-count'] });
-    },
-  });
-
-  const markAllReadMutation = useMutation({
-    mutationFn: () => api.post('/v1/notifications/read-all/'),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['notifications'] });
-      void queryClient.invalidateQueries({ queryKey: ['notifications-unread-count'] });
+  const markReadMutation = useMarkNotificationRead({
+    mutation: {
+      client: reactQueryClient,
+      onSuccess: () => {
+        void reactQueryClient.invalidateQueries({ queryKey: listNotificationsQueryKey() });
+        void reactQueryClient.invalidateQueries({ queryKey: getUnreadNotificationCountQueryKey() });
+      },
     },
   });
 
-  const notifications = data?.results ?? [];
-  const hasUnread = notifications.some((n) => !n.is_read);
+  const markAllReadMutation = useMarkAllNotificationsRead({
+    mutation: {
+      client: reactQueryClient,
+      onSuccess: () => {
+        void reactQueryClient.invalidateQueries({ queryKey: listNotificationsQueryKey() });
+        void reactQueryClient.invalidateQueries({ queryKey: getUnreadNotificationCountQueryKey() });
+      },
+    },
+  });
+
+  const notifications: Notification[] = notificationsQuery.data?.data ?? [];
+  const total = notificationsQuery.data?.meta?.total ?? notifications.length;
+  const hasUnread = notifications.some((notification) => !notification.is_read);
 
   return (
     <div className="flex flex-col h-full">
@@ -129,10 +128,10 @@ export function NotificationCenterPanel() {
         <div className="flex items-center gap-2">
           <BellIcon className="h-4 w-4 text-muted-foreground" />
           <span className="font-semibold text-sm">Notificações</span>
-          {data?.count !== undefined && (
+          {total > 0 && (
             <StatusPill
               status="pending"
-              label={String(data.count)}
+              label={String(total)}
               className="text-[10px]"
             />
           )}
@@ -152,7 +151,7 @@ export function NotificationCenterPanel() {
 
       {/* Content */}
       <ScrollArea className="flex-1">
-        {isLoading ? (
+        {notificationsQuery.isLoading ? (
           <div className="divide-y">
             {Array.from({ length: 4 }).map((_, i) => (
               <NotificationItemSkeleton key={i} />
@@ -170,22 +169,12 @@ export function NotificationCenterPanel() {
               <NotificationItem
                 key={n.id}
                 notification={n}
-                onMarkRead={(id) => markReadMutation.mutate(id)}
+                onMarkRead={(id) => markReadMutation.mutate({ id })}
               />
             ))}
           </div>
         )}
       </ScrollArea>
-
-      <Separator />
-      <div className="p-3 text-center">
-        <a
-          href="/notifications"
-          className="text-xs text-primary-600 underline-offset-4 hover:underline"
-        >
-          Ver todas as notificações
-        </a>
-      </div>
     </div>
   );
 }

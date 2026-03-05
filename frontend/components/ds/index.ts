@@ -30,3 +30,6 @@ export type { TrendChipProps } from './trend-chip';
 
 export { PermissionTag } from './permission-tag';
 export type { PermissionTagProps, UserRole } from './permission-tag';
+
+export { AppointmentTypeBadge } from './appointment-type-badge';
+export type { AppointmentTypeBadgeProps } from './appointment-type-badge';

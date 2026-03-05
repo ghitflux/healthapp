@@ -1,10 +1,8 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { api } from '@/lib/api';
 
 const STATUS_COLORS: Record<string, string> = {
   pending: '#f59e0b',
@@ -25,20 +23,14 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 interface AppointmentsStatusChartProps {
-  endpoint: string;
+  data?: Record<string, number>;
+  isLoading: boolean;
 }
 
-export function AppointmentsStatusChart({ endpoint }: AppointmentsStatusChartProps) {
-  const { data, isLoading } = useQuery<Record<string, number>>({
-    queryKey: ['appointments-status', endpoint],
-    queryFn: async () => {
-      const response = await api.get(endpoint);
-      const raw = response.data.data ?? response.data;
-      return raw.appointments_by_status ?? raw.by_status ?? {};
-    },
-    staleTime: 1000 * 60 * 5,
-  });
-
+export function AppointmentsStatusChart({
+  data,
+  isLoading,
+}: AppointmentsStatusChartProps) {
   if (isLoading) {
     return (
       <Card>

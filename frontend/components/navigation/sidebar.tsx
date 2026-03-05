@@ -4,22 +4,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  LayoutDashboardIcon,
-  StethoscopeIcon,
-  CalendarIcon,
-  FlaskConicalIcon,
-  CalendarCheckIcon,
-  DollarSignIcon,
-  SettingsIcon,
-  BarChart3Icon,
-  Building2Icon,
-  UsersIcon,
-  WalletIcon,
-  TrendingUpIcon,
-  ShieldIcon,
   LogOutIcon,
   HeartIcon,
-  type LucideIcon,
 } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -30,39 +16,13 @@ import { authService } from '@/lib/auth';
 import { useAuthStore } from '@/stores/auth-store';
 import { Separator } from '@/components/ui/separator';
 import { prefetchOwnerData } from '@/lib/owner-prefetch';
-
-interface NavItem {
-  label: string;
-  href: string;
-  icon: LucideIcon;
-}
-
-/**
- * Factory Method pattern: cria os itens de navegação baseado no variant.
- */
-function createNavItems(variant: 'convenio' | 'owner'): NavItem[] {
-  if (variant === 'owner') {
-    return [
-      { label: 'Dashboard', href: '/owner/dashboard', icon: BarChart3Icon },
-      { label: 'Convênios', href: '/owner/convenios', icon: Building2Icon },
-      { label: 'Usuários', href: '/owner/users', icon: UsersIcon },
-      { label: 'Financeiro', href: '/owner/financial', icon: WalletIcon },
-      { label: 'Analytics', href: '/owner/analytics', icon: TrendingUpIcon },
-      { label: 'Auditoria', href: '/owner/audit-logs', icon: ShieldIcon },
-      { label: 'Configurações', href: '/owner/settings', icon: SettingsIcon },
-    ];
-  }
-
-  return [
-    { label: 'Dashboard', href: '/convenio/dashboard', icon: LayoutDashboardIcon },
-    { label: 'Médicos', href: '/convenio/doctors', icon: StethoscopeIcon },
-    { label: 'Agendas', href: '/convenio/schedules', icon: CalendarIcon },
-    { label: 'Exames', href: '/convenio/exams', icon: FlaskConicalIcon },
-    { label: 'Agendamentos', href: '/convenio/appointments', icon: CalendarCheckIcon },
-    { label: 'Financeiro', href: '/convenio/financial', icon: DollarSignIcon },
-    { label: 'Configurações', href: '/convenio/settings', icon: SettingsIcon },
-  ];
-}
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { createNavItems, isNavItemActive } from './nav-config';
 
 interface SidebarProps {
   variant: 'convenio' | 'owner';
@@ -109,33 +69,35 @@ export function Sidebar({ variant }: SidebarProps) {
 
       {/* Navigation */}
       <ScrollArea className="flex-1 px-3 py-4">
-        <nav className="space-y-1">
-          {navItems.map((item) => {
-            const isActive =
-              pathname === item.href ||
-              (item.href !== '/convenio/dashboard' &&
-                item.href !== '/owner/dashboard' &&
-                pathname.startsWith(item.href));
+        <TooltipProvider delayDuration={150}>
+          <nav className="space-y-1">
+            {navItems.map((item) => {
+              const isActive = isNavItemActive(pathname, item.href);
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onMouseEnter={() => handlePrefetch(item.href)}
-                onFocus={() => handlePrefetch(item.href)}
-                className={cn(
-                  'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-[background-color,color,transform,box-shadow] duration-[var(--duration-base)] ease-[var(--ease-standard)]',
-                  isActive
-                    ? 'bg-primary-100 text-primary-700 shadow-xs dark:bg-primary-900/30 dark:text-primary-400'
-                    : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground motion-safe:hover:translate-x-0.5'
-                )}
-              >
-                <item.icon className="h-4 w-4 shrink-0 transition-transform duration-[var(--duration-fast)] ease-[var(--ease-standard)] motion-safe:group-hover:scale-110" />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+              return (
+                <Tooltip key={item.href}>
+                  <TooltipTrigger asChild>
+                    <Link
+                      href={item.href}
+                      onMouseEnter={() => handlePrefetch(item.href)}
+                      onFocus={() => handlePrefetch(item.href)}
+                      className={cn(
+                        'group relative flex items-center gap-3 rounded-r-lg rounded-l-sm border-l-2 px-3 py-2.5 text-sm transition-[background-color,color,transform,box-shadow,border-color] duration-[var(--duration-base)] ease-[var(--ease-standard)]',
+                        isActive
+                          ? 'border-primary-600 bg-primary-100/80 pl-[calc(theme(spacing.3)-2px)] font-semibold text-primary-700 shadow-xs dark:bg-primary-900/30 dark:text-primary-300'
+                          : 'border-transparent font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground motion-safe:hover:translate-x-0.5'
+                      )}
+                    >
+                      <item.icon className="h-4 w-4 shrink-0 transition-transform duration-[var(--duration-fast)] ease-[var(--ease-standard)] motion-safe:group-hover:scale-110" />
+                      {item.label}
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">{item.label}</TooltipContent>
+                </Tooltip>
+              );
+            })}
+          </nav>
+        </TooltipProvider>
       </ScrollArea>
 
       {/* User info + Logout */}

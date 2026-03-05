@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { PagePlaceholder } from '@/components/feedback/page-placeholder';
+import { FinancialPageContent } from '@/features/financial';
 
 export const metadata: Metadata = { title: 'Financeiro — HealthApp' };
+export const dynamic = 'force-dynamic';
 
 export default function FinancialPage() {
-  return <PagePlaceholder title="Financeiro" description="Relatórios e análises financeiras" />;
+  return <FinancialPageContent />;
 }

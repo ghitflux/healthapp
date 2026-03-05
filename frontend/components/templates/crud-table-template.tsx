@@ -7,6 +7,7 @@
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { PlusIcon } from '@/lib/icons';
+import { PageBreadcrumb } from '@/components/patterns/page-breadcrumb';
 
 export interface CrudTableTemplateProps {
   /** Título da página */
@@ -40,6 +41,8 @@ export function CrudTableTemplate({
 }: CrudTableTemplateProps) {
   return (
     <div className={cn('space-y-6', className)}>
+      <PageBreadcrumb />
+
       {/* Page Header */}
       <div className="flex items-start justify-between">
         <div>

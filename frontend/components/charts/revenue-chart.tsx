@@ -1,6 +1,5 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import {
   AreaChart,
   Area,
@@ -12,25 +11,20 @@ import {
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { api } from '@/lib/api';
 import { formatCurrency } from '@/lib/formatters';
+import { asNumber } from '@/hooks/owner/utils';
 
 interface RevenueChartProps {
-  endpoint: string;
+  data?: Array<Record<string, unknown>>;
+  isLoading: boolean;
   title?: string;
 }
 
-export function RevenueChart({ endpoint, title = 'Receita Mensal' }: RevenueChartProps) {
-  const { data, isLoading } = useQuery<Array<{ date: string; revenue: number }>>({
-    queryKey: ['revenue-chart', endpoint],
-    queryFn: async () => {
-      const response = await api.get(endpoint);
-      const raw = response.data.data ?? response.data;
-      return raw.revenue_by_day ?? raw.revenue_chart ?? [];
-    },
-    staleTime: 1000 * 60 * 5,
-  });
-
+export function RevenueChart({
+  data,
+  isLoading,
+  title = 'Receita Mensal',
+}: RevenueChartProps) {
   if (isLoading) {
     return (
       <Card>
@@ -44,7 +38,14 @@ export function RevenueChart({ endpoint, title = 'Receita Mensal' }: RevenueChar
     );
   }
 
-  const chartData = data ?? [];
+  const chartData = Array.isArray(data)
+    ? data
+        .map((item) => ({
+          date: typeof item.date === 'string' ? item.date : '',
+          revenue: asNumber(item.revenue ?? item.total),
+        }))
+        .filter((item) => item.date.length > 0)
+    : [];
 
   return (
     <Card>

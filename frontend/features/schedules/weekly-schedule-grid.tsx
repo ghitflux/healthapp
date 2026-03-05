@@ -163,7 +163,7 @@ export function WeeklyScheduleGrid({
   return (
     <div className="space-y-3">
       {/* Header with add button */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-sm font-medium text-muted-foreground">
           Grade Semanal
         </h3>
@@ -174,44 +174,46 @@ export function WeeklyScheduleGrid({
       </div>
 
       {/* 7-column grid */}
-      <div className="grid grid-cols-7 gap-2 min-w-0">
-        {WEEKDAY_NAMES.map((dayName, weekdayIndex) => {
-          const daySchedules = byWeekday[weekdayIndex] ?? [];
+      <div className="overflow-x-auto pb-1">
+        <div className="grid min-w-[760px] grid-cols-7 gap-2">
+          {WEEKDAY_NAMES.map((dayName, weekdayIndex) => {
+            const daySchedules = byWeekday[weekdayIndex] ?? [];
 
-          return (
-            <div key={weekdayIndex} className="space-y-1.5 min-w-0">
-              {/* Day header */}
-              <div
-                className={`rounded-md px-2 py-1.5 text-center text-xs font-semibold ${
-                  daySchedules.length > 0
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground'
-                }`}
-              >
-                {dayName}
-                {daySchedules.length > 0 && (
-                  <span className="ml-1 opacity-70">({daySchedules.length})</span>
+            return (
+              <div key={weekdayIndex} className="space-y-1.5 min-w-0">
+                {/* Day header */}
+                <div
+                  className={`rounded-md px-2 py-1.5 text-center text-xs font-semibold ${
+                    daySchedules.length > 0
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-muted-foreground'
+                  }`}
+                >
+                  {dayName}
+                  {daySchedules.length > 0 && (
+                    <span className="ml-1 opacity-70">({daySchedules.length})</span>
+                  )}
+                </div>
+
+                {/* Schedule blocks */}
+                {daySchedules.length > 0 ? (
+                  daySchedules.map((schedule) => (
+                    <ScheduleBlock
+                      key={schedule.id}
+                      schedule={schedule}
+                      onEdit={onEdit}
+                      onDelete={onDelete}
+                    />
+                  ))
+                ) : (
+                  <div className="rounded-md border border-dashed border-muted-foreground/20 py-4 text-center text-xs text-muted-foreground/50">
+                    —
+                  </div>
                 )}
               </div>
-
-              {/* Schedule blocks */}
-              {daySchedules.length > 0 ? (
-                daySchedules.map((schedule) => (
-                  <ScheduleBlock
-                    key={schedule.id}
-                    schedule={schedule}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                  />
-                ))
-              ) : (
-                <div className="rounded-md border border-dashed border-muted-foreground/20 py-4 text-center text-xs text-muted-foreground/50">
-                  —
-                </div>
-              )}
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { PagePlaceholder } from '@/components/feedback/page-placeholder';
+import { SettingsPageContent } from '@/features/settings';
 
 export const metadata: Metadata = { title: 'Configurações — HealthApp' };
+export const dynamic = 'force-dynamic';
 
 export default function SettingsPage() {
-  return <PagePlaceholder title="Configurações" description="Configurações do convênio" />;
+  return <SettingsPageContent />;
 }

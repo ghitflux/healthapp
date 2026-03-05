@@ -5,6 +5,7 @@
  */
 
 import { cn } from '@/lib/utils';
+import { PageBreadcrumb } from '@/components/patterns/page-breadcrumb';
 
 export interface DashboardTemplateProps {
   /** Título da página */
@@ -36,6 +37,8 @@ export function DashboardTemplate({
 }: DashboardTemplateProps) {
   return (
     <div className={cn('space-y-6', className)}>
+      <PageBreadcrumb />
+
       {/* Page Header */}
       <div className="flex items-start justify-between">
         <div>

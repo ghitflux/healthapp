@@ -21,6 +21,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
+import { PageBreadcrumb } from '@/components/patterns/page-breadcrumb';
 import { EmptyStateBlock } from '@/components/patterns/empty-state-block';
 import { ErrorStateBlock } from '@/components/patterns/error-state-block';
 import { LoaderIcon, StethoscopeIcon, UsersIcon } from '@/lib/icons';
@@ -173,16 +174,19 @@ export function SchedulesPageContent() {
   return (
     <>
       {/* Page header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">Agendas Médicas</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Gerencie os horários semanais e exceções de agenda dos médicos.
-        </p>
+      <div className="mb-6 space-y-4">
+        <PageBreadcrumb />
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Agendas Médicas</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Gerencie os horários semanais e exceções de agenda dos médicos.
+          </p>
+        </div>
       </div>
 
-      <div className="flex gap-6 min-h-[600px]">
+      <div className="grid min-h-[600px] gap-6 xl:grid-cols-[280px_minmax(0,1fr)] xl:items-start">
         {/* Left column — Doctor selector */}
-        <div className="w-64 shrink-0">
+        <div className="min-w-0 xl:sticky xl:top-0">
           <div className="rounded-lg border bg-card">
             <div className="px-4 py-3 border-b">
               <div className="flex items-center gap-2">
@@ -212,7 +216,7 @@ export function SchedulesPageContent() {
                 className="py-8"
               />
             ) : (
-              <ScrollArea className="h-[calc(100vh-280px)]">
+              <ScrollArea className="h-[280px] xl:h-[calc(100vh-280px)]">
                 <div className="p-2 space-y-1">
                   {doctors.map((doctor) => {
                     const isSelected = doctor.id === selectedDoctorId;

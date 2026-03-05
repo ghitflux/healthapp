@@ -1,28 +1,20 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import type { ConvenioDashboard } from '@api/types/ConvenioDashboard';
 import { StethoscopeIcon, CalendarCheckIcon, DollarSignIcon, XCircleIcon } from '@/lib/icons';
 import { KpiCard as KPICard, KpiCardSkeleton as KPICardSkeleton } from '@/components/patterns/kpi-card';
-import { api } from '@/lib/api';
 import { formatCurrency } from '@/lib/formatters';
+import { asNumber } from '@/hooks/owner/utils';
 
-interface ConvenioDashboardData {
-  total_doctors?: number;
-  total_appointments_month?: number;
-  total_revenue_month?: number;
-  cancellation_rate?: number;
+interface ConvenioDashboardKPIsProps {
+  dashboard?: ConvenioDashboard;
+  isLoading: boolean;
 }
 
-export function ConvenioDashboardKPIs() {
-  const { data, isLoading } = useQuery<ConvenioDashboardData>({
-    queryKey: ['convenio-dashboard'],
-    queryFn: async () => {
-      const response = await api.get('/v1/convenios/dashboard/');
-      return response.data.data ?? response.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
-
+export function ConvenioDashboardKPIs({
+  dashboard,
+  isLoading,
+}: ConvenioDashboardKPIsProps) {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -36,28 +28,28 @@ export function ConvenioDashboardKPIs() {
   const kpis = [
     {
       title: 'Médicos Ativos',
-      value: data?.total_doctors ?? 0,
+      value: dashboard?.total_doctors ?? 0,
       icon: StethoscopeIcon,
       iconColor: 'text-primary-600',
       description: 'Total de médicos no convênio',
     },
     {
       title: 'Agendamentos (Mês)',
-      value: data?.total_appointments_month ?? 0,
+      value: dashboard?.total_appointments_month ?? 0,
       icon: CalendarCheckIcon,
       iconColor: 'text-success-600',
       description: 'Agendamentos no mês atual',
     },
     {
       title: 'Receita (Mês)',
-      value: formatCurrency(data?.total_revenue_month ?? 0),
+      value: formatCurrency(asNumber(dashboard?.total_revenue_month)),
       icon: DollarSignIcon,
       iconColor: 'text-warning-600',
       description: 'Faturamento do mês atual',
     },
     {
       title: 'Taxa de Cancelamento',
-      value: `${(data?.cancellation_rate ?? 0).toFixed(1)}%`,
+      value: `${(dashboard?.cancellation_rate ?? 0).toFixed(1)}%`,
       icon: XCircleIcon,
       iconColor: 'text-danger-600',
       description: 'Percentual de cancelamentos',

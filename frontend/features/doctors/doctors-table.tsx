@@ -26,6 +26,7 @@ import { EmptyStateBlock } from '@/components/patterns/empty-state-block';
 import { ErrorStateBlock } from '@/components/patterns/error-state-block';
 import { RatingStars } from '@/components/ds/rating-stars';
 import { CurrencyText } from '@/components/ds/currency-text';
+import { DateTimeText } from '@/components/ds/datetime-text';
 import { MoreHorizontalIcon, EditIcon, TrashIcon } from '@/lib/icons';
 import type { DoctorList } from '@api/types/DoctorList';
 
@@ -75,16 +76,15 @@ export function DoctorsTable({
   }
 
   return (
-    <div className="rounded-md border">
+    <div className="overflow-x-auto rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Nome</TableHead>
-            <TableHead>Convênio</TableHead>
             <TableHead>Especialidade</TableHead>
-            <TableHead>Duração</TableHead>
+            <TableHead className="hidden lg:table-cell">Proximo horario</TableHead>
             <TableHead>Preço Consulta</TableHead>
-            <TableHead>Avaliação</TableHead>
+            <TableHead className="hidden md:table-cell">Avaliacao</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="w-12" />
           </TableRow>
@@ -97,11 +97,19 @@ export function DoctorsTable({
               onClick={() => onView(doctor)}
             >
               <TableCell className="font-medium">{doctor.user_name}</TableCell>
-              <TableCell className="text-muted-foreground text-sm">
-                {doctor.convenio_name ?? '—'}
-              </TableCell>
               <TableCell>{doctor.specialty}</TableCell>
-              <TableCell>—</TableCell>
+              <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
+                {doctor.next_available_date ? (
+                  <div className="space-y-0.5">
+                    <DateTimeText value={doctor.next_available_date} variant="date" />
+                    {doctor.next_available_time && (
+                      <p className="text-xs text-muted-foreground">{doctor.next_available_time}</p>
+                    )}
+                  </div>
+                ) : (
+                  <span className="text-muted-foreground">Sem agenda</span>
+                )}
+              </TableCell>
               <TableCell>
                 {doctor.consultation_price ? (
                   <CurrencyText value={parseFloat(doctor.consultation_price)} />
@@ -109,7 +117,7 @@ export function DoctorsTable({
                   <span className="text-muted-foreground">—</span>
                 )}
               </TableCell>
-              <TableCell>
+              <TableCell className="hidden md:table-cell">
                 <div className="flex items-center gap-1.5">
                   <RatingStars value={parseFloat(doctor.rating ?? '0')} size="sm" />
                   <span className="text-xs text-muted-foreground">

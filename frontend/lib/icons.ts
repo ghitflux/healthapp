@@ -159,6 +159,11 @@ export {
   FileUp as FileUpIcon,
   Printer as PrinterIcon,
 
+  // Appointment actions
+  PlayCircle as PlayCircleIcon,
+  CircleCheckBig as CircleCheckBigIcon,
+  UserRoundX as UserRoundXIcon,
+
   // Misc
   HelpCircle as HelpCircleIcon,
   BookOpen as BookOpenIcon,

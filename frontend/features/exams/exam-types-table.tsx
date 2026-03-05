@@ -66,15 +66,15 @@ export function ExamTypesTable({
   }
 
   return (
-    <div className="rounded-md border">
+    <div className="overflow-x-auto rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Nome</TableHead>
-            <TableHead>Duração</TableHead>
+            <TableHead className="hidden sm:table-cell">Duracao</TableHead>
             <TableHead>Preço</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Atualizado em</TableHead>
+            <TableHead className="hidden lg:table-cell">Atualizado em</TableHead>
             <TableHead className="w-12" />
           </TableRow>
         </TableHeader>
@@ -91,7 +91,7 @@ export function ExamTypesTable({
                   )}
                 </div>
               </TableCell>
-              <TableCell>{et.duration_minutes ?? '—'} min</TableCell>
+              <TableCell className="hidden sm:table-cell">{et.duration_minutes ?? '—'} min</TableCell>
               <TableCell>
                 <CurrencyText value={parseFloat(et.price)} />
               </TableCell>
@@ -100,7 +100,7 @@ export function ExamTypesTable({
                   {et.is_active ? 'Ativo' : 'Inativo'}
                 </Badge>
               </TableCell>
-              <TableCell>
+              <TableCell className="hidden lg:table-cell">
                 <DateTimeText value={et.updated_at} variant="date" className="text-sm text-muted-foreground" />
               </TableCell>
               <TableCell>

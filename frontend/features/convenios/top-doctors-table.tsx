@@ -1,12 +1,11 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import type { ConvenioDashboard } from '@api/types/ConvenioDashboard';
 import { RatingStars } from '@/components/ds/rating-stars';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { api } from '@/lib/api';
 
 interface TopDoctor {
   id: string;
@@ -62,17 +61,13 @@ function mapTopDoctor(raw: unknown, index: number): TopDoctor {
   };
 }
 
-export function TopDoctorsTable() {
-  const { data, isLoading } = useQuery<TopDoctor[]>({
-    queryKey: ['top-doctors'],
-    queryFn: async () => {
-      const response = await api.get('/v1/convenios/dashboard/');
-      const raw = response.data.data ?? response.data;
-      const doctors = Array.isArray(raw?.top_doctors) ? raw.top_doctors : [];
-      return doctors.map(mapTopDoctor);
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+interface TopDoctorsTableProps {
+  doctors?: ConvenioDashboard['top_doctors'];
+  isLoading: boolean;
+}
+
+export function TopDoctorsTable({ doctors, isLoading }: TopDoctorsTableProps) {
+  const resolvedDoctors = Array.isArray(doctors) ? doctors.map(mapTopDoctor) : [];
 
   if (isLoading) {
     return (
@@ -87,15 +82,13 @@ export function TopDoctorsTable() {
     );
   }
 
-  const doctors = data ?? [];
-
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-base">Top Médicos</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        {doctors.length === 0 ? (
+        {resolvedDoctors.length === 0 ? (
           <div className="p-6 text-center text-sm text-muted-foreground">
             Nenhum dado disponível
           </div>
@@ -109,7 +102,7 @@ export function TopDoctorsTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {doctors.slice(0, 5).map((doctor) => {
+              {resolvedDoctors.slice(0, 5).map((doctor) => {
                 const initials = doctor.name
                   .split(/\s+/)
                   .filter(Boolean)
