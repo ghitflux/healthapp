@@ -31,6 +31,8 @@ function isInternalAsset(pathname: string) {
 function roleRedirect(role?: string | null) {
   if (role === 'owner') return '/owner/dashboard';
   if (role === 'convenio_admin') return '/convenio/dashboard';
+  if (role === 'doctor') return '/access-denied?reason=doctor_web_pending&role=doctor';
+  if (role === 'patient') return '/access-denied?reason=web_only&role=patient';
   return '/login';
 }
 

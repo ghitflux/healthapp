@@ -23,6 +23,13 @@ export interface JWTPayload {
   iat: number;
 }
 
+export const WEB_ALLOWED_ROLES = ['owner', 'convenio_admin', 'doctor'] as const;
+export type WebAllowedRole = (typeof WEB_ALLOWED_ROLES)[number];
+
+export function isWebAllowedRole(role: string | null | undefined): role is WebAllowedRole {
+  return !!role && WEB_ALLOWED_ROLES.includes(role as WebAllowedRole);
+}
+
 /**
  * Estratégia de redirect por role (Strategy Pattern).
  */
@@ -42,6 +49,12 @@ class OwnerRedirect implements RoleRedirectStrategy {
   }
 }
 
+class DoctorRedirect implements RoleRedirectStrategy {
+  getRedirectPath(): string {
+    return '/access-denied?reason=doctor_web_pending&role=doctor';
+  }
+}
+
 class DefaultRedirect implements RoleRedirectStrategy {
   getRedirectPath(): string {
     return '/login';
@@ -57,6 +70,8 @@ function createRedirectStrategy(role: string | null): RoleRedirectStrategy {
       return new OwnerRedirect();
     case 'convenio_admin':
       return new ConvenioAdminRedirect();
+    case 'doctor':
+      return new DoctorRedirect();
     default:
       return new DefaultRedirect();
   }
@@ -74,6 +89,13 @@ export const authService = {
     return tokens;
   },
 
+  clearTokens: (): void => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+    }
+  },
+
   logout: async (): Promise<void> => {
     const refresh = typeof window !== 'undefined'
       ? localStorage.getItem('refresh_token')
@@ -88,8 +110,7 @@ export const authService = {
     }
 
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
+      authService.clearTokens();
       window.location.href = '/login';
     }
   },
@@ -131,6 +152,11 @@ export const authService = {
     return payload?.user_id ?? null;
   },
 
+  isWebRoleAllowed: (roleOverride?: string | null): boolean => {
+    const role = roleOverride ?? authService.getUserRole();
+    return isWebAllowedRole(role);
+  },
+
   isTokenExpired: (): boolean => {
     const payload = authService.decodePayload();
     if (!payload?.exp) return true;
@@ -141,8 +167,8 @@ export const authService = {
    * Obtém o caminho de redirect baseado no role do usuário logado.
    * Usa Strategy Pattern para determinar o destino correto.
    */
-  getRedirectPath: (): string => {
-    const role = authService.getUserRole();
+  getRedirectPath: (roleOverride?: string | null): string => {
+    const role = roleOverride ?? authService.getUserRole();
     const strategy = createRedirectStrategy(role);
     return strategy.getRedirectPath();
   },

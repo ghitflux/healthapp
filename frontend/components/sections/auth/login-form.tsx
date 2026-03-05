@@ -47,17 +47,31 @@ export function LoginForm() {
   async function onSubmit(data: LoginFormData) {
     try {
       await authService.login(data);
+      let role = authService.getUserRole();
 
       try {
         const meResponse = await api.get('/v1/users/me/');
         const user = meResponse.data.data ?? meResponse.data;
         setUser(user);
+        role = user?.role ?? role;
       } catch {
         // não crítico — store será populado em próxima requisição
       }
 
+      if (!authService.isWebRoleAllowed(role)) {
+        authService.clearTokens();
+        setUser(null);
+        toast.error('Perfil de paciente não acessa o portal web. Use o aplicativo mobile.');
+        const deniedParams = new URLSearchParams({
+          reason: 'web_only',
+          role: role ?? 'unknown',
+        });
+        router.replace(`/access-denied?${deniedParams.toString()}`);
+        return;
+      }
+
       toast.success('Login realizado com sucesso!');
-      router.push(authService.getRedirectPath());
+      router.push(authService.getRedirectPath(role));
     } catch (error) {
       const err = error as {
         response?: { data?: { detail?: string; errors?: Array<{ detail: string }> } };

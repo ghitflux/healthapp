@@ -17,13 +17,59 @@ interface TopDoctor {
   rating: number;
 }
 
+function toText(value: unknown, fallback: string) {
+  if (typeof value === 'string' && value.trim()) {
+    return value.trim();
+  }
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return String(value);
+  }
+  return fallback;
+}
+
+function toNumber(value: unknown, fallback = 0) {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+  if (typeof value === 'string') {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) return parsed;
+  }
+  return fallback;
+}
+
+function mapTopDoctor(raw: unknown, index: number): TopDoctor {
+  const row = (raw ?? {}) as {
+    id?: string | number;
+    name?: string;
+    user_name?: string;
+    doctor_name?: string;
+    specialty?: string;
+    avatar_url?: string;
+    total_appointments?: number | string;
+    rating?: number | string;
+  };
+
+  const name = toText(row.name ?? row.user_name ?? row.doctor_name, 'Sem nome');
+
+  return {
+    id: toText(row.id, `doctor-${index}`),
+    name,
+    specialty: toText(row.specialty, 'Sem especialidade'),
+    avatar_url: typeof row.avatar_url === 'string' ? row.avatar_url : undefined,
+    total_appointments: toNumber(row.total_appointments),
+    rating: toNumber(row.rating),
+  };
+}
+
 export function TopDoctorsTable() {
   const { data, isLoading } = useQuery<TopDoctor[]>({
     queryKey: ['top-doctors'],
     queryFn: async () => {
       const response = await api.get('/v1/convenios/dashboard/');
       const raw = response.data.data ?? response.data;
-      return raw.top_doctors ?? [];
+      const doctors = Array.isArray(raw?.top_doctors) ? raw.top_doctors : [];
+      return doctors.map(mapTopDoctor);
     },
     staleTime: 1000 * 60 * 5,
   });
@@ -65,7 +111,8 @@ export function TopDoctorsTable() {
             <TableBody>
               {doctors.slice(0, 5).map((doctor) => {
                 const initials = doctor.name
-                  .split(' ')
+                  .split(/\s+/)
+                  .filter(Boolean)
                   .map((n) => n[0])
                   .slice(0, 2)
                   .join('');
