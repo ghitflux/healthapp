@@ -23,6 +23,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { EmptyStateBlock } from '@/components/patterns/empty-state-block';
 import { ErrorStateBlock } from '@/components/patterns/error-state-block';
 import { LoaderIcon, SaveIcon } from '@/lib/icons';
+import { queryClient } from '@/lib/query-client';
 import { useOwnerMutations } from '@/hooks/owner';
 
 type SettingsFormValues = z.infer<typeof updatePlatformSettingsMutationRequestSchema>;
@@ -38,6 +39,7 @@ export function OwnerSettingsPageContent() {
 
   const settingsQuery = useGetPlatformSettings({
     query: {
+      client: queryClient,
       staleTime: 1000 * 60 * 5,
       gcTime: 1000 * 60 * 20,
       refetchOnWindowFocus: false,

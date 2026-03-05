@@ -6,6 +6,7 @@ import type { AdminUserList } from '@api/types/AdminUserList';
 import type { RoleEnum } from '@api/types/RoleEnum';
 import type { ListAdminUsersQueryParams } from '@api/types/ownerTypes/ListAdminUsers';
 import { listAdminUsersQueryParamsSchema } from '@api/zod/ownerSchemas/listAdminUsersSchema';
+import { queryClient } from '@/lib/query-client';
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -43,6 +44,7 @@ export function useOwnerUsersList() {
 
   const query = useListAdminUsers(params, {
     query: {
+      client: queryClient,
       staleTime: 1000 * 30,
       gcTime: 1000 * 60 * 10,
       refetchOnWindowFocus: false,

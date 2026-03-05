@@ -35,6 +35,7 @@ export function useScheduleMutations() {
   // --- Horários ---
   const createScheduleMutation = useCreateDoctorSchedule({
     mutation: {
+      client: queryClient,
       onSuccess: () => { toast.success('Horário criado!'); invalidateSchedules(); },
       onError: (e: unknown) => toast.error(getApiError(e, 'Erro ao criar horário.')),
     },
@@ -42,6 +43,7 @@ export function useScheduleMutations() {
 
   const patchScheduleMutation = usePatchDoctorSchedule({
     mutation: {
+      client: queryClient,
       onSuccess: () => { toast.success('Horário atualizado!'); invalidateSchedules(); },
       onError: (e: unknown) => toast.error(getApiError(e, 'Erro ao atualizar horário.')),
     },
@@ -49,6 +51,7 @@ export function useScheduleMutations() {
 
   const deleteScheduleMutation = useDeleteDoctorSchedule({
     mutation: {
+      client: queryClient,
       onSuccess: () => { toast.success('Horário removido!'); invalidateSchedules(); },
       onError: (e: unknown) => toast.error(getApiError(e, 'Erro ao remover horário.')),
     },
@@ -57,6 +60,7 @@ export function useScheduleMutations() {
   // --- Exceções ---
   const createExceptionMutation = useCreateScheduleException({
     mutation: {
+      client: queryClient,
       onSuccess: () => { toast.success('Exceção criada!'); invalidateExceptions(); },
       onError: (e: unknown) => toast.error(getApiError(e, 'Erro ao criar exceção.')),
     },
@@ -64,6 +68,7 @@ export function useScheduleMutations() {
 
   const deleteExceptionMutation = useDeleteScheduleException({
     mutation: {
+      client: queryClient,
       onSuccess: () => { toast.success('Exceção removida!'); invalidateExceptions(); },
       onError: (e: unknown) => toast.error(getApiError(e, 'Erro ao remover exceção.')),
     },

@@ -5,6 +5,7 @@ import { listAuditLogsQueryKey, useListAuditLogs } from '@api/hooks/useOwner';
 import type { AuditLog } from '@api/types/AuditLog';
 import type { ListAuditLogsQueryParams } from '@api/types/ownerTypes/ListAuditLogs';
 import { listAuditLogsQueryParamsSchema } from '@api/zod/ownerSchemas/listAuditLogsSchema';
+import { queryClient } from '@/lib/query-client';
 import { normalizeActionFilter } from './utils';
 
 const DEFAULT_PAGE_SIZE = 20;
@@ -38,6 +39,7 @@ export function useOwnerAuditLogsList() {
 
   const query = useListAuditLogs(params, {
     query: {
+      client: queryClient,
       staleTime: 1000 * 30,
       gcTime: 1000 * 60 * 10,
       refetchOnWindowFocus: false,

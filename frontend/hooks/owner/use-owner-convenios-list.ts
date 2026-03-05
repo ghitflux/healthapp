@@ -8,6 +8,7 @@ import {
 import type { AdminConvenioList } from '@api/types/AdminConvenioList';
 import type { ListAdminConveniosQueryParams } from '@api/types/ownerTypes/ListAdminConvenios';
 import { listAdminConveniosQueryParamsSchema } from '@api/zod/ownerSchemas/listAdminConveniosSchema';
+import { queryClient } from '@/lib/query-client';
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -49,6 +50,7 @@ export function useOwnerConveniosList() {
 
   const query = useListAdminConvenios(params, {
     query: {
+      client: queryClient,
       staleTime: 1000 * 60,
       gcTime: 1000 * 60 * 10,
       refetchOnWindowFocus: false,

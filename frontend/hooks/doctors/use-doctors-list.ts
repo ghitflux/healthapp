@@ -9,6 +9,7 @@
 import { useState } from 'react';
 import { useListDoctors, listDoctorsQueryKey } from '@api/hooks/useDoctors';
 import type { ListDoctorsQueryParams } from '@api/types/doctorsTypes/ListDoctors';
+import { queryClient } from '@/lib/query-client';
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -30,7 +31,11 @@ export function useDoctorsList(overrides?: Partial<ListDoctorsQueryParams>) {
     ...overrides,
   };
 
-  const query = useListDoctors(params);
+  const query = useListDoctors(params, {
+    query: {
+      client: queryClient,
+    },
+  });
 
   const totalCount = query.data?.meta?.total ?? 0;
   const totalPages = query.data?.meta?.total_pages ?? Math.ceil(totalCount / pageSize);

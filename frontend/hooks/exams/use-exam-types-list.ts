@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { useListExamTypes, listExamTypesQueryKey } from '@api/hooks/useConvenio';
+import { queryClient } from '@/lib/query-client';
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -24,7 +25,11 @@ export function useExamTypesList(convenioId: string) {
     ...(convenioId ? { convenio: convenioId } : {}),
   };
 
-  const query = useListExamTypes(params);
+  const query = useListExamTypes(params, {
+    query: {
+      client: queryClient,
+    },
+  });
 
   const totalCount = query.data?.meta?.total ?? 0;
   const totalPages = Math.ceil(totalCount / pageSize);

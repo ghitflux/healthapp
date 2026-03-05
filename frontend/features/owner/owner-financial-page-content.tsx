@@ -34,6 +34,7 @@ import { KpiCard, KpiCardSkeleton, KpiGrid } from '@/components/patterns/kpi-car
 import { exportRowsToCsv, printRowsAsPdf } from '@/lib/export-utils';
 import { formatCurrency } from '@/lib/formatters';
 import { DownloadIcon, DollarSignIcon, RefreshIcon, TrendingUpIcon, WalletIcon } from '@/lib/icons';
+import { queryClient } from '@/lib/query-client';
 import { asNumber, asInteger } from '@/hooks/owner/utils';
 
 const METHOD_COLORS = ['#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6'];
@@ -68,6 +69,7 @@ export function OwnerFinancialPageContent() {
 
   const financialQuery = useGetOwnerFinancialReport({
     query: {
+      client: queryClient,
       staleTime: 1000 * 60 * 5,
       gcTime: 1000 * 60 * 15,
       refetchOnWindowFocus: false,
@@ -77,6 +79,7 @@ export function OwnerFinancialPageContent() {
 
   const dashboardQuery = useGetOwnerDashboard({
     query: {
+      client: queryClient,
       staleTime: 1000 * 60 * 5,
       gcTime: 1000 * 60 * 15,
       refetchOnWindowFocus: false,

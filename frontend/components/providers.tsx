@@ -5,8 +5,11 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'sonner';
 import { queryClient } from '@/lib/query-client';
+import { configureKubbClient } from '@/lib/kubb-client';
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  configureKubbClient();
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider

@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { useGetOwnerDashboard, useGetOwnerFinancialReport } from '@api/hooks/useOwner';
 import type { OwnerDashboard } from '@api/types/OwnerDashboard';
 import type { OwnerFinancialReport } from '@api/types/OwnerFinancialReport';
+import { queryClient } from '@/lib/query-client';
 import {
   asInteger,
   asNumber,
@@ -37,6 +38,7 @@ export function useOwnerDashboard() {
 
   const dashboardQuery = useGetOwnerDashboard({
     query: {
+      client: queryClient,
       staleTime: DASHBOARD_STALE_TIME,
       gcTime: 1000 * 60 * 30,
       refetchOnWindowFocus: false,
@@ -46,6 +48,7 @@ export function useOwnerDashboard() {
 
   const financialPreviewQuery = useGetOwnerFinancialReport({
     query: {
+      client: queryClient,
       staleTime: FINANCIAL_STALE_TIME,
       gcTime: 1000 * 60 * 30,
       refetchOnWindowFocus: false,

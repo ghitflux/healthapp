@@ -26,6 +26,7 @@ export function useExamTypeMutations() {
 
   const createMutation = useCreateExamType({
     mutation: {
+      client: queryClient,
       onSuccess: () => { toast.success('Tipo de exame criado!'); invalidateExamTypes(); },
       onError: (e: unknown) => toast.error(getApiError(e, 'Erro ao criar tipo de exame.')),
     },
@@ -33,6 +34,7 @@ export function useExamTypeMutations() {
 
   const patchMutation = usePatchExamType({
     mutation: {
+      client: queryClient,
       onSuccess: () => { toast.success('Tipo de exame atualizado!'); invalidateExamTypes(); },
       onError: (e: unknown) => toast.error(getApiError(e, 'Erro ao atualizar tipo de exame.')),
     },
@@ -40,6 +42,7 @@ export function useExamTypeMutations() {
 
   const deleteMutation = useDeleteExamType({
     mutation: {
+      client: queryClient,
       onSuccess: () => { toast.success('Tipo de exame removido!'); invalidateExamTypes(); },
       onError: (e: unknown) => toast.error(getApiError(e, 'Erro ao remover tipo de exame.')),
     },

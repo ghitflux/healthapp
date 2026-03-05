@@ -88,6 +88,7 @@ import {
   PlusIcon,
   TrashIcon,
 } from '@/lib/icons';
+import { queryClient } from '@/lib/query-client';
 import { useOwnerConveniosList, useOwnerMutations } from '@/hooks/owner';
 import { asNumber } from '@/hooks/owner/utils';
 
@@ -123,6 +124,7 @@ export function OwnerConveniosPageContent() {
 
   const detailQuery = useGetAdminConvenioById(selectedConvenio?.id ?? '', {
     query: {
+      client: queryClient,
       enabled: detailOpen && !!selectedConvenio,
       staleTime: 1000 * 60,
       gcTime: 1000 * 60 * 5,

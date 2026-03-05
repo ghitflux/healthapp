@@ -33,6 +33,7 @@ export function useOwnerMutations() {
 
   const createConvenioMutation = useCreateConvenio({
     mutation: {
+      client: queryClient,
       onSuccess: () => {
         toast.success('Convênio criado com sucesso.');
         invalidateConvenios();
@@ -45,6 +46,7 @@ export function useOwnerMutations() {
 
   const deleteConvenioMutation = useDeleteConvenio({
     mutation: {
+      client: queryClient,
       onSuccess: () => {
         toast.success('Convênio excluído com sucesso.');
         invalidateConvenios();
@@ -57,6 +59,7 @@ export function useOwnerMutations() {
 
   const approveConvenioMutation = useApproveConvenio({
     mutation: {
+      client: queryClient,
       onSuccess: (_data, variables) => {
         toast.success('Convênio aprovado com sucesso.');
         invalidateConvenios();
@@ -70,6 +73,7 @@ export function useOwnerMutations() {
 
   const suspendConvenioMutation = useSuspendConvenio({
     mutation: {
+      client: queryClient,
       onSuccess: (_data, variables) => {
         toast.success('Convênio suspenso com sucesso.');
         invalidateConvenios();
@@ -83,6 +87,7 @@ export function useOwnerMutations() {
 
   const updateSettingsMutation = useUpdatePlatformSettings({
     mutation: {
+      client: queryClient,
       onSuccess: () => {
         toast.success('Configurações globais atualizadas com sucesso.');
         invalidateSettings();

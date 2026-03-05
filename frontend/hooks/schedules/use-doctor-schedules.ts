@@ -12,6 +12,7 @@ import {
 } from '@api/hooks/useConvenio';
 import type { ListDoctorSchedulesQueryParams } from '@api/types/convenioTypes/ListDoctorSchedules';
 import type { DoctorSchedule } from '@api/types/DoctorSchedule';
+import { queryClient } from '@/lib/query-client';
 
 export function useDoctorSchedules(doctorId: string | null) {
   const params: ListDoctorSchedulesQueryParams | undefined = doctorId
@@ -19,7 +20,10 @@ export function useDoctorSchedules(doctorId: string | null) {
     : undefined;
 
   const query = useListDoctorSchedules(params, {
-    query: { enabled: !!doctorId },
+    query: {
+      client: queryClient,
+      enabled: !!doctorId,
+    },
   });
 
   const allSchedules: DoctorSchedule[] = query.data?.data ?? [];

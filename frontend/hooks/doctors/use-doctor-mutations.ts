@@ -26,6 +26,7 @@ export function useDoctorMutations() {
 
   const createMutation = useCreateDoctor({
     mutation: {
+      client: queryClient,
       onSuccess: () => {
         toast.success('Médico criado com sucesso!');
         invalidateDoctors();
@@ -38,6 +39,7 @@ export function useDoctorMutations() {
 
   const patchMutation = usePatchDoctor({
     mutation: {
+      client: queryClient,
       onSuccess: () => {
         toast.success('Médico atualizado com sucesso!');
         invalidateDoctors();
@@ -50,6 +52,7 @@ export function useDoctorMutations() {
 
   const deleteMutation = useDeleteDoctor({
     mutation: {
+      client: queryClient,
       onSuccess: () => {
         toast.success('Médico removido com sucesso!');
         invalidateDoctors();

@@ -38,6 +38,7 @@ import type { ScheduleException } from '@api/types/ScheduleException';
 import type { DoctorScheduleRequest } from '@api/types/DoctorScheduleRequest';
 import type { PatchedDoctorScheduleRequest } from '@api/types/PatchedDoctorScheduleRequest';
 import type { ScheduleExceptionRequest } from '@api/types/ScheduleExceptionRequest';
+import { queryClient } from '@/lib/query-client';
 import { useAuthStore } from '@/stores/auth-store';
 
 export function SchedulesPageContent() {
@@ -54,13 +55,16 @@ export function SchedulesPageContent() {
   const [deleteException, setDeleteException] = useState<ScheduleException | null>(null);
 
   // Fetch doctors for selector
-  const doctorsQuery = useListDoctors({ convenio: convenioId, page_size: 100 });
+  const doctorsQuery = useListDoctors(
+    { convenio: convenioId, page_size: 100 },
+    { query: { client: queryClient } }
+  );
   const doctors: DoctorList[] = doctorsQuery.data?.data ?? [];
 
   // Fetch schedules for selected doctor
   const schedulesQuery = useListDoctorSchedules(
     selectedDoctorId ? { page_size: 100 } : undefined,
-    { query: { enabled: !!selectedDoctorId } }
+    { query: { client: queryClient, enabled: !!selectedDoctorId } }
   );
   const schedules: DoctorSchedule[] = schedulesQuery.data?.data ?? [];
 
@@ -73,7 +77,7 @@ export function SchedulesPageContent() {
   // Fetch exceptions for selected doctor
   const exceptionsQuery = useListScheduleExceptions(
     selectedDoctorId ? { page_size: 100 } : undefined,
-    { query: { enabled: !!selectedDoctorId } }
+    { query: { client: queryClient, enabled: !!selectedDoctorId } }
   );
   const exceptions: ScheduleException[] = exceptionsQuery.data?.data ?? [];
 
