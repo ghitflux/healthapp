@@ -271,13 +271,13 @@ export function OwnerFinancialPageContent() {
             </div>
           ) : (
             <>
-              <div className="rounded-md border p-3">
+              <div className="rounded-md border bg-card p-3 shadow-xs">
                 Interno concluído: <strong>{reconciliation.internalCompleted}</strong>
               </div>
-              <div className="rounded-md border p-3">
+              <div className="rounded-md border bg-card p-3 shadow-xs">
                 Provedor concluído: <strong>{reconciliation.stripeCompleted}</strong>
               </div>
-              <div className="rounded-md border p-3">
+              <div className="rounded-md border bg-card p-3 shadow-xs">
                 Diferença: <strong>{reconciliation.difference}</strong>
               </div>
             </>
@@ -332,14 +332,14 @@ export function OwnerFinancialPageContent() {
             type="date"
             value={startDate}
             onChange={(event) => setStartDate(event.target.value)}
-            className="h-9 rounded-md border px-2 text-sm"
+            className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
             aria-label="Data inicial"
           />
           <input
             type="date"
             value={endDate}
             onChange={(event) => setEndDate(event.target.value)}
-            className="h-9 rounded-md border px-2 text-sm"
+            className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
             aria-label="Data final"
           />
           <Badge variant="secondary">Filtro de período depende de endpoint dedicado</Badge>

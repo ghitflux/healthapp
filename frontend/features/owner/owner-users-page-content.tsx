@@ -177,7 +177,7 @@ export function OwnerUsersPageContent() {
               description="Ajuste os filtros para localizar usuários cadastrados."
             />
           ) : (
-            <div className="rounded-md border">
+            <div className="rounded-md border bg-card shadow-xs">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -285,7 +285,7 @@ export function OwnerUsersPageContent() {
                 <p className="text-sm text-muted-foreground">{selectedUser.email}</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 rounded-md border p-4 text-sm">
+              <div className="grid grid-cols-2 gap-4 rounded-md border bg-card p-4 text-sm shadow-xs">
                 <div>
                   <p className="text-muted-foreground">Perfil</p>
                   <p className="font-medium">{mapRoleLabel(selectedUser.role)}</p>

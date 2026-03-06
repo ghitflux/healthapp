@@ -284,7 +284,7 @@ export function OwnerConveniosPageContent() {
               action={{ label: 'Novo Convênio', onClick: () => setCreateOpen(true) }}
             />
           ) : (
-            <div className="rounded-md border">
+            <div className="rounded-md border bg-card shadow-xs">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -560,7 +560,7 @@ export function OwnerConveniosPageContent() {
                   <p className="text-sm text-muted-foreground">CNPJ: {detail.cnpj}</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 rounded-md border p-4 text-sm">
+                <div className="grid grid-cols-2 gap-4 rounded-md border bg-card p-4 text-sm shadow-xs">
                   <div>
                     <p className="text-muted-foreground">Status</p>
                     <p className="font-medium">{!detail.is_active ? 'Suspenso' : detail.is_approved ? 'Aprovado' : 'Pendente'}</p>
@@ -579,7 +579,7 @@ export function OwnerConveniosPageContent() {
                   </div>
                 </div>
 
-                <div className="rounded-md border p-4">
+                <div className="rounded-md border bg-card p-4 shadow-xs">
                   <p className="mb-2 text-sm font-medium">Métricas do mês</p>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>

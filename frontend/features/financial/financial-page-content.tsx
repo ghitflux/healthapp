@@ -108,7 +108,7 @@ export function FinancialPageContent() {
               description="Nao houve volume suficiente de servicos no periodo selecionado."
             />
           ) : (
-            <div className="overflow-x-auto rounded-md border">
+            <div className="overflow-x-auto rounded-md border bg-card shadow-xs">
               <Table>
                 <TableHeader>
                   <TableRow>

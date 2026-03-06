@@ -92,7 +92,7 @@ export function ScheduleExceptionsList({
         </Button>
       </div>
 
-      <div className="overflow-x-auto rounded-md border">
+      <div className="overflow-x-auto rounded-md border bg-card shadow-xs">
         <Table>
           <TableHeader>
             <TableRow>

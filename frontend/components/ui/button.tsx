@@ -42,10 +42,39 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, style, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
+    const resolvedVariant = variant ?? 'default';
+    const baseStyle: React.CSSProperties =
+      resolvedVariant === 'default'
+        ? {
+            backgroundColor: 'hsl(var(--primary))',
+            color: 'hsl(var(--primary-foreground))',
+          }
+        : resolvedVariant === 'destructive'
+          ? {
+              backgroundColor: 'hsl(var(--destructive))',
+              color: 'hsl(var(--destructive-foreground))',
+            }
+          : resolvedVariant === 'secondary'
+            ? {
+                backgroundColor: 'hsl(var(--secondary))',
+                color: 'hsl(var(--secondary-foreground))',
+              }
+            : resolvedVariant === 'outline'
+              ? {
+                  backgroundColor: 'hsl(var(--background))',
+                  borderColor: 'hsl(var(--input))',
+                }
+              : {};
+
     return (
-      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        style={{ ...baseStyle, ...style }}
+        {...props}
+      />
     );
   }
 );

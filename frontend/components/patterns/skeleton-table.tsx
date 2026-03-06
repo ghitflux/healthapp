@@ -39,7 +39,7 @@ export function SkeletonTable({
   };
 
   return (
-    <div className={cn('rounded-md border', className)}>
+    <div className={cn('rounded-md border bg-card shadow-xs', className)}>
       <Table>
         <TableHeader>
           <TableRow>

@@ -206,7 +206,7 @@ export function WeeklyScheduleGrid({
                     />
                   ))
                 ) : (
-                  <div className="rounded-md border border-dashed border-muted-foreground/20 py-4 text-center text-xs text-muted-foreground/50">
+                  <div className="rounded-md border border-dashed border-muted-foreground/20 bg-muted/10 py-4 text-center text-xs text-muted-foreground/50">
                     —
                   </div>
                 )}

@@ -166,7 +166,7 @@ export function PricingTable({
       </div>
 
       {/* Pricing table */}
-      <div className="rounded-md border">
+      <div className="rounded-md border bg-card shadow-xs">
         <Table>
           <TableHeader>
             <TableRow>
@@ -226,7 +226,7 @@ export function PricingTable({
 
       {/* Session history */}
       {history.length > 0 && (
-        <div className="rounded-md border">
+        <div className="rounded-md border bg-card shadow-xs">
           <div className="px-4 py-2.5 border-b bg-muted/30">
             <p className="text-sm font-medium">Histórico de Alterações (sessão atual)</p>
             <p className="text-xs text-muted-foreground">

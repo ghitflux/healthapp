@@ -112,7 +112,7 @@ export function OwnerAuditLogsPageContent() {
                 type="text"
                 value={list.modelName}
                 onChange={(event) => list.handleModel(event.target.value)}
-                className="h-9 w-36 rounded-md border px-2 text-sm"
+                className="h-9 w-36 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
                 placeholder="Entidade"
                 aria-label="Filtro por entidade"
               />
@@ -121,7 +121,7 @@ export function OwnerAuditLogsPageContent() {
                 type="text"
                 value={list.user}
                 onChange={(event) => list.handleUser(event.target.value)}
-                className="h-9 w-44 rounded-md border px-2 text-sm"
+                className="h-9 w-44 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
                 placeholder="UUID do ator"
                 aria-label="Filtro por usuário"
               />
@@ -130,7 +130,7 @@ export function OwnerAuditLogsPageContent() {
                 type="date"
                 value={list.dateFrom}
                 onChange={(event) => list.handleDateFrom(event.target.value)}
-                className="h-9 rounded-md border px-2 text-sm"
+                className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
                 aria-label="Data inicial"
               />
 
@@ -138,7 +138,7 @@ export function OwnerAuditLogsPageContent() {
                 type="date"
                 value={list.dateTo}
                 onChange={(event) => list.handleDateTo(event.target.value)}
-                className="h-9 rounded-md border px-2 text-sm"
+                className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
                 aria-label="Data final"
               />
 
@@ -187,7 +187,7 @@ export function OwnerAuditLogsPageContent() {
             description="Ajuste os filtros para localizar registros de auditoria."
           />
         ) : (
-          <div className="rounded-md border">
+          <div className="rounded-md border bg-card shadow-xs">
             <Table>
               <TableHeader>
                 <TableRow>

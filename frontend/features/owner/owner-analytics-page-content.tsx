@@ -50,7 +50,7 @@ export function OwnerAnalyticsPageContent() {
       title="Analytics"
       description="Tendências de crescimento e comportamento operacional da plataforma."
       headerActions={
-        <div className="flex items-center gap-1 rounded-md border p-1">
+        <div className="flex items-center gap-1 rounded-md border bg-card p-1 shadow-xs">
           <Button
             type="button"
             size="sm"
@@ -142,13 +142,13 @@ export function OwnerAnalyticsPageContent() {
             <CardTitle className="text-base">Leituras analíticas</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <div className="rounded-md border p-3">
+            <div className="rounded-md border bg-card p-3 shadow-xs">
               Usuários no período: <strong>{dashboard.kpis.newUsers.toLocaleString('pt-BR')}</strong>
             </div>
-            <div className="rounded-md border p-3">
+            <div className="rounded-md border bg-card p-3 shadow-xs">
               Agendamentos no período: <strong>{dashboard.kpis.appointments.toLocaleString('pt-BR')}</strong>
             </div>
-            <div className="rounded-md border p-3">
+            <div className="rounded-md border bg-card p-3 shadow-xs">
               Receita no período: <strong>{formatCurrency(dashboard.kpis.revenue)}</strong>
             </div>
           </CardContent>

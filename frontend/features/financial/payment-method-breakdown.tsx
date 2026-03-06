@@ -70,7 +70,7 @@ export function PaymentMethodBreakdown({
             return (
               <div
                 key={item.method}
-                className="flex items-center justify-between rounded-lg border p-3"
+                className="flex items-center justify-between rounded-lg border bg-background p-3 shadow-xs"
               >
                 <div className="space-y-1">
                   <PaymentMethodBadge method={item.method} />

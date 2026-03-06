@@ -57,7 +57,7 @@ export function OwnerDashboardPageContent() {
 
   const headerActions = (
     <div className="flex flex-wrap items-center gap-2">
-      <div className="flex items-center gap-1 rounded-md border p-1">
+      <div className="flex items-center gap-1 rounded-md border bg-card p-1 shadow-xs">
         <Button
           type="button"
           size="sm"
@@ -96,14 +96,14 @@ export function OwnerDashboardPageContent() {
         <div className="flex items-center gap-2">
           <input
             type="date"
-            className="h-9 rounded-md border px-2 text-sm"
+            className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
             aria-label="Data inicial do filtro"
             value={dashboard.customStart}
             onChange={(event) => dashboard.setCustomStart(event.target.value)}
           />
           <input
             type="date"
-            className="h-9 rounded-md border px-2 text-sm"
+            className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
             aria-label="Data final do filtro"
             value={dashboard.customEnd}
             onChange={(event) => dashboard.setCustomEnd(event.target.value)}
@@ -308,18 +308,18 @@ export function OwnerDashboardPageContent() {
             />
           ) : (
             <>
-              <div className="rounded-md border p-3">
+              <div className="rounded-md border bg-card p-3 shadow-xs">
                 <p className="text-xs text-muted-foreground">Receita total da plataforma</p>
                 <p className="text-lg font-semibold">
                   {formatCurrency(dashboard.financialInsights.totalRevenuePlatform)}
                 </p>
               </div>
-              <div className="rounded-md border p-3">
+              <div className="rounded-md border bg-card p-3 shadow-xs">
                 <p className="text-xs text-muted-foreground">Taxa de estorno</p>
                 <p className="text-lg font-semibold">{dashboard.financialInsights.refundRate.toFixed(2)}%</p>
               </div>
               <div
-                className={`rounded-md border p-3 ${
+                className={`rounded-md border bg-card p-3 shadow-xs ${
                   dashboard.financialInsights.difference === 0 ? 'border-success-500/40' : 'border-warning-500/40'
                 }`}
               >

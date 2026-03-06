@@ -3,7 +3,13 @@ import { cn } from '@/lib/utils';
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto">
+    <div
+      className="relative w-full overflow-auto rounded-[inherit] bg-card text-card-foreground"
+      style={{
+        backgroundColor: 'hsl(var(--card))',
+        color: 'hsl(var(--card-foreground))',
+      }}
+    >
       <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
     </div>
   )
@@ -14,7 +20,7 @@ const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn('[&_tr]:border-b', className)} {...props} />
+  <thead ref={ref} className={cn('bg-muted/35 [&_tr]:border-b', className)} {...props} />
 ));
 TableHeader.displayName = 'TableHeader';
 
@@ -43,7 +49,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
     <tr
       ref={ref}
       className={cn(
-        'border-b transition-[background-color,transform] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:bg-muted/50 motion-safe:hover:translate-x-[1px] data-[state=selected]:bg-muted',
+        'border-b transition-[background-color,transform] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:bg-muted/45 motion-safe:hover:translate-x-[1px] data-[state=selected]:bg-muted/70',
         className
       )}
       {...props}
