@@ -39,12 +39,12 @@ export function RevenueByPeriodChart({ data, isLoading }: RevenueByPeriodChartPr
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Receita por periodo</CardTitle>
+        <CardTitle className="text-base">Receita por período</CardTitle>
       </CardHeader>
       <CardContent>
         {rows.length === 0 ? (
           <EmptyStateBlock
-            title="Sem dados no periodo"
+            title="Sem dados no período"
             description="Ajuste as datas para visualizar a evolucao da receita."
           />
         ) : (
@@ -63,7 +63,7 @@ export function RevenueByPeriodChart({ data, isLoading }: RevenueByPeriodChartPr
               />
               <Tooltip
                 formatter={(value: number, name: string) =>
-                  name === 'Receita' ? formatCurrency(value) : `${value} transacoes`
+                  name === 'Receita' ? formatCurrency(value) : `${value} transações`
                 }
               />
               <Legend />
@@ -83,7 +83,7 @@ export function RevenueByPeriodChart({ data, isLoading }: RevenueByPeriodChartPr
                 stroke="#f59e0b"
                 strokeWidth={2}
                 dot={false}
-                name="Transacoes"
+                name="Transações"
               />
             </LineChart>
           </ResponsiveContainer>

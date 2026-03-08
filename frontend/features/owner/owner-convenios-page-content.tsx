@@ -457,7 +457,7 @@ export function OwnerConveniosPageContent() {
                     <FormItem>
                       <FormLabel>E-mail de contato</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="contato@convenio.com" {...field} />
+                        <Input type="email" placeholder="contato@convênio.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/table';
 import { CrudTableTemplate } from '@/components/templates/crud-table-template';
 import { DataTableToolbar } from '@/components/patterns/data-table-toolbar';
+import { DatePicker } from '@/components/ui/date-picker';
 import { EmptyStateBlock } from '@/components/patterns/empty-state-block';
 import { ErrorStateBlock } from '@/components/patterns/error-state-block';
 import { SkeletonTable } from '@/components/patterns/skeleton-table';
@@ -126,19 +127,18 @@ export function OwnerAuditLogsPageContent() {
                 aria-label="Filtro por usuário"
               />
 
-              <input
-                type="date"
+              <DatePicker
+                className="w-[160px]"
                 value={list.dateFrom}
-                onChange={(event) => list.handleDateFrom(event.target.value)}
-                className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
+                onChange={(value) => list.handleDateFrom(value ?? '')}
                 aria-label="Data inicial"
               />
 
-              <input
-                type="date"
+              <DatePicker
+                className="w-[160px]"
                 value={list.dateTo}
-                onChange={(event) => list.handleDateTo(event.target.value)}
-                className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
+                min={list.dateFrom || undefined}
+                onChange={(value) => list.handleDateTo(value ?? '')}
                 aria-label="Data final"
               />
 

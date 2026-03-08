@@ -2,7 +2,7 @@
 
 /**
  * @file features/appointments/appointment-cancel-dialog.tsx
- * @description Dialog de confirmacao para cancelamento de agendamento.
+ * @description Dialog de confirmação para cancelamento de agendamento.
  */
 
 import { useState } from 'react';
@@ -49,7 +49,7 @@ export function AppointmentCancelDialog({
       open={open}
       onClose={handleClose}
       title="Cancelar Agendamento"
-      description="Tem certeza que deseja cancelar este agendamento? O paciente sera notificado."
+      description="Tem certeza que deseja cancelar este agendamento? O paciente será notificado."
       confirmLabel="Cancelar Agendamento"
       confirmVariant="destructive"
       onConfirm={handleConfirm}

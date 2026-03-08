@@ -2,7 +2,7 @@
 
 /**
  * @file features/appointments/appointment-noshow-dialog.tsx
- * @description Dialog de confirmacao para marcar nao comparecimento.
+ * @description Dialog de confirmação para marcar não comparecimento.
  */
 
 import { useState } from 'react';
@@ -39,18 +39,18 @@ export function AppointmentNoShowDialog({
     <ActionConfirmationDialog
       open={open}
       onClose={handleClose}
-      title="Marcar Nao Comparecimento"
-      description="O paciente nao compareceu a consulta? Esta acao sera registrada."
-      confirmLabel="Confirmar Nao Comparecimento"
+      title="Marcar Não Comparecimento"
+      description="O paciente não compareceu a consulta? Esta ação será registrada."
+      confirmLabel="Confirmar Não Comparecimento"
       confirmVariant="destructive"
       onConfirm={handleConfirm}
       isLoading={isLoading}
     >
       <div className="space-y-2">
-        <Label htmlFor="noshow-reason">Observacoes (opcional)</Label>
+        <Label htmlFor="noshow-reason">Observações (opcional)</Label>
         <Textarea
           id="noshow-reason"
-          placeholder="Alguma observacao sobre o nao comparecimento..."
+          placeholder="Alguma observação sobre o não comparecimento..."
           value={reason}
           onChange={(e) => setReason(e.target.value)}
           rows={3}

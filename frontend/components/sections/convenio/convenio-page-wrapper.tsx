@@ -7,6 +7,7 @@
  */
 
 import { useAuthStore } from '@/stores/auth-store';
+import { getAuthUserConvenioId } from '@/lib/auth-user';
 
 interface ConvenioPageWrapperProps {
   children: (convenioId: string) => React.ReactNode;
@@ -14,6 +15,6 @@ interface ConvenioPageWrapperProps {
 
 export function ConvenioPageWrapper({ children }: ConvenioPageWrapperProps) {
   const user = useAuthStore((s) => s.user);
-  const convenioId = user?.convenio_id ?? '';
+  const convenioId = getAuthUserConvenioId(user);
   return <>{children(convenioId)}</>;
 }

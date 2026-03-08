@@ -21,7 +21,7 @@ export interface CrudTableTemplateProps {
   toolbar?: React.ReactNode;
   /** Tabela de dados */
   table: React.ReactNode;
-  /** Paginação */
+  /** Páginação */
   pagination?: React.ReactNode;
   /** Slots extras (modais, etc.) */
   extras?: React.ReactNode;

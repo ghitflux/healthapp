@@ -12,6 +12,7 @@ import type { z } from 'zod/v4';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
@@ -31,10 +32,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { LoaderIcon } from '@/lib/icons';
+import { useGetDoctorById } from '@api/hooks/useDoctors';
 import { doctorRequestSchema } from '@api/zod/doctorRequestSchema';
 import { patchedDoctorRequestSchema } from '@api/zod/patchedDoctorRequestSchema';
+import type { Doctor } from '@api/types/Doctor';
 import type { DoctorList } from '@api/types/DoctorList';
 import { normalizeIntegerInput } from '@/lib/input-masks';
+import { queryClient } from '@/lib/query-client';
 
 type CreateValues = z.infer<typeof doctorRequestSchema>;
 type PatchValues = z.infer<typeof patchedDoctorRequestSchema>;
@@ -48,6 +52,25 @@ interface DoctorFormDialogProps {
   isSubmitting: boolean;
 }
 
+type DoctorFormSeed = Partial<Doctor & DoctorList> | null | undefined;
+
+function buildDefaultValues(convenioId: string, doctor?: DoctorFormSeed) {
+  return {
+    user: typeof doctor?.user === 'string' ? doctor.user : '',
+    convenio: typeof doctor?.convenio === 'string' ? doctor.convenio : convenioId,
+    crm: typeof doctor?.crm === 'string' ? doctor.crm : '',
+    crm_state: typeof doctor?.crm_state === 'string' ? doctor.crm_state : '',
+    specialty: typeof doctor?.specialty === 'string' ? doctor.specialty : '',
+    subspecialties: Array.isArray(doctor?.subspecialties) ? doctor.subspecialties : [],
+    bio: typeof doctor?.bio === 'string' ? doctor.bio : '',
+    consultation_duration:
+      typeof doctor?.consultation_duration === 'number' ? doctor.consultation_duration : 30,
+    consultation_price:
+      typeof doctor?.consultation_price === 'string' ? doctor.consultation_price : '',
+    is_available: typeof doctor?.is_available === 'boolean' ? doctor.is_available : true,
+  };
+}
+
 export function DoctorFormDialog({
   open,
   onClose,
@@ -57,45 +80,31 @@ export function DoctorFormDialog({
   isSubmitting,
 }: DoctorFormDialogProps) {
   const isEdit = !!doctor;
+  const doctorDetailQuery = useGetDoctorById(doctor?.id ?? '', {
+    query: {
+      client: queryClient,
+      enabled: open && isEdit && !!doctor?.id,
+      staleTime: 1000 * 60 * 5,
+    },
+  });
+  const resolvedDoctor = doctorDetailQuery.data ?? doctor ?? undefined;
 
   const form = useForm<CreateValues>({
     resolver: zodResolver(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (isEdit ? patchedDoctorRequestSchema : doctorRequestSchema) as any
     ),
-    defaultValues: {
-      user: '',
-      convenio: convenioId,
-      crm: '',
-      crm_state: '',
-      specialty: doctor?.specialty ?? '',
-      subspecialties: [],
-      bio: '',
-      consultation_duration: 30,
-      consultation_price: doctor?.consultation_price ?? '',
-      is_available: doctor?.is_available ?? true,
-    },
+    defaultValues: buildDefaultValues(convenioId),
   });
 
   useEffect(() => {
     if (open) {
-      form.reset({
-        user: '',
-        convenio: convenioId,
-        crm: '',
-        crm_state: '',
-        specialty: doctor?.specialty ?? '',
-        subspecialties: [],
-        bio: '',
-        consultation_duration: 30,
-        consultation_price: doctor?.consultation_price ?? '',
-        is_available: doctor?.is_available ?? true,
-      });
+      form.reset(buildDefaultValues(convenioId, resolvedDoctor));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, doctor, convenioId]);
+  }, [open, convenioId, resolvedDoctor]);
 
-  async function handleSubmit(values: CreateValues) {
+  async function handleSubmit(values: CreateValues | PatchValues) {
     await onSubmit(values);
     onClose();
   }
@@ -105,10 +114,23 @@ export function DoctorFormDialog({
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Editar Médico' : 'Novo Médico'}</DialogTitle>
+          <DialogDescription>
+            O médico fica vinculado automaticamente a clínica atual. Os atendimentos entram no painel após pagamento confirmado.
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+            {isEdit && doctorDetailQuery.isLoading && (
+              <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm text-muted-foreground">
+                Carregando dados completos do médico...
+              </div>
+            )}
+
+            <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm text-muted-foreground">
+              Este cadastro permanece vinculado a clínica atual e não depende de ajuste no app mobile.
+            </div>
+
             {!isEdit && (
               <FormField
                 control={form.control}

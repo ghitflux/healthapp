@@ -71,7 +71,7 @@ export function ExamTypesTable({
         <TableHeader>
           <TableRow>
             <TableHead>Nome</TableHead>
-            <TableHead className="hidden sm:table-cell">Duracao</TableHead>
+            <TableHead className="hidden sm:table-cell">Duração</TableHead>
             <TableHead>Preço</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="hidden lg:table-cell">Atualizado em</TableHead>

@@ -2,10 +2,11 @@
 
 /**
  * @file components/patterns/page-breadcrumb.tsx
- * @description Molecula — Breadcrumb padronizado para paginas internas.
+ * @description Molecula — Breadcrumb padronizado para páginas internas.
  */
 
 import Link from 'next/link';
+import { Fragment } from 'react';
 import { usePathname } from 'next/navigation';
 import {
   Breadcrumb,
@@ -18,14 +19,14 @@ import {
 
 const SEGMENT_LABELS: Record<string, string> = {
   dashboard: 'Dashboard',
-  doctors: 'Medicos',
+  doctors: 'Médicos',
   schedules: 'Agendas',
   exams: 'Exames',
   appointments: 'Agendamentos',
   financial: 'Financeiro',
-  settings: 'Configuracoes',
-  convenios: 'Convenios',
-  users: 'Usuarios',
+  settings: 'Configurações',
+  convenios: 'Convênios',
+  users: 'Usuários',
   analytics: 'Analytics',
   'audit-logs': 'Auditoria',
 };
@@ -97,16 +98,18 @@ export function PageBreadcrumb({ items }: PageBreadcrumbProps) {
           const isLast = index === resolvedItems.length - 1;
 
           return (
-            <BreadcrumbItem key={`${item.label}-${item.href ?? index}`}>
-              {item.href && !isLast ? (
-                <BreadcrumbLink asChild>
-                  <Link href={item.href}>{item.label}</Link>
-                </BreadcrumbLink>
-              ) : (
-                <BreadcrumbPage>{item.label}</BreadcrumbPage>
-              )}
+            <Fragment key={`${item.label}-${item.href ?? index}`}>
+              <BreadcrumbItem>
+                {item.href && !isLast ? (
+                  <BreadcrumbLink asChild>
+                    <Link href={item.href}>{item.label}</Link>
+                  </BreadcrumbLink>
+                ) : (
+                  <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                )}
+              </BreadcrumbItem>
               {!isLast && <BreadcrumbSeparator />}
-            </BreadcrumbItem>
+            </Fragment>
           );
         })}
       </BreadcrumbList>

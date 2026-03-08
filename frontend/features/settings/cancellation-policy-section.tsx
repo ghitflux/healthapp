@@ -84,13 +84,13 @@ export function CancellationPolicySection({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Politica de cancelamento</CardTitle>
+        <CardTitle className="text-base">Política de cancelamento</CardTitle>
       </CardHeader>
       <CardContent>
         <form className="space-y-6" onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="min-cancellation-hours">Prazo minimo (horas)</Label>
+              <Label htmlFor="min-cancellation-hours">Prazo mínimo (horas)</Label>
               <IntegerInput
                 id="min-cancellation-hours"
                 value={form.watch('minCancellationHours')}
@@ -130,7 +130,7 @@ export function CancellationPolicySection({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="cancellation-policy-message">Mensagem da politica</Label>
+            <Label htmlFor="cancellation-policy-message">Mensagem da política</Label>
             <Textarea
               id="cancellation-policy-message"
               rows={4}
@@ -145,7 +145,7 @@ export function CancellationPolicySection({
               ) : (
                 <SaveIcon className="mr-2 h-4 w-4" />
               )}
-              Salvar politica
+              Salvar política
             </Button>
           </div>
         </form>

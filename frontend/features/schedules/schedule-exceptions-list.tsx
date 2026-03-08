@@ -99,7 +99,7 @@ export function ScheduleExceptionsList({
               <TableHead>Data</TableHead>
               <TableHead>Horário</TableHead>
               <TableHead className="hidden md:table-cell">Dia Inteiro</TableHead>
-              <TableHead className="hidden sm:table-cell">Disponivel</TableHead>
+              <TableHead className="hidden sm:table-cell">Disponível</TableHead>
               <TableHead>Motivo</TableHead>
               <TableHead className="w-12" />
             </TableRow>

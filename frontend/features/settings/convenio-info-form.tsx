@@ -18,15 +18,27 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { LoaderIcon, SaveIcon } from '@/lib/icons';
 import { maskCnpjInput, maskPhoneInput, maskZipCodeInput } from '@/lib/input-masks';
+import { BRAZILIAN_STATE_OPTIONS } from './convenio-settings';
 
 type BaseFormValues = z.infer<typeof patchedConvenioRequestSchema>;
 
 type ConvenioInfoFormValues = Omit<BaseFormValues, 'address'> & {
   address: {
     street?: string;
+    number?: string;
+    neighborhood?: string;
+    complement?: string;
+    reference?: string;
     city?: string;
     state?: string;
     zip?: string;
@@ -44,6 +56,13 @@ interface ConvenioInfoFormProps {
 function buildAddress(address: Convenio['address']) {
   return {
     street: typeof address?.street === 'string' ? address.street : '',
+    number:
+      typeof address?.number === 'string' || typeof address?.number === 'number'
+        ? String(address.number)
+        : '',
+    neighborhood: typeof address?.neighborhood === 'string' ? address.neighborhood : '',
+    complement: typeof address?.complement === 'string' ? address.complement : '',
+    reference: typeof address?.reference === 'string' ? address.reference : '',
     city: typeof address?.city === 'string' ? address.city : '',
     state: typeof address?.state === 'string' ? address.state : '',
     zip: typeof address?.zip === 'string' ? address.zip : '',
@@ -100,7 +119,7 @@ export function ConvenioInfoForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Informacoes do convenio</CardTitle>
+        <CardTitle className="text-base">Informações da clínica</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -111,7 +130,7 @@ export function ConvenioInfoForm({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome do convenio</FormLabel>
+                    <FormLabel>Nome da clínica</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -171,7 +190,7 @@ export function ConvenioInfoForm({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Descricao</FormLabel>
+                  <FormLabel>Descrição</FormLabel>
                   <FormControl>
                     <Textarea rows={4} {...field} value={field.value ?? ''} />
                   </FormControl>
@@ -188,11 +207,46 @@ export function ConvenioInfoForm({
                   <FormItem>
                     <FormLabel>Rua</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        value={maskZipCodeInput(field.value ?? '')}
-                        onChange={(event) => field.onChange(maskZipCodeInput(event.target.value))}
-                      />
+                      <Input {...field} value={field.value ?? ''} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="address.number"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Número</FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value ?? ''} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="address.neighborhood"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bairro</FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value ?? ''} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="address.complement"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Complemento</FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value ?? ''} placeholder="Sala, bloco, andar" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -217,9 +271,20 @@ export function ConvenioInfoForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Estado</FormLabel>
-                    <FormControl>
-                      <Input {...field} value={field.value ?? ''} />
-                    </FormControl>
+                    <Select value={field.value || undefined} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a UF" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {BRAZILIAN_STATE_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormItem>
                 )}
               />
@@ -231,7 +296,64 @@ export function ConvenioInfoForm({
                   <FormItem>
                     <FormLabel>CEP</FormLabel>
                     <FormControl>
-                      <Input {...field} value={field.value ?? ''} />
+                      <Input
+                        {...field}
+                        value={maskZipCodeInput(field.value ?? '')}
+                        onChange={(event) => field.onChange(maskZipCodeInput(event.target.value))}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="address.reference"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ponto de referência</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        value={field.value ?? ''}
+                        placeholder="Ex: ao lado do shopping, torre B"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="address.lat"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Latitude</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        value={field.value ?? ''}
+                        placeholder="-3.7319"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="address.lng"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Longitude</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        value={field.value ?? ''}
+                        placeholder="-38.5267"
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -245,7 +367,7 @@ export function ConvenioInfoForm({
                 ) : (
                   <SaveIcon className="mr-2 h-4 w-4" />
                 )}
-                Salvar alteracoes
+                Salvar alterações
               </Button>
             </div>
           </form>

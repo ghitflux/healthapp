@@ -41,9 +41,10 @@ import type { PatchedDoctorScheduleRequest } from '@api/types/PatchedDoctorSched
 import type { ScheduleExceptionRequest } from '@api/types/ScheduleExceptionRequest';
 import { queryClient } from '@/lib/query-client';
 import { useAuthStore } from '@/stores/auth-store';
+import { getAuthUserConvenioId } from '@/lib/auth-user';
 
 export function SchedulesPageContent() {
-  const convenioId = useAuthStore((s) => s.user?.convenio_id ?? '');
+  const convenioId = useAuthStore((state) => getAuthUserConvenioId(state.user));
   const [selectedDoctorId, setSelectedDoctorId] = useState<string | null>(null);
 
   // Schedule modal state
@@ -58,7 +59,7 @@ export function SchedulesPageContent() {
   // Fetch doctors for selector
   const doctorsQuery = useListDoctors(
     { convenio: convenioId, page_size: 100 },
-    { query: { client: queryClient } }
+    { query: { client: queryClient, enabled: Boolean(convenioId) } }
   );
   const doctors: DoctorList[] = doctorsQuery.data?.data ?? [];
 

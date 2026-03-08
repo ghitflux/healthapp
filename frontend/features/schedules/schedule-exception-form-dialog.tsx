@@ -25,8 +25,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
+import { TimePicker } from '@/components/ui/time-picker';
 import { Button } from '@/components/ui/button';
 import { LoaderIcon } from '@/lib/icons';
 import { scheduleExceptionRequestSchema } from '@api/zod/scheduleExceptionRequestSchema';
@@ -138,10 +140,10 @@ export function ScheduleExceptionFormDialog({
                 <FormItem>
                   <FormLabel>{isRangeMode ? 'Data de Início' : 'Data'}</FormLabel>
                   <FormControl>
-                    <Input
-                      type="date"
+                    <DatePicker
                       aria-label={isRangeMode ? 'Data de início' : 'Data da exceção'}
-                      {...field}
+                      value={field.value ?? ''}
+                      onChange={(value) => field.onChange(value ?? '')}
                     />
                   </FormControl>
                   <FormMessage />
@@ -155,11 +157,11 @@ export function ScheduleExceptionFormDialog({
                 <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Data de Término
                 </label>
-                <Input
-                  type="date"
+                <DatePicker
                   value={rangeEndDate}
-                  onChange={(e) => {
-                    setRangeEndDate(e.target.value);
+                  min={form.getValues('date') || undefined}
+                  onChange={(value) => {
+                    setRangeEndDate(value ?? '');
                     setRangeEndDateError('');
                   }}
                   aria-label="Data de término do período"
@@ -198,11 +200,10 @@ export function ScheduleExceptionFormDialog({
                     <FormItem>
                       <FormLabel>Início</FormLabel>
                       <FormControl>
-                        <Input
-                          type="time"
+                        <TimePicker
                           aria-label="Horário de início"
                           value={field.value ?? ''}
-                          onChange={(e) => field.onChange(e.target.value || null)}
+                          onChange={(value) => field.onChange(value ?? null)}
                         />
                       </FormControl>
                       <FormMessage />
@@ -216,11 +217,10 @@ export function ScheduleExceptionFormDialog({
                     <FormItem>
                       <FormLabel>Término</FormLabel>
                       <FormControl>
-                        <Input
-                          type="time"
+                        <TimePicker
                           aria-label="Horário de término"
                           value={field.value ?? ''}
-                          onChange={(e) => field.onChange(e.target.value || null)}
+                          onChange={(value) => field.onChange(value ?? null)}
                         />
                       </FormControl>
                       <FormMessage />

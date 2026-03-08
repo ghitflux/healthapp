@@ -2,21 +2,19 @@
 
 /**
  * @file hooks/appointments/use-appointment-mutations.ts
- * @description Mutations de agendamento: confirmar, cancelar, iniciar, concluir, no-show.
+ * @description Mutations de agendamento: cancelar, iniciar, concluir, no-show.
  */
 
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import {
   getAppointmentByIdQueryKey,
-  useConfirmAppointment,
   useCancelAppointment,
   useStartAppointment,
   useCompleteAppointment,
   useMarkNoShow,
   listAppointmentsQueryKey,
 } from '@api/hooks/useAppointments';
-import type { ConfirmAppointmentMutationRequest } from '@api/types/appointmentsTypes/ConfirmAppointment';
 import { getApiError } from '@/lib/utils';
 
 export function useAppointmentMutations() {
@@ -28,19 +26,6 @@ export function useAppointmentMutations() {
       void queryClient.invalidateQueries({ queryKey: getAppointmentByIdQueryKey(appointmentId) });
     }
   }
-
-  const confirmMutation = useConfirmAppointment({
-    mutation: {
-      client: queryClient,
-      onSuccess: (_data, variables) => {
-        toast.success('Agendamento confirmado com sucesso!');
-        invalidateAppointments(variables.id);
-      },
-      onError: (error: unknown) => {
-        toast.error(getApiError(error, 'Erro ao confirmar agendamento.'));
-      },
-    },
-  });
 
   const cancelMutation = useCancelAppointment({
     mutation: {
@@ -85,20 +70,14 @@ export function useAppointmentMutations() {
     mutation: {
       client: queryClient,
       onSuccess: (_data, variables) => {
-        toast.success('Marcado como nao compareceu.');
+        toast.success('Marcado como não compareceu.');
         invalidateAppointments(variables.id);
       },
       onError: (error: unknown) => {
-        toast.error(getApiError(error, 'Erro ao marcar nao comparecimento.'));
+        toast.error(getApiError(error, 'Erro ao marcar não comparecimento.'));
       },
     },
   });
-
-  async function confirmAppointment(id: string) {
-    // The backend action does not require a body, but the generated schema currently
-    // models it as AppointmentRequest. Sending an empty object preserves runtime behavior.
-    return confirmMutation.mutateAsync({ id, data: {} as ConfirmAppointmentMutationRequest });
-  }
 
   async function cancelAppointment(id: string, reason?: string) {
     return cancelMutation.mutateAsync({ id, data: reason ? { reason } : undefined });
@@ -117,12 +96,10 @@ export function useAppointmentMutations() {
   }
 
   return {
-    confirmAppointment,
     cancelAppointment,
     startAppointment,
     completeAppointment,
     markNoShow,
-    isConfirming: confirmMutation.isPending,
     isCancelling: cancelMutation.isPending,
     isStarting: startMutation.isPending,
     isCompleting: completeMutation.isPending,

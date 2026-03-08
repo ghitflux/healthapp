@@ -9,7 +9,8 @@ import { TopDoctorsTable } from '@/features/convenios/top-doctors-table';
 import { RecentAppointments } from '@/features/convenios/recent-appointments';
 import { QuickActionsCard } from '@/features/convenios/quick-actions-card';
 import { DashboardTemplate } from '@/components/templates/dashboard-template';
-import { RefreshIcon } from '@/lib/icons';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { InfoIcon, RefreshIcon } from '@/lib/icons';
 import { useConvenioDashboard } from '@/hooks/convenio/use-convenio-dashboard';
 
 export default function ConvenioDashboardPage() {
@@ -19,7 +20,7 @@ export default function ConvenioDashboardPage() {
     return (
       <ErrorStateBlock
         title="Erro ao carregar dashboard"
-        message="Nao foi possivel carregar os indicadores do convenio."
+        message="Não foi possível carregar os indicadores do convênio."
         onRetry={() => void refetch()}
       />
     );
@@ -28,7 +29,7 @@ export default function ConvenioDashboardPage() {
   return (
     <DashboardTemplate
       title="Dashboard"
-      description="Visão geral do seu convênio"
+      description="Visão geral da sua clínica e dos atendimentos liberados após pagamento."
       headerActions={(
         <Button variant="outline" size="sm" onClick={() => void refetch()}>
           <RefreshIcon className="mr-2 h-4 w-4" />
@@ -53,6 +54,15 @@ export default function ConvenioDashboardPage() {
             <RecentAppointments />
           </div>
         </>
+      }
+      extra={
+        <Alert>
+          <InfoIcon className="h-4 w-4" />
+          <AlertTitle>Recebimento após confirmação de pagamento</AlertTitle>
+          <AlertDescription>
+            Todo médico permanece vinculado a esta clínica e os agendamentos entram na fila operacional após confirmação do pagamento no app. Indicadores podem exibir itens aguardando PIX até o webhook concluir.
+          </AlertDescription>
+        </Alert>
       }
     />
   );

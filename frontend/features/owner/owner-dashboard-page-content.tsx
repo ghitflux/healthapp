@@ -18,6 +18,7 @@ import {
 } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DashboardTemplate } from '@/components/templates/dashboard-template';
 import { EmptyStateBlock } from '@/components/patterns/empty-state-block';
@@ -94,19 +95,18 @@ export function OwnerDashboardPageContent() {
 
       {dashboard.period === 'custom' && (
         <div className="flex items-center gap-2">
-          <input
-            type="date"
-            className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
+          <DatePicker
+            className="w-[160px]"
             aria-label="Data inicial do filtro"
             value={dashboard.customStart}
-            onChange={(event) => dashboard.setCustomStart(event.target.value)}
+            onChange={(value) => dashboard.setCustomStart(value ?? '')}
           />
-          <input
-            type="date"
-            className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
+          <DatePicker
+            className="w-[160px]"
             aria-label="Data final do filtro"
             value={dashboard.customEnd}
-            onChange={(event) => dashboard.setCustomEnd(event.target.value)}
+            min={dashboard.customStart || undefined}
+            onChange={(value) => dashboard.setCustomEnd(value ?? '')}
           />
           <Button type="button" size="sm" variant="outline" onClick={dashboard.resetCustomRange}>
             Limpar

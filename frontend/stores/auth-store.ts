@@ -4,6 +4,7 @@
  */
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { normalizeAuthUser } from '@/lib/auth-user';
 
 export interface AuthUser {
   id: string;
@@ -12,6 +13,7 @@ export interface AuthUser {
   role: string;
   avatar_url?: string;
   convenio_id?: string;
+  convenio?: string | null;
   phone?: string;
 }
 
@@ -31,7 +33,11 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: true,
       setUser: (user) =>
-        set({ user, isAuthenticated: !!user, isLoading: false }),
+        set({
+          user: normalizeAuthUser(user),
+          isAuthenticated: !!user,
+          isLoading: false,
+        }),
       setLoading: (isLoading) => set({ isLoading }),
       logout: () => {
         if (typeof window !== 'undefined') {
@@ -43,6 +49,21 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'healthapp-auth',
+      merge: (persistedState, currentState) => {
+        const persisted = persistedState as Partial<AuthState> | undefined;
+        const user = normalizeAuthUser(persisted?.user ?? currentState.user);
+
+        return {
+          ...currentState,
+          ...persisted,
+          user,
+          isAuthenticated: persisted?.isAuthenticated ?? Boolean(user),
+          isLoading: false,
+        };
+      },
+      onRehydrateStorage: () => (state) => {
+        state?.setLoading(false);
+      },
       partialize: (state) => ({
         user: state.user,
         isAuthenticated: state.isAuthenticated,

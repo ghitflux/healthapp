@@ -19,6 +19,7 @@ import type { OwnerFinancialReport } from '@api/types/OwnerFinancialReport';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DatePicker } from '@/components/ui/date-picker';
 import {
   Table,
   TableBody,
@@ -139,7 +140,7 @@ export function OwnerFinancialPageContent() {
   const isError = financialQuery.isError;
 
   const exportColumns = [
-    { key: 'convenio', label: 'Convênio' },
+    { key: 'convênio', label: 'Convênio' },
     { key: 'revenue', label: 'Receita total' },
   ];
 
@@ -328,18 +329,17 @@ export function OwnerFinancialPageContent() {
       description="Controle financeiro global, reconciliação e distribuição de receitas."
       headerActions={
         <div className="flex flex-wrap items-center gap-2">
-          <input
-            type="date"
+          <DatePicker
+            className="w-[160px]"
             value={startDate}
-            onChange={(event) => setStartDate(event.target.value)}
-            className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
+            onChange={(value) => setStartDate(value ?? '')}
             aria-label="Data inicial"
           />
-          <input
-            type="date"
+          <DatePicker
+            className="w-[160px]"
             value={endDate}
-            onChange={(event) => setEndDate(event.target.value)}
-            className="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-xs"
+            min={startDate || undefined}
+            onChange={(value) => setEndDate(value ?? '')}
             aria-label="Data final"
           />
           <Badge variant="secondary">Filtro de período depende de endpoint dedicado</Badge>

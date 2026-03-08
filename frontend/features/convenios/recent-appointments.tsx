@@ -12,7 +12,7 @@ import { queryClient } from '@/lib/query-client';
 
 export function RecentAppointments() {
   const query = useListAppointments(
-    { page: 1, page_size: 5, ordering: '-scheduled_date' },
+    { page: 1, page_size: 20, ordering: '-scheduled_date' },
     {
       query: {
         client: queryClient,
@@ -25,7 +25,7 @@ export function RecentAppointments() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Agendamentos Recentes</CardTitle>
+          <CardTitle className="text-base">Atendimentos Liberados</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -36,12 +36,14 @@ export function RecentAppointments() {
     );
   }
 
-  const appointments: AppointmentList[] = query.data?.data ?? [];
+  const appointments: AppointmentList[] = (query.data?.data ?? []).filter(
+    (appointment) => appointment.status !== 'pending'
+  );
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-4">
-        <CardTitle className="text-base">Agendamentos Recentes</CardTitle>
+        <CardTitle className="text-base">Atendimentos Liberados</CardTitle>
         <Button asChild variant="ghost" size="sm" className="h-8 px-2">
           <Link href="/convenio/appointments">Ver todos</Link>
         </Button>
@@ -49,7 +51,7 @@ export function RecentAppointments() {
       <CardContent className="space-y-3">
         {appointments.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">
-            Nenhum agendamento recente
+            Nenhum atendimento liberado recentemente
           </p>
         ) : (
           appointments.slice(0, 5).map((apt) => {
@@ -68,7 +70,12 @@ export function RecentAppointments() {
                     />
                   </p>
                 </div>
-                {apt.status && <StatusPill status={apt.status} />}
+                {apt.status && (
+                  <StatusPill
+                    status={apt.status}
+                    label={apt.status === 'pending' ? 'Aguardando PIX' : undefined}
+                  />
+                )}
               </div>
             );
           })

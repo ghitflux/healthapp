@@ -29,7 +29,7 @@ function createListState() {
     logs: [
       {
         id: 1,
-        model_name: 'convenio',
+        model_name: 'convênio',
         object_pk: '1',
         object_repr: 'Convênio Alfa',
         action: '1',
@@ -73,7 +73,7 @@ describe('OwnerAuditLogsPageContent', () => {
     render(<OwnerAuditLogsPageContent />);
 
     expect(screen.getByText('owner@healthapp.com')).toBeInTheDocument();
-    expect(screen.getByText('convenio')).toBeInTheDocument();
+    expect(screen.getByText('convênio')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'CSV' }));
 

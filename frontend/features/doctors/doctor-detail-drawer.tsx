@@ -43,7 +43,7 @@ export function DoctorDetailDrawer({ open, onClose, doctor }: DoctorDetailDrawer
         <SheetHeader>
           <SheetTitle>Detalhes do Médico</SheetTitle>
           <SheetDescription>
-            Consulte disponibilidade, desempenho e atalhos operacionais do medico.
+            Consulte disponibilidade, desempenho e o vínculo operacional do médico com a clínica.
           </SheetDescription>
         </SheetHeader>
 
@@ -51,7 +51,7 @@ export function DoctorDetailDrawer({ open, onClose, doctor }: DoctorDetailDrawer
           <div className="rounded-xl border bg-muted/20 p-4">
             <div className="flex flex-wrap items-center gap-3">
               <Badge variant={doctor.is_available ? 'default' : 'secondary'}>
-                {doctor.is_available ? 'Disponivel' : 'Indisponivel'}
+                {doctor.is_available ? 'Disponível' : 'Indisponível'}
               </Badge>
               {doctor.convenio_name && (
                 <span className="text-sm text-muted-foreground">{doctor.convenio_name}</span>
@@ -68,22 +68,23 @@ export function DoctorDetailDrawer({ open, onClose, doctor }: DoctorDetailDrawer
 
           <div>
             <h4 className="mb-2 text-sm font-semibold text-muted-foreground">
-              Visao operacional
+              Visão operacional
             </h4>
             <DetailInfoRow label="Especialidade" icon={StethoscopeIcon} value={doctor.specialty} />
+            <DetailInfoRow label="Clínica" value={doctor.convenio_name ?? 'Clínica atual'} />
             <DetailInfoRow
-              label="Preco de consulta"
+              label="Preço de consulta"
               icon={DollarSignIcon}
               value={
                 doctor.consultation_price ? (
                   <CurrencyText value={parseFloat(doctor.consultation_price)} />
                 ) : (
-                  'Nao informado'
+                  'Não informado'
                 )
               }
             />
             <DetailInfoRow
-              label="Avaliacao"
+              label="Avaliação"
               icon={TrendingUpIcon}
               value={
                 <div className="flex items-center gap-2">
@@ -95,12 +96,12 @@ export function DoctorDetailDrawer({ open, onClose, doctor }: DoctorDetailDrawer
               }
             />
             <DetailInfoRow
-              label="Proxima disponibilidade"
+              label="Próxima disponibilidade"
               icon={CalendarIcon}
               value={
                 doctor.next_available_date
                   ? `${new Date(`${doctor.next_available_date}T00:00:00`).toLocaleDateString('pt-BR')}${doctor.next_available_time ? ` as ${doctor.next_available_time}` : ''}`
-                  : 'Sem horarios futuros'
+                  : 'Sem horários futuros'
               }
             />
           </div>
@@ -114,7 +115,7 @@ export function DoctorDetailDrawer({ open, onClose, doctor }: DoctorDetailDrawer
             <Button asChild size="sm">
               <Link href={`/convenio/appointments?search=${encodeURIComponent(doctor.user_name)}`}>
                 <CalendarCheckIcon className="mr-2 h-4 w-4" />
-                Ver agendamentos
+                Ver atendimentos
               </Link>
             </Button>
           </div>

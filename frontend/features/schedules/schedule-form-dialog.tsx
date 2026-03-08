@@ -31,9 +31,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
 import { IntegerInput } from '@/components/ui/integer-input';
 import { Switch } from '@/components/ui/switch';
+import { TimePicker } from '@/components/ui/time-picker';
 import { Button } from '@/components/ui/button';
 import { LoaderIcon } from '@/lib/icons';
 import { doctorScheduleRequestSchema } from '@api/zod/doctorScheduleRequestSchema';
@@ -163,10 +163,10 @@ export function ScheduleFormDialog({
                   <FormItem>
                     <FormLabel>Início</FormLabel>
                     <FormControl>
-                      <Input
-                        type="time"
+                      <TimePicker
                         aria-label="Horário de início"
-                        {...field}
+                        value={field.value ?? ''}
+                        onChange={(value) => field.onChange(value ?? '')}
                       />
                     </FormControl>
                     <FormMessage />
@@ -180,10 +180,10 @@ export function ScheduleFormDialog({
                   <FormItem>
                     <FormLabel>Término</FormLabel>
                     <FormControl>
-                      <Input
-                        type="time"
+                      <TimePicker
                         aria-label="Horário de término"
-                        {...field}
+                        value={field.value ?? ''}
+                        onChange={(value) => field.onChange(value ?? '')}
                       />
                     </FormControl>
                     <FormMessage />

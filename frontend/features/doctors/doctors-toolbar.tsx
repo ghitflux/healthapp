@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/select';
 
 const AVAILABILITY_OPTIONS = [
-  { label: 'Todos', value: '' },
+  { label: 'Todos', value: 'all' },
   { label: 'Disponíveis', value: 'true' },
   { label: 'Indisponíveis', value: 'false' },
 ];
@@ -44,11 +44,10 @@ export function DoctorsToolbar({
   ordering,
   onOrdering,
 }: DoctorsToolbarProps) {
-  const availabilityValue =
-    isAvailable === undefined ? '' : isAvailable ? 'true' : 'false';
+  const availabilityValue = isAvailable === undefined ? 'all' : isAvailable ? 'true' : 'false';
 
   function handleAvailability(val: string) {
-    if (val === '') onAvailability(undefined);
+    if (val === 'all') onAvailability(undefined);
     else onAvailability(val === 'true');
   }
 

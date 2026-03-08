@@ -22,25 +22,29 @@ import { ExamTypeDeleteDialog } from './exam-type-delete-dialog';
 import { PricingTable } from './pricing-table';
 import { useExamTypesList } from '@/hooks/exams/use-exam-types-list';
 import { useExamTypeMutations } from '@/hooks/exams/use-exam-type-mutations';
-import { useDoctorsList } from '@/hooks/doctors/use-doctors-list';
-import { useDoctorMutations } from '@/hooks/doctors/use-doctor-mutations';
+import { useConvenioSettings } from '@/hooks/settings/use-convenio-settings';
 import type { ExamType } from '@api/types/ExamType';
 import type { ExamTypeRequest } from '@api/types/ExamTypeRequest';
 import type { PatchedExamTypeRequest } from '@api/types/PatchedExamTypeRequest';
 import { useAuthStore } from '@/stores/auth-store';
+import { getAuthUserConvenioId } from '@/lib/auth-user';
+import {
+  normalizeBookableServices,
+  toConvenioSettingsRecord,
+} from '@/features/settings/convenio-settings';
 
 export function ExamsPageContent() {
-  const convenioId = useAuthStore((s) => s.user?.convenio_id ?? '');
+  const convenioId = useAuthStore((state) => getAuthUserConvenioId(state.user));
   const [createOpen, setCreateOpen] = useState(false);
   const [editExamType, setEditExamType] = useState<ExamType | null>(null);
   const [deleteExamType, setDeleteExamType] = useState<ExamType | null>(null);
 
   const list = useExamTypesList(convenioId);
   const mutations = useExamTypeMutations();
-
-  // For pricing table
-  const doctorList = useDoctorsList({ convenio: convenioId });
-  const doctorMutations = useDoctorMutations();
+  const { convenio, patchSettings, isPatching, isLoading: isLoadingSettings, isError: isSettingsError } =
+    useConvenioSettings();
+  const convenioSettings = toConvenioSettingsRecord(convenio?.settings);
+  const services = normalizeBookableServices(convenioSettings);
 
   const handleCreate = useCallback(() => setCreateOpen(true), []);
   const handleEdit = useCallback((et: ExamType) => setEditExamType(et), []);
@@ -62,26 +66,27 @@ export function ExamsPageContent() {
     setDeleteExamType(null);
   }
 
-  async function handlePatchDoctorPrice(id: string, price: string) {
-    await doctorMutations.patchDoctor(id, { consultation_price: price });
-  }
-
-  async function handlePatchExamTypePrice(id: string, price: string) {
-    await mutations.patchExamType(id, { price });
+  async function handleSaveServices(nextServices: typeof services) {
+    await patchSettings({
+      settings: {
+        ...convenioSettings,
+        bookable_services: nextServices,
+      },
+    });
   }
 
   return (
     <Tabs defaultValue="exams">
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Exames e Preços</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Exames e Serviços</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Gerencie tipos de exame e a tabela de preços do convênio.
+            Gerencie tipos de exame técnicos e o catálogo comercial do app sem depender de médico.
           </p>
         </div>
-        <TabsList>
+        <TabsList className="h-auto rounded-2xl">
           <TabsTrigger value="exams">Tipos de Exame</TabsTrigger>
-          <TabsTrigger value="pricing">Tabela de Preços</TabsTrigger>
+          <TabsTrigger value="pricing">Serviços e Preços</TabsTrigger>
         </TabsList>
       </div>
 
@@ -140,12 +145,11 @@ export function ExamsPageContent() {
 
       <TabsContent value="pricing" className="mt-0">
         <PricingTable
-          doctors={doctorList.doctors}
-          examTypes={list.examTypes}
-          isLoadingDoctors={doctorList.isLoading}
-          isLoadingExams={list.isLoading}
-          onPatchDoctor={handlePatchDoctorPrice}
-          onPatchExamType={handlePatchExamTypePrice}
+          services={services}
+          isLoading={isLoadingSettings}
+          isError={isSettingsError}
+          isSubmitting={isPatching}
+          onSave={handleSaveServices}
         />
       </TabsContent>
 

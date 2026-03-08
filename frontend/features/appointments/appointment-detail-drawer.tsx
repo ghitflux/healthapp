@@ -12,6 +12,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { StatusPill } from '@/components/ds/status-pill';
@@ -32,11 +33,11 @@ import {
   ClockIcon,
   DollarSignIcon,
   FileTextIcon,
-  CheckCircleIcon,
   XCircleIcon,
   PlayCircleIcon,
   CircleCheckBigIcon,
   UserRoundXIcon,
+  InfoIcon,
 } from '@/lib/icons';
 import type { AppointmentStatusEnum } from '@api/types/AppointmentStatusEnum';
 import Link from 'next/link';
@@ -45,7 +46,6 @@ interface AppointmentDetailDrawerProps {
   appointmentId: string | null;
   open: boolean;
   onClose: () => void;
-  onConfirm?: (id: string) => void;
   onCancel?: (id: string) => void;
   onStart?: (id: string) => void;
   onComplete?: (id: string) => void;
@@ -56,7 +56,6 @@ export function AppointmentDetailDrawer({
   appointmentId,
   open,
   onClose,
-  onConfirm,
   onCancel,
   onStart,
   onComplete,
@@ -91,7 +90,7 @@ export function AppointmentDetailDrawer({
         <SheetHeader>
           <SheetTitle>Detalhes do Agendamento</SheetTitle>
           <SheetDescription>
-            Consulte o contexto do atendimento e execute a proxima acao disponivel.
+            Consulte o contexto do atendimento e execute a próxima ação disponível.
           </SheetDescription>
         </SheetHeader>
 
@@ -99,7 +98,7 @@ export function AppointmentDetailDrawer({
 
         {!isLoading && !apt && (
           <div className="mt-4">
-            <ErrorStateBlock title="Agendamento indisponivel" message="Nao foi possivel carregar os detalhes deste agendamento." />
+            <ErrorStateBlock title="Agendamento indisponível" message="Não foi possível carregar os detalhes deste agendamento." />
           </div>
         )}
 
@@ -113,7 +112,7 @@ export function AppointmentDetailDrawer({
               <div className="space-y-1">
                 <DateTimeText value={scheduledAt} className="text-base font-semibold" />
                 <p className="text-sm text-muted-foreground">
-                  Atendimento do convenio {apt.convenio_name}
+                  Atendimento da clínica {apt.convenio_name}
                 </p>
               </div>
             </div>
@@ -121,19 +120,19 @@ export function AppointmentDetailDrawer({
             <Separator />
 
             <div>
-              <h4 className="mb-2 text-sm font-semibold text-muted-foreground">Informacoes gerais</h4>
+              <h4 className="mb-2 text-sm font-semibold text-muted-foreground">Informações gerais</h4>
               <DetailInfoRow label="Paciente" icon={UserIcon} value={apt.patient_name} />
-              <DetailInfoRow label="Medico" icon={StethoscopeIcon} value={apt.doctor_name} />
-              <DetailInfoRow label="Convenio" value={apt.convenio_name} />
+              <DetailInfoRow label="Médico" icon={StethoscopeIcon} value={apt.doctor_name} />
+              <DetailInfoRow label="Clínica" value={apt.convenio_name} />
               <DetailInfoRow
                 label="Data e hora"
                 icon={CalendarIcon}
                 value={<DateTimeText value={scheduledAt} />}
               />
               <DetailInfoRow
-                label="Duracao"
+                label="Duração"
                 icon={ClockIcon}
-                value={apt.duration_minutes ? `${apt.duration_minutes} min` : 'Nao informada'}
+                value={apt.duration_minutes ? `${apt.duration_minutes} min` : 'Não informada'}
               />
               <DetailInfoRow label="Tipo de atendimento" value={<AppointmentTypeBadge type={apt.appointment_type} />} />
               {apt.exam_type && <DetailInfoRow label="Exame" value={apt.exam_type} />}
@@ -146,13 +145,20 @@ export function AppointmentDetailDrawer({
               <DetailInfoRow
                 label="Valor"
                 icon={DollarSignIcon}
-                value={apt.price ? <CurrencyText value={Number.parseFloat(apt.price)} /> : 'Nao informado'}
+                value={apt.price ? <CurrencyText value={Number.parseFloat(apt.price)} /> : 'Não informado'}
               />
               <DetailInfoRow
                 label="Status do pagamento"
                 value={
                   payment?.status ? (
-                    <StatusPill status={payment.status} />
+                    <StatusPill
+                      status={payment.status}
+                      label={
+                        payment.status === 'pending' || payment.status === 'processing'
+                          ? 'Aguardando PIX'
+                          : undefined
+                      }
+                    />
                   ) : apt.payment ? (
                     'Carregando pagamento...'
                   ) : (
@@ -161,23 +167,33 @@ export function AppointmentDetailDrawer({
                 }
               />
               <DetailInfoRow
-                label="Metodo"
+                label="Método"
                 value={
                   payment?.payment_method ? (
                     <PaymentMethodBadge method={payment.payment_method} />
                   ) : (
-                    'Nao informado'
+                    'Não informado'
                   )
                 }
               />
             </div>
+
+            {status === 'pending' && (
+              <Alert>
+                <InfoIcon className="h-4 w-4" />
+                <AlertTitle>Aguardando confirmação do pagamento</AlertTitle>
+                <AlertDescription>
+                  Este agendamento só entra na operação da clínica após o PIX ser confirmado pelo backend.
+                </AlertDescription>
+              </Alert>
+            )}
 
             {apt.notes && (
               <>
                 <Separator />
                 <div>
                   <h4 className="mb-2 text-sm font-semibold text-muted-foreground">Notas</h4>
-                  <DetailInfoRow label="Observacoes" icon={FileTextIcon} value={apt.notes} />
+                  <DetailInfoRow label="Observações" icon={FileTextIcon} value={apt.notes} />
                 </div>
               </>
             )}
@@ -218,17 +234,11 @@ export function AppointmentDetailDrawer({
 
             <div className="flex flex-wrap items-center gap-2 pt-2">
               <Button type="button" size="sm" variant="outline" asChild>
-                <Link href="/convenio/schedules">Ver agenda do medico</Link>
+                <Link href="/convenio/schedules">Ver agenda do médico</Link>
               </Button>
             </div>
 
             <div className="flex flex-wrap gap-2 pt-2">
-              {status === 'pending' && onConfirm && (
-                <Button size="sm" onClick={() => onConfirm(apt.id)}>
-                  <CheckCircleIcon className="mr-2 h-4 w-4" />
-                  Confirmar
-                </Button>
-              )}
               {status === 'confirmed' && onStart && (
                 <Button size="sm" onClick={() => onStart(apt.id)}>
                   <PlayCircleIcon className="mr-2 h-4 w-4" />
@@ -244,7 +254,7 @@ export function AppointmentDetailDrawer({
               {status === 'in_progress' && onNoShow && (
                 <Button size="sm" variant="outline" onClick={() => onNoShow(apt.id)}>
                   <UserRoundXIcon className="mr-2 h-4 w-4" />
-                  Nao compareceu
+                  Não compareceu
                 </Button>
               )}
               {(status === 'pending' || status === 'confirmed') && onCancel && (

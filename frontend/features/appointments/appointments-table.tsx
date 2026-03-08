@@ -2,7 +2,7 @@
 
 /**
  * @file features/appointments/appointments-table.tsx
- * @description Tabela de agendamentos com colunas, status e acoes.
+ * @description Tabela de agendamentos com colunas, status e ações.
  */
 
 import { memo } from 'react';
@@ -32,7 +32,6 @@ import { ErrorStateBlock } from '@/components/patterns/error-state-block';
 import {
   MoreHorizontalIcon,
   EyeIcon,
-  CheckCircleIcon,
   XCircleIcon,
   PlayCircleIcon,
   CircleCheckBigIcon,
@@ -48,16 +47,12 @@ interface AppointmentsTableProps {
   isError: boolean;
   onRetry: () => void;
   onView: (appointment: AppointmentList) => void;
-  onConfirm: (appointment: AppointmentList) => void;
   onCancel: (appointment: AppointmentList) => void;
   onStart: (appointment: AppointmentList) => void;
   onComplete: (appointment: AppointmentList) => void;
   onNoShow: (appointment: AppointmentList) => void;
 }
 
-function canConfirm(status?: AppointmentStatusEnum) {
-  return status === 'pending';
-}
 function canCancel(status?: AppointmentStatusEnum) {
   return status === 'pending' || status === 'confirmed';
 }
@@ -77,7 +72,6 @@ export const AppointmentsTable = memo(function AppointmentsTable({
   isError,
   onRetry,
   onView,
-  onConfirm,
   onCancel,
   onStart,
   onComplete,
@@ -90,18 +84,18 @@ export const AppointmentsTable = memo(function AppointmentsTable({
       <EmptyStateBlock
         icon={CalendarCheckIcon}
         title="Nenhum agendamento encontrado"
-        description="Ajuste os filtros ou aguarde novos agendamentos dos pacientes."
+        description="Ajuste os filtros ou aguarde novos atendimentos liberados após pagamento dos pacientes."
       />
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-md border">
+    <div className="overflow-x-auto rounded-md border bg-card shadow-xs">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Data/Hora</TableHead>
-            <TableHead>Medico</TableHead>
+            <TableHead>Médico</TableHead>
             <TableHead className="hidden md:table-cell">Tipo</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="hidden lg:table-cell text-right">Valor</TableHead>
@@ -130,7 +124,12 @@ export const AppointmentsTable = memo(function AppointmentsTable({
                 <AppointmentTypeBadge type={apt.appointment_type} />
               </TableCell>
               <TableCell>
-                {apt.status && <StatusPill status={apt.status} />}
+                {apt.status && (
+                  <StatusPill
+                    status={apt.status}
+                    label={apt.status === 'pending' ? 'Aguardando PIX' : undefined}
+                  />
+                )}
               </TableCell>
               <TableCell className="hidden lg:table-cell text-right">
                 {apt.price ? <CurrencyText value={Number.parseFloat(apt.price)} /> : '—'}
@@ -140,7 +139,7 @@ export const AppointmentsTable = memo(function AppointmentsTable({
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
                       <MoreHorizontalIcon className="h-4 w-4" />
-                      <span className="sr-only">Acoes</span>
+                      <span className="sr-only">Ações</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -148,15 +147,6 @@ export const AppointmentsTable = memo(function AppointmentsTable({
                       <EyeIcon className="mr-2 h-4 w-4" />
                       Ver detalhes
                     </DropdownMenuItem>
-                    {canConfirm(apt.status) && (
-                      <>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => onConfirm(apt)}>
-                          <CheckCircleIcon className="mr-2 h-4 w-4 text-success-600" />
-                          Confirmar
-                        </DropdownMenuItem>
-                      </>
-                    )}
                     {canStart(apt.status) && (
                       <DropdownMenuItem onClick={() => onStart(apt)}>
                         <PlayCircleIcon className="mr-2 h-4 w-4 text-primary-600" />
@@ -172,7 +162,7 @@ export const AppointmentsTable = memo(function AppointmentsTable({
                     {canMarkNoShow(apt.status) && (
                       <DropdownMenuItem onClick={() => onNoShow(apt)}>
                         <UserRoundXIcon className="mr-2 h-4 w-4 text-warning-600" />
-                        Nao compareceu
+                        Não compareceu
                       </DropdownMenuItem>
                     )}
                     {canCancel(apt.status) && (

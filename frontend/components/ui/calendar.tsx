@@ -14,6 +14,77 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+type CalendarDropdownOption = {
+  value: number
+  label: string
+  disabled: boolean
+}
+
+type CalendarDropdownProps = React.SelectHTMLAttributes<HTMLSelectElement> & {
+  options?: CalendarDropdownOption[]
+  components?: unknown
+  classNames?: unknown
+}
+
+function CalendarDropdown({
+  options,
+  value,
+  onChange,
+  className,
+  "aria-label": ariaLabel,
+  disabled,
+  components: _components,
+  classNames: _classNames,
+}: CalendarDropdownProps) {
+  const selectedValue =
+    value === undefined || value === null
+      ? undefined
+      : Array.isArray(value)
+        ? String(value[0] ?? "")
+        : String(value)
+
+  return (
+    <Select
+      value={selectedValue}
+      disabled={disabled}
+      onValueChange={(nextValue) => {
+        onChange?.({
+          target: { value: nextValue },
+          currentTarget: { value: nextValue },
+        } as React.ChangeEvent<HTMLSelectElement>)
+      }}
+    >
+      <SelectTrigger
+        aria-label={ariaLabel}
+        className={cn(
+          "h-8 min-w-[4.75rem] rounded-md border-border/80 bg-background/95 px-2 text-sm font-semibold shadow-xs hover:bg-background",
+          className
+        )}
+      >
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent className="min-w-[var(--radix-select-trigger-width)]">
+        {options?.map((option: CalendarDropdownOption) => (
+          <SelectItem
+            key={option.value}
+            value={String(option.value)}
+            disabled={option.disabled}
+          >
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  )
+}
 
 function Calendar({
   className,
@@ -74,18 +145,18 @@ function Calendar({
           defaultClassNames.dropdowns
         ),
         dropdown_root: cn(
-          "relative rounded-md border border-input shadow-xs has-focus:border-ring has-focus:ring-[3px] has-focus:ring-ring/50",
+          "relative",
           defaultClassNames.dropdown_root
         ),
         dropdown: cn(
-          "absolute inset-0 bg-popover opacity-0",
+          "hidden",
           defaultClassNames.dropdown
         ),
         caption_label: cn(
           "font-medium select-none",
           captionLayout === "label"
             ? "text-sm"
-            : "flex h-8 items-center gap-1 rounded-md pr-1 pl-2 text-sm [&>svg]:size-3.5 [&>svg]:text-muted-foreground",
+            : "hidden",
           defaultClassNames.caption_label
         ),
         table: "w-full border-collapse",
@@ -162,6 +233,7 @@ function Calendar({
             <ChevronDownIcon className={cn("size-4", className)} {...props} />
           )
         },
+        Dropdown: CalendarDropdown,
         DayButton: CalendarDayButton,
         WeekNumber: ({ children, ...props }) => {
           return (

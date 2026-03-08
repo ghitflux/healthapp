@@ -37,12 +37,11 @@ interface AppointmentsToolbarProps {
 
 const STATUS_OPTIONS: { value: string; label: string }[] = [
   { value: 'all', label: 'Todos os status' },
-  { value: 'pending', label: 'Pendente' },
   { value: 'confirmed', label: 'Confirmado' },
   { value: 'in_progress', label: 'Em andamento' },
   { value: 'completed', label: 'Concluido' },
   { value: 'cancelled', label: 'Cancelado' },
-  { value: 'no_show', label: 'Nao compareceu' },
+  { value: 'no_show', label: 'Não compareceu' },
 ];
 
 const TYPE_OPTIONS: { value: string; label: string }[] = [
@@ -76,46 +75,46 @@ export function AppointmentsToolbar({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-3">
-      <SearchFieldDebounced
-        value={search}
-        onSearch={onSearchChange}
-        placeholder="Buscar por medico..."
-        className="w-full sm:w-72"
-      />
-      <Select
-        value={status || 'all'}
-        onValueChange={(value) =>
-          onStatusChange(value === 'all' ? '' : (value as AppointmentStatusEnum))
-        }
-      >
-        <SelectTrigger className="w-44 h-9">
-          <SelectValue placeholder="Status" />
-        </SelectTrigger>
-        <SelectContent>
-          {STATUS_OPTIONS.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
-              {opt.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <Select
-        value={appointmentType || 'all'}
-        onValueChange={(value) =>
-          onTypeChange(value === 'all' ? '' : (value as AppointmentTypeEnum))
-        }
-      >
-        <SelectTrigger className="w-40 h-9">
-          <SelectValue placeholder="Tipo" />
-        </SelectTrigger>
-        <SelectContent>
-          {TYPE_OPTIONS.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
-              {opt.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        <SearchFieldDebounced
+          value={search}
+          onSearch={onSearchChange}
+          placeholder="Buscar por médico..."
+          className="w-full sm:w-72"
+        />
+        <Select
+          value={status || 'all'}
+          onValueChange={(value) =>
+            onStatusChange(value === 'all' ? '' : (value as AppointmentStatusEnum))
+          }
+        >
+          <SelectTrigger className="w-44 h-9">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            {STATUS_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select
+          value={appointmentType || 'all'}
+          onValueChange={(value) =>
+            onTypeChange(value === 'all' ? '' : (value as AppointmentTypeEnum))
+          }
+        >
+          <SelectTrigger className="w-40 h-9">
+            <SelectValue placeholder="Tipo" />
+          </SelectTrigger>
+          <SelectContent>
+            {TYPE_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Select value={ordering} onValueChange={onOrderingChange}>
           <SelectTrigger className="w-44 h-9">
             <SelectValue placeholder="Ordenacao" />

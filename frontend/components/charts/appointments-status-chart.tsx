@@ -14,7 +14,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 const STATUS_LABELS: Record<string, string> = {
-  pending: 'Pendente',
+  pending: 'Aguardando PIX',
   confirmed: 'Confirmado',
   in_progress: 'Em andamento',
   completed: 'Concluído',

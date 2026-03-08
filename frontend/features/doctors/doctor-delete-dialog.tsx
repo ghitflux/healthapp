@@ -39,9 +39,9 @@ export function DoctorDeleteDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Excluir Médico</AlertDialogTitle>
           <AlertDialogDescription>
-            Tem certeza que deseja excluir{' '}
+            Tem certeza que deseja remover{' '}
             <strong>{doctor?.user_name}</strong>
-            {doctor?.convenio_name ? ` (${doctor.convenio_name})` : ''}?
+            {doctor?.convenio_name ? ` da clínica ${doctor.convenio_name}` : ' da clínica atual'}?
             Esta ação não pode ser desfeita.
           </AlertDialogDescription>
         </AlertDialogHeader>

@@ -16,7 +16,15 @@ import {
 } from '@/lib/icons';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -78,9 +86,13 @@ export function Header({ variant }: HeaderProps) {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-full sm:max-w-sm">
+            <SheetHeader className="sr-only">
+              <SheetTitle>Menu de navegação</SheetTitle>
+              <SheetDescription>Links principais do painel web.</SheetDescription>
+            </SheetHeader>
             <div className="flex h-full flex-col gap-6">
               <div className="space-y-1">
-                <p className="text-sm font-semibold">Navegacao</p>
+                <p className="text-sm font-semibold">Navegação</p>
                 <p className="text-sm text-muted-foreground">
                   Acesse as principais areas do painel.
                 </p>
@@ -95,7 +107,7 @@ export function Header({ variant }: HeaderProps) {
                       <Link
                         href={item.href}
                         className={cn(
-                          'flex items-center gap-3 rounded-lg border px-3 py-3 text-sm transition-colors',
+                          'flex items-center gap-3 rounded-lg border bg-background px-3 py-3 text-sm transition-colors',
                           isActive
                             ? 'border-primary-200 bg-primary-50 text-primary-700'
                             : 'border-border text-foreground hover:bg-muted'
@@ -131,16 +143,20 @@ export function Header({ variant }: HeaderProps) {
 
         <Sheet open={notificationsOpen} onOpenChange={setNotificationsOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative" aria-label="Notificacoes">
+            <Button variant="ghost" size="icon" className="relative" aria-label="Notificações">
               <BellIcon className="h-4 w-4" />
               <CounterBadge
                 count={unreadCount}
                 className="absolute -right-1 -top-1"
-                aria-label={`${unreadCount} notificacoes nao lidas`}
+                aria-label={`${unreadCount} notificações não lidas`}
               />
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-full p-0 sm:max-w-md">
+            <SheetHeader className="sr-only">
+              <SheetTitle>Central de notificações</SheetTitle>
+              <SheetDescription>Notificações recentes e ações de leitura.</SheetDescription>
+            </SheetHeader>
             <NotificationCenterPanel />
           </SheetContent>
         </Sheet>

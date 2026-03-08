@@ -3,7 +3,7 @@
 /**
  * @file features/doctors/doctors-page-content.tsx
  * @description Organism: conteúdo completo da página de médicos.
- * Integra listagem, toolbar, paginação, modais CRUD.
+ * Integra listagem, toolbar, páginação, modais CRUD.
  */
 
 import { useState, useCallback } from 'react';
@@ -26,9 +26,10 @@ import { useAuthStore } from '@/stores/auth-store';
 import type { DoctorList } from '@api/types/DoctorList';
 import type { DoctorRequest } from '@api/types/DoctorRequest';
 import type { PatchedDoctorRequest } from '@api/types/PatchedDoctorRequest';
+import { getAuthUserConvenioId } from '@/lib/auth-user';
 
 export function DoctorsPageContent() {
-  const convenioId = useAuthStore((s) => s.user?.convenio_id ?? '');
+  const convenioId = useAuthStore((state) => getAuthUserConvenioId(state.user));
   const [createOpen, setCreateOpen] = useState(false);
   const [editDoctor, setEditDoctor] = useState<DoctorList | null>(null);
   const [deleteDoctor, setDeleteDoctor] = useState<DoctorList | null>(null);
@@ -62,8 +63,8 @@ export function DoctorsPageContent() {
     <>
       <CrudTableTemplate
         title="Médicos"
-        description="Gerencie os médicos do seu convênio"
-        createLabel="Novo Médico"
+        description="Gerencie os médicos vinculados a sua clínica. Os atendimentos entram no painel após pagamento confirmado."
+        createLabel="Novo Médico da Clínica"
         onCreate={handleCreate}
         toolbar={
           <DoctorsToolbar

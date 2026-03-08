@@ -2,12 +2,12 @@
 
 /**
  * @file components/patterns/date-range-filter.tsx
- * @description Molecula — Filtro simples de intervalo com inputs nativos.
+ * @description Molecula — Filtro simples de intervalo com date pickers estilizados.
  */
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from '@/components/ui/label';
 
 export interface DateRangeFilterProps {
@@ -24,7 +24,7 @@ export function DateRangeFilter({
   to,
   onFromChange,
   onToChange,
-  label = 'Periodo',
+  label = 'Período',
   className,
 }: DateRangeFilterProps) {
   const hasActiveFilters = Boolean(from || to);
@@ -54,11 +54,11 @@ export function DateRangeFilter({
           <Label htmlFor="date-range-from" className="text-xs text-muted-foreground">
             De
           </Label>
-          <Input
+          <DatePicker
             id="date-range-from"
-            type="date"
             value={from ?? ''}
-            onChange={(event) => onFromChange(event.target.value || undefined)}
+            onChange={onFromChange}
+            placeholder="Selecione a data"
           />
         </div>
 
@@ -66,12 +66,12 @@ export function DateRangeFilter({
           <Label htmlFor="date-range-to" className="text-xs text-muted-foreground">
             Ate
           </Label>
-          <Input
+          <DatePicker
             id="date-range-to"
-            type="date"
             value={to ?? ''}
             min={from}
-            onChange={(event) => onToChange(event.target.value || undefined)}
+            onChange={onToChange}
+            placeholder="Selecione a data"
           />
         </div>
       </div>

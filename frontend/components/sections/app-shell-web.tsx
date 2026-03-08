@@ -3,8 +3,8 @@
 /**
  * @file components/sections/app-shell-web.tsx
  * @description Organismo — Shell principal do painel web.
- * Compõe Sidebar + Header + area de conteúdo principal.
- * Substitui o layout inline repetido em (convenio) e (owner).
+ * Compõe Sidebar + Header + área de conteúdo principal.
+ * Substitui o layout inline repetido em (convênio) e (owner).
  */
 
 import { Sidebar } from '@/components/navigation/sidebar';

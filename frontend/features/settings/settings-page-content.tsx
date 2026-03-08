@@ -6,6 +6,12 @@ import { PageBreadcrumb } from '@/components/patterns/page-breadcrumb';
 import { useConvenioSettings } from '@/hooks/settings/use-convenio-settings';
 import { ConvenioInfoForm } from './convenio-info-form';
 import { CancellationPolicySection } from './cancellation-policy-section';
+import { BookingOperationsSection } from './booking-operations-section';
+import { BookableServicesSection } from './bookable-services-section';
+import {
+  normalizeBookableServices,
+  toConvenioSettingsRecord,
+} from './convenio-settings';
 
 function SettingsSkeleton() {
   return (
@@ -18,6 +24,17 @@ function SettingsSkeleton() {
 
 export function SettingsPageContent() {
   const { convenio, isLoading, isError, refetch, patchSettings, isPatching } = useConvenioSettings();
+  const settings = toConvenioSettingsRecord(convenio?.settings);
+  const services = normalizeBookableServices(settings);
+
+  async function handleSaveServices(nextServices: ReturnType<typeof normalizeBookableServices>) {
+    await patchSettings({
+      settings: {
+        ...settings,
+        bookable_services: nextServices,
+      },
+    });
+  }
 
   if (isLoading) {
     return <SettingsSkeleton />;
@@ -26,8 +43,8 @@ export function SettingsPageContent() {
   if (isError || !convenio) {
     return (
       <ErrorStateBlock
-        title="Erro ao carregar configuracoes"
-        message="Nao foi possivel carregar os dados do convenio."
+        title="Erro ao carregar configurações"
+        message="Não foi possível carregar os dados do convênio."
         onRetry={() => void refetch()}
       />
     );
@@ -38,16 +55,18 @@ export function SettingsPageContent() {
       <PageBreadcrumb />
 
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Configuracoes</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Configurações da Clínica</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Ajuste dados cadastrais e politicas operacionais do convenio.
+          Ajuste dados cadastrais, regras do app e o catálogo comercial usado pelo agendamento.
         </p>
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="general">Informacoes Gerais</TabsTrigger>
-          <TabsTrigger value="cancellation">Politica de Cancelamento</TabsTrigger>
+        <TabsList className="flex h-auto w-full flex-wrap justify-start rounded-2xl border border-border/80 bg-muted/75 p-1.5 shadow-xs">
+          <TabsTrigger value="general">Informações Gerais</TabsTrigger>
+          <TabsTrigger value="booking">Agendamento e Operação</TabsTrigger>
+          <TabsTrigger value="services">Serviços e Comissões</TabsTrigger>
+          <TabsTrigger value="cancellation">Política de Cancelamento</TabsTrigger>
         </TabsList>
 
         <TabsContent value="general" className="mt-0">
@@ -58,9 +77,25 @@ export function SettingsPageContent() {
           />
         </TabsContent>
 
+        <TabsContent value="booking" className="mt-0">
+          <BookingOperationsSection
+            settings={settings}
+            onSave={patchSettings}
+            isSubmitting={isPatching}
+          />
+        </TabsContent>
+
+        <TabsContent value="services" className="mt-0">
+          <BookableServicesSection
+            services={services}
+            onSave={handleSaveServices}
+            isSubmitting={isPatching}
+          />
+        </TabsContent>
+
         <TabsContent value="cancellation" className="mt-0">
           <CancellationPolicySection
-            settings={(convenio.settings as Record<string, unknown>) ?? {}}
+            settings={settings}
             onSave={patchSettings}
             isSubmitting={isPatching}
           />

@@ -28,6 +28,7 @@ export function useExamTypesList(convenioId: string) {
   const query = useListExamTypes(params, {
     query: {
       client: queryClient,
+      enabled: Boolean(convenioId),
     },
   });
 

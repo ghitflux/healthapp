@@ -34,6 +34,7 @@ export function useAppointmentsList(overrides?: Partial<ListAppointmentsQueryPar
   const [ordering, setOrdering] = useState('-scheduled_date');
   const [status, setStatus] = useState<AppointmentStatusEnum | ''>(() => {
     const rawValue = searchParams.get('status');
+    if (rawValue === 'pending') return '';
     return (rawValue as AppointmentStatusEnum | null) ?? '';
   });
   const [appointmentType, setAppointmentType] = useState<AppointmentTypeEnum | ''>(() => {
@@ -57,15 +58,18 @@ export function useAppointmentsList(overrides?: Partial<ListAppointmentsQueryPar
     },
   });
 
-  const filteredAppointments = useMemo(() => {
+  const operationalAppointments = useMemo(() => {
     const allAppointments = query.data?.data ?? [];
+    return allAppointments.filter((appointment) => appointment.status !== 'pending');
+  }, [query.data?.data]);
 
-    return allAppointments.filter((appointment) => {
+  const filteredAppointments = useMemo(() => {
+    return operationalAppointments.filter((appointment) => {
       if (status && appointment.status !== status) return false;
       if (appointmentType && appointment.appointment_type !== appointmentType) return false;
       return isWithinDateRange(appointment, dateFrom, dateTo);
     });
-  }, [appointmentType, dateFrom, dateTo, query.data?.data, status]);
+  }, [appointmentType, dateFrom, dateTo, operationalAppointments, status]);
 
   const totalCount = filteredAppointments.length;
   const totalPages = Math.max(1, Math.ceil(totalCount / LOCAL_PAGE_SIZE));

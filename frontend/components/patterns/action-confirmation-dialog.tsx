@@ -2,7 +2,7 @@
 
 /**
  * @file components/patterns/action-confirmation-dialog.tsx
- * @description Molecula — Dialog generico para confirmacao de acoes.
+ * @description Molecula — Dialog generico para confirmação de ações.
  */
 
 import {

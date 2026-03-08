@@ -2,8 +2,8 @@
 
 /**
  * @file features/appointments/appointments-page-content.tsx
- * @description Organism: conteudo completo da pagina de agendamentos do convenio.
- * Integra listagem, toolbar, paginacao, drawer e dialogs de acao.
+ * @description Organism: conteudo completo da página de agendamentos da clínica.
+ * Integra listagem, toolbar, paginação, drawer e dialogs de ação.
  */
 
 import { useState, useCallback } from 'react';
@@ -16,8 +16,10 @@ import { AppointmentCancelDialog } from './appointment-cancel-dialog';
 import { AppointmentCompleteDialog } from './appointment-complete-dialog';
 import { AppointmentNoShowDialog } from './appointment-noshow-dialog';
 import { ActionConfirmationDialog } from '@/components/patterns/action-confirmation-dialog';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useAppointmentsList } from '@/hooks/appointments/use-appointments-list';
 import { useAppointmentMutations } from '@/hooks/appointments/use-appointment-mutations';
+import { InfoIcon } from '@/lib/icons';
 import type { AppointmentList } from '@api/types/AppointmentList';
 
 export function AppointmentsPageContent() {
@@ -27,24 +29,16 @@ export function AppointmentsPageContent() {
   // Detail drawer
   const [viewId, setViewId] = useState<string | null>(null);
   // Action dialogs
-  const [confirmId, setConfirmId] = useState<string | null>(null);
   const [cancelId, setCancelId] = useState<string | null>(null);
   const [startId, setStartId] = useState<string | null>(null);
   const [completeId, setCompleteId] = useState<string | null>(null);
   const [noShowId, setNoShowId] = useState<string | null>(null);
 
   const handleView = useCallback((apt: AppointmentList) => setViewId(apt.id), []);
-  const handleConfirmPrompt = useCallback((apt: AppointmentList) => setConfirmId(apt.id), []);
   const handleCancelPrompt = useCallback((apt: AppointmentList) => setCancelId(apt.id), []);
   const handleStartPrompt = useCallback((apt: AppointmentList) => setStartId(apt.id), []);
   const handleCompletePrompt = useCallback((apt: AppointmentList) => setCompleteId(apt.id), []);
   const handleNoShowPrompt = useCallback((apt: AppointmentList) => setNoShowId(apt.id), []);
-
-  async function handleConfirm() {
-    if (!confirmId) return;
-    await mutations.confirmAppointment(confirmId);
-    setConfirmId(null);
-  }
 
   async function handleCancel(reason?: string) {
     if (!cancelId) return;
@@ -71,10 +65,18 @@ export function AppointmentsPageContent() {
   }
 
   return (
-    <>
+    <div className="space-y-4">
+      <Alert>
+        <InfoIcon className="h-4 w-4" />
+        <AlertTitle>Fila operacional da clínica</AlertTitle>
+        <AlertDescription>
+          Consultas e exames aparecem aqui somente após confirmação do pagamento no app. Agendamentos aguardando PIX ficam fora desta fila.
+        </AlertDescription>
+      </Alert>
+
       <CrudTableTemplate
         title="Agendamentos"
-        description="Gerencie todos os agendamentos do convenio"
+        description="Gerencie os atendimentos liberados para a clínica após confirmação do pagamento."
         toolbar={
           <AppointmentsToolbar
             search={list.search}
@@ -100,7 +102,6 @@ export function AppointmentsPageContent() {
             isError={list.isError}
             onRetry={list.refetch}
             onView={handleView}
-            onConfirm={handleConfirmPrompt}
             onCancel={handleCancelPrompt}
             onStart={handleStartPrompt}
             onComplete={handleCompletePrompt}
@@ -121,22 +122,10 @@ export function AppointmentsPageContent() {
         appointmentId={viewId}
         open={!!viewId}
         onClose={() => setViewId(null)}
-        onConfirm={(id) => { setViewId(null); setConfirmId(id); }}
         onCancel={(id) => { setViewId(null); setCancelId(id); }}
         onStart={(id) => { setViewId(null); setStartId(id); }}
         onComplete={(id) => { setViewId(null); setCompleteId(id); }}
         onNoShow={(id) => { setViewId(null); setNoShowId(id); }}
-      />
-
-      {/* Confirm dialog */}
-      <ActionConfirmationDialog
-        open={!!confirmId}
-        onClose={() => setConfirmId(null)}
-        title="Confirmar Agendamento"
-        description="Deseja confirmar este agendamento? O paciente sera notificado."
-        confirmLabel="Confirmar"
-        onConfirm={handleConfirm}
-        isLoading={mutations.isConfirming}
       />
 
       {/* Start dialog */}
@@ -144,7 +133,7 @@ export function AppointmentsPageContent() {
         open={!!startId}
         onClose={() => setStartId(null)}
         title="Iniciar Consulta"
-        description="Confirme o inicio da consulta."
+        description="Confirme o início da consulta."
         confirmLabel="Iniciar"
         onConfirm={handleStart}
         isLoading={mutations.isStarting}
@@ -173,6 +162,6 @@ export function AppointmentsPageContent() {
         onConfirm={handleNoShow}
         isLoading={mutations.isMarkingNoShow}
       />
-    </>
+    </div>
   );
 }

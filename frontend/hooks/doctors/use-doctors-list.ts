@@ -34,6 +34,10 @@ export function useDoctorsList(overrides?: Partial<ListDoctorsQueryParams>) {
   const query = useListDoctors(params, {
     query: {
       client: queryClient,
+      enabled:
+        typeof overrides?.convenio === 'string'
+          ? Boolean(overrides.convenio)
+          : true,
     },
   });
 

@@ -69,22 +69,22 @@ export function DoctorsTable({
     return (
       <EmptyStateBlock
         title="Nenhum médico encontrado"
-        description="Cadastre o primeiro médico do seu convênio."
+        description="Cadastre o primeiro médico vinculado a sua clínica."
         action={{ label: 'Novo Médico', onClick: onCreate }}
       />
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-md border">
+    <div className="overflow-x-auto rounded-md border bg-card shadow-xs">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Nome</TableHead>
             <TableHead>Especialidade</TableHead>
-            <TableHead className="hidden lg:table-cell">Proximo horario</TableHead>
+            <TableHead className="hidden lg:table-cell">Próximo horário</TableHead>
             <TableHead>Preço Consulta</TableHead>
-            <TableHead className="hidden md:table-cell">Avaliacao</TableHead>
+            <TableHead className="hidden md:table-cell">Avaliação</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="w-12" />
           </TableRow>

@@ -14,15 +14,18 @@ import { queryClient } from '@/lib/query-client';
 import { useAuthStore } from '@/stores/auth-store';
 import { getFriendlyApiError } from '@/lib/error-messages';
 import { unwrapEnvelope } from '@/hooks/owner/utils';
+import { getAuthUserConvenioId } from '@/lib/auth-user';
 
 export function useConvenioSettings() {
   const reactQueryClient = useQueryClient();
-  const convenioId = useAuthStore((state) => state.user?.convenio_id ?? '');
+  const convenioId = useAuthStore((state) => getAuthUserConvenioId(state.user));
+  const authLoading = useAuthStore((state) => state.isLoading);
+  const isQueryEnabled = Boolean(convenioId) && !authLoading;
 
   const convenioQuery = useGetConvenioById(convenioId, {
     query: {
       client: queryClient,
-      enabled: Boolean(convenioId),
+      enabled: isQueryEnabled,
     },
   });
 
@@ -34,13 +37,13 @@ export function useConvenioSettings() {
     mutation: {
       client: reactQueryClient,
       onSuccess: (_data, variables) => {
-        toast.success('Configuracoes salvas!');
+        toast.success('Configurações salvas!');
         void reactQueryClient.invalidateQueries({
           queryKey: getConvenioByIdQueryKey(variables.id),
         });
       },
       onError: (error) => {
-        toast.error(getFriendlyApiError(error, 'Erro ao salvar configuracoes.'));
+        toast.error(getFriendlyApiError(error, 'Erro ao salvar configurações.'));
       },
     },
   });
@@ -52,8 +55,9 @@ export function useConvenioSettings() {
 
   return {
     convenio,
-    isLoading: convenioQuery.isLoading,
-    isError: convenioQuery.isError,
+    convenioId,
+    isLoading: authLoading || convenioQuery.isLoading,
+    isError: !authLoading && (!convenioId || convenioQuery.isError),
     refetch: convenioQuery.refetch,
     patchSettings,
     isPatching: patchMutation.isPending,

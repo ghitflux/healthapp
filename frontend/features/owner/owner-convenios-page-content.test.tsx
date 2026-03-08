@@ -33,7 +33,7 @@ function createListState() {
     ordering: 'name',
     convenios: [
       {
-        id: 'convenio-1',
+        id: 'convênio-1',
         name: 'Convênio Alfa',
         contact_email: 'contato@alfa.com',
         subscription_plan: 'pro',
@@ -93,7 +93,7 @@ describe('OwnerConveniosPageContent', () => {
     });
   });
 
-  it('renders convenios and exports csv', async () => {
+  it('renders convênios and exports csv', async () => {
     const user = userEvent.setup();
 
     render(<OwnerConveniosPageContent />);
@@ -117,7 +117,7 @@ describe('OwnerConveniosPageContent', () => {
     await user.click(screen.getByRole('button', { name: 'Confirmar' }));
 
     await waitFor(() => {
-      expect(mutations.approveConvenio).toHaveBeenCalledWith('convenio-1');
+      expect(mutations.approveConvenio).toHaveBeenCalledWith('convênio-1');
     });
   });
 });

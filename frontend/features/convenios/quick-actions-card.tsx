@@ -11,19 +11,19 @@ export function QuickActionsCard() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Acoes rapidas</CardTitle>
+        <CardTitle className="text-base">Ações rapidas</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-3">
         <Button asChild className="justify-start">
           <Link href={`/convenio/appointments?from=${today}&to=${today}`}>
-            Ver agendamentos de hoje
+            Ver atendimentos liberados de hoje
           </Link>
         </Button>
         <Button asChild variant="outline" className="justify-start">
-          <Link href="/convenio/doctors">Novo medico</Link>
+          <Link href="/convenio/doctors">Novo médico da clínica</Link>
         </Button>
         <Button asChild variant="outline" className="justify-start">
-          <Link href="/convenio/financial">Ver relatorio</Link>
+          <Link href="/convenio/financial">Ver relatório</Link>
         </Button>
       </CardContent>
     </Card>

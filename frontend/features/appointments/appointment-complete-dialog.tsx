@@ -2,7 +2,7 @@
 
 /**
  * @file features/appointments/appointment-complete-dialog.tsx
- * @description Dialog de confirmacao para concluir agendamento.
+ * @description Dialog de confirmação para concluir agendamento.
  */
 
 import { useState } from 'react';
@@ -40,16 +40,16 @@ export function AppointmentCompleteDialog({
       open={open}
       onClose={handleClose}
       title="Concluir Consulta"
-      description="Confirme a conclusao da consulta. Voce pode adicionar observacoes."
+      description="Confirme a conclusão da consulta. Você pode adicionar observações."
       confirmLabel="Concluir"
       onConfirm={handleConfirm}
       isLoading={isLoading}
     >
       <div className="space-y-2">
-        <Label htmlFor="complete-notes">Observacoes (opcional)</Label>
+        <Label htmlFor="complete-notes">Observações (opcional)</Label>
         <Textarea
           id="complete-notes"
-          placeholder="Adicione observacoes sobre a consulta..."
+          placeholder="Adicione observações sobre a consulta..."
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={3}

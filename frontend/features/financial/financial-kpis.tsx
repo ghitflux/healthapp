@@ -57,13 +57,13 @@ export function FinancialKpis({ report, isLoading }: FinancialKpisProps) {
         iconColor="text-primary-600"
       />
       <KpiCard
-        title="Transacoes"
+        title="Transações"
         value={report?.transaction_count ?? 0}
         icon={CreditCardIcon}
         iconColor="text-warning-600"
       />
       <KpiCard
-        title="Ticket Medio"
+        title="Ticket Médio"
         value={formatCurrency(asNumber(report?.average_ticket))}
         icon={TrendingUpIcon}
         iconColor="text-primary-600"

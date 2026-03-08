@@ -7,6 +7,7 @@ import type { FinancialReport } from '@api/types/FinancialReport';
 import { queryClient } from '@/lib/query-client';
 import { useAuthStore } from '@/stores/auth-store';
 import { unwrapEnvelope } from '@/hooks/owner/utils';
+import { getAuthUserConvenioId } from '@/lib/auth-user';
 
 function getCurrentMonthWindow() {
   const now = new Date();
@@ -18,7 +19,7 @@ function getCurrentMonthWindow() {
 }
 
 export function useConvenioFinancial() {
-  const convenioId = useAuthStore((state) => state.user?.convenio_id ?? '');
+  const convenioId = useAuthStore((state) => getAuthUserConvenioId(state.user));
   const monthWindow = getCurrentMonthWindow();
   const [dateFrom, setDateFrom] = useState(monthWindow.from);
   const [dateTo, setDateTo] = useState(monthWindow.to);
@@ -33,7 +34,7 @@ export function useConvenioFinancial() {
       query: {
         client: queryClient,
         staleTime: 5 * 60_000,
-        enabled: Boolean(dateFrom && dateTo),
+        enabled: Boolean(dateFrom && dateTo && convenioId),
       },
     }
   );

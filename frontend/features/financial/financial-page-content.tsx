@@ -21,9 +21,10 @@ import { RevenueByPeriodChart } from './revenue-by-period-chart';
 import { PaymentMethodBreakdown } from './payment-method-breakdown';
 import { FinancialExportButton } from './financial-export-button';
 import { asNumber } from '@/hooks/owner/utils';
+import { getAuthUserConvenioId } from '@/lib/auth-user';
 
 export function FinancialPageContent() {
-  const convenioId = useAuthStore((state) => state.user?.convenio_id ?? '');
+  const convenioId = useAuthStore((state) => getAuthUserConvenioId(state.user));
   const {
     report,
     isLoading,
@@ -40,7 +41,7 @@ export function FinancialPageContent() {
     return (
       <ErrorStateBlock
         title="Erro ao carregar financeiro"
-        message="Nao foi possivel carregar o relatorio financeiro do convenio."
+        message="Não foi possível carregar o relatório financeiro do convênio."
         onRetry={() => void refetch()}
       />
     );
@@ -54,7 +55,7 @@ export function FinancialPageContent() {
         <div className="space-y-1">
           <h1 className="text-2xl font-bold tracking-tight">Financeiro</h1>
           <p className="text-sm text-muted-foreground">
-            Acompanhe receita, reembolsos e principais servicos do convenio.
+            Acompanhe receita, reembolsos e principais serviços do convênio.
           </p>
         </div>
 
@@ -88,9 +89,9 @@ export function FinancialPageContent() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between gap-4">
           <div>
-            <CardTitle className="text-base">Top servicos</CardTitle>
+            <CardTitle className="text-base">Top serviços</CardTitle>
             <p className="text-sm text-muted-foreground">
-              Servicos com maior receita no periodo filtrado.
+              Serviços com maior receita no período filtrado.
             </p>
           </div>
           <button
@@ -98,21 +99,21 @@ export function FinancialPageContent() {
             className="text-sm text-muted-foreground underline-offset-4 hover:underline"
             onClick={handleResetDates}
           >
-            Resetar periodo
+            Resetar período
           </button>
         </CardHeader>
         <CardContent>
           {!isLoading && (!report?.top_services || report.top_services.length === 0) ? (
             <EmptyStateBlock
-              title="Sem servicos destacados"
-              description="Nao houve volume suficiente de servicos no periodo selecionado."
+              title="Sem serviços destacados"
+              description="Não houve volume suficiente de serviços no período selecionado."
             />
           ) : (
             <div className="overflow-x-auto rounded-md border bg-card shadow-xs">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Servico</TableHead>
+                    <TableHead>Serviço</TableHead>
                     <TableHead className="text-right">Quantidade</TableHead>
                     <TableHead className="text-right">Receita</TableHead>
                   </TableRow>
@@ -121,7 +122,7 @@ export function FinancialPageContent() {
                   {(report?.top_services ?? []).map((service, index) => (
                     <TableRow key={`${service.service ?? 'service'}-${index}`}>
                       <TableCell className="font-medium">
-                        {typeof service.service === 'string' ? service.service : 'Servico'}
+                        {typeof service.service === 'string' ? service.service : 'Serviço'}
                       </TableCell>
                       <TableCell className="text-right">{asNumber(service.count)}</TableCell>
                       <TableCell className="text-right">

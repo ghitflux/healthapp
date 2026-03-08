@@ -2,7 +2,7 @@
 
 /**
  * @file components/patterns/table-pagination.tsx
- * @description Molecula — Paginacao padronizada para tabelas de dados.
+ * @description Molecula — Paginação padronizada para tabelas de dados.
  */
 
 import {
@@ -36,7 +36,7 @@ export function TablePagination({ page, totalPages, onPageChange, className }: T
           </PaginationItem>
           <PaginationItem>
             <span className="flex h-9 items-center px-3 text-sm text-muted-foreground">
-              Pagina {page} de {totalPages}
+              Página {page} de {totalPages}
             </span>
           </PaginationItem>
           <PaginationItem>

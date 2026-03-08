@@ -25,7 +25,7 @@ export function PaymentMethodBreakdown({
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Metodos de pagamento</CardTitle>
+          <CardTitle className="text-base">Métodos de pagamento</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           {Array.from({ length: 3 }).map((_, index) => (
@@ -55,13 +55,13 @@ export function PaymentMethodBreakdown({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Metodos de pagamento</CardTitle>
+        <CardTitle className="text-base">Métodos de pagamento</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {rows.length === 0 ? (
           <EmptyStateBlock
-            title="Sem breakdown por metodo"
-            description="Nao houve pagamentos suficientes para distribuir por metodo."
+            title="Sem breakdown por método"
+            description="Não houve pagamentos suficientes para distribuir por método."
           />
         ) : (
           rows.map((item) => {
@@ -74,7 +74,7 @@ export function PaymentMethodBreakdown({
               >
                 <div className="space-y-1">
                   <PaymentMethodBadge method={item.method} />
-                  <p className="text-xs text-muted-foreground">{item.count} transacoes</p>
+                  <p className="text-xs text-muted-foreground">{item.count} transações</p>
                 </div>
 
                 <div className="text-right">
