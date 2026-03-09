@@ -46,8 +46,12 @@ export function LoginForm() {
 
   async function onSubmit(data: LoginFormData) {
     try {
-      await authService.login(data);
-      let role = authService.getUserRole();
+      const session = await authService.login(data);
+      let role = session.user?.role ?? authService.getUserRole();
+
+      if (session.user) {
+        setUser(session.user as unknown as Parameters<typeof setUser>[0]);
+      }
 
       try {
         const meResponse = await api.get('/v1/users/me/');

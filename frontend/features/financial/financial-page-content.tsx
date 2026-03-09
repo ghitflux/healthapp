@@ -14,18 +14,16 @@ import {
 } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useConvenioFinancial } from '@/hooks/financial/use-convenio-financial';
-import { useAuthStore } from '@/stores/auth-store';
 import { CurrencyText } from '@/components/ds/currency-text';
 import { FinancialKpis } from './financial-kpis';
 import { RevenueByPeriodChart } from './revenue-by-period-chart';
 import { PaymentMethodBreakdown } from './payment-method-breakdown';
 import { FinancialExportButton } from './financial-export-button';
 import { asNumber } from '@/hooks/owner/utils';
-import { getAuthUserConvenioId } from '@/lib/auth-user';
 
 export function FinancialPageContent() {
-  const convenioId = useAuthStore((state) => getAuthUserConvenioId(state.user));
   const {
+    convenioId,
     report,
     isLoading,
     isError,

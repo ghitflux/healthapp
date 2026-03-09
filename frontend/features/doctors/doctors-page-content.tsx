@@ -20,16 +20,20 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import { useResolvedConvenioId } from '@/hooks/convenio/use-resolved-convenio-id';
 import { useDoctorsList } from '@/hooks/doctors/use-doctors-list';
 import { useDoctorMutations } from '@/hooks/doctors/use-doctor-mutations';
-import { useAuthStore } from '@/stores/auth-store';
 import type { DoctorList } from '@api/types/DoctorList';
 import type { DoctorRequest } from '@api/types/DoctorRequest';
 import type { PatchedDoctorRequest } from '@api/types/PatchedDoctorRequest';
-import { getAuthUserConvenioId } from '@/lib/auth-user';
 
 export function DoctorsPageContent() {
-  const convenioId = useAuthStore((state) => getAuthUserConvenioId(state.user));
+  const {
+    convenioId,
+    isLoading: isResolvingConvenio,
+    isError: isConvenioResolutionError,
+    refetch: refetchConvenioResolution,
+  } = useResolvedConvenioId();
   const [createOpen, setCreateOpen] = useState(false);
   const [editDoctor, setEditDoctor] = useState<DoctorList | null>(null);
   const [deleteDoctor, setDeleteDoctor] = useState<DoctorList | null>(null);
@@ -37,6 +41,10 @@ export function DoctorsPageContent() {
 
   const list = useDoctorsList({ convenio: convenioId });
   const mutations = useDoctorMutations();
+  const canManageDoctors = Boolean(convenioId);
+  const isDoctorsLoading = isResolvingConvenio || list.isLoading;
+  const isDoctorsError =
+    isConvenioResolutionError || (!isResolvingConvenio && canManageDoctors && list.isError);
 
   const handleCreate = useCallback(() => setCreateOpen(true), []);
   const handleEdit = useCallback((d: DoctorList) => setEditDoctor(d), []);
@@ -65,7 +73,7 @@ export function DoctorsPageContent() {
         title="Médicos"
         description="Gerencie os médicos vinculados a sua clínica. Os atendimentos entram no painel após pagamento confirmado."
         createLabel="Novo Médico da Clínica"
-        onCreate={handleCreate}
+        onCreate={canManageDoctors ? handleCreate : undefined}
         toolbar={
           <DoctorsToolbar
             search={list.search}
@@ -79,13 +87,13 @@ export function DoctorsPageContent() {
         table={
           <DoctorsTable
             doctors={list.doctors}
-            isLoading={list.isLoading}
-            isError={list.isError}
-            onRetry={list.refetch}
+            isLoading={isDoctorsLoading}
+            isError={isDoctorsError}
+            onRetry={convenioId ? list.refetch : refetchConvenioResolution}
             onEdit={handleEdit}
             onDelete={handleDeletePrompt}
             onView={handleView}
-            onCreate={handleCreate}
+            onCreate={canManageDoctors ? handleCreate : () => void 0}
           />
         }
         pagination={
@@ -120,23 +128,27 @@ export function DoctorsPageContent() {
       />
 
       {/* Modal criar */}
-      <DoctorFormDialog
-        open={createOpen}
-        onClose={() => setCreateOpen(false)}
-        convenioId={convenioId}
-        onSubmit={handleFormSubmit}
-        isSubmitting={mutations.isCreating}
-      />
+      {canManageDoctors && (
+        <DoctorFormDialog
+          open={createOpen}
+          onClose={() => setCreateOpen(false)}
+          convenioId={convenioId}
+          onSubmit={handleFormSubmit}
+          isSubmitting={mutations.isCreating}
+        />
+      )}
 
       {/* Modal editar */}
-      <DoctorFormDialog
-        open={!!editDoctor}
-        onClose={() => setEditDoctor(null)}
-        doctor={editDoctor}
-        convenioId={convenioId}
-        onSubmit={handleFormSubmit}
-        isSubmitting={mutations.isPatching}
-      />
+      {canManageDoctors && (
+        <DoctorFormDialog
+          open={!!editDoctor}
+          onClose={() => setEditDoctor(null)}
+          doctor={editDoctor}
+          convenioId={convenioId}
+          onSubmit={handleFormSubmit}
+          isSubmitting={mutations.isPatching}
+        />
+      )}
 
       {/* Dialog excluir */}
       <DoctorDeleteDialog

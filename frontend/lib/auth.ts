@@ -10,6 +10,13 @@ export interface AuthTokens {
   refresh: string;
 }
 
+export interface AuthSession extends AuthTokens {
+  user?: {
+    role?: string | null;
+    [key: string]: unknown;
+  };
+}
+
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -81,12 +88,12 @@ function createRedirectStrategy(role: string | null): RoleRedirectStrategy {
  * Singleton — Serviço de autenticação.
  */
 export const authService = {
-  login: async (credentials: LoginCredentials): Promise<AuthTokens> => {
+  login: async (credentials: LoginCredentials): Promise<AuthSession> => {
     const response = await api.post('/v1/auth/login/', credentials);
-    const tokens = response.data.data ?? response.data;
-    localStorage.setItem('access_token', tokens.access);
-    localStorage.setItem('refresh_token', tokens.refresh);
-    return tokens;
+    const session = response.data.data ?? response.data;
+    localStorage.setItem('access_token', session.access);
+    localStorage.setItem('refresh_token', session.refresh);
+    return session;
   },
 
   clearTokens: (): void => {

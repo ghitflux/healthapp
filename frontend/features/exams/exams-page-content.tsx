@@ -22,19 +22,23 @@ import { ExamTypeDeleteDialog } from './exam-type-delete-dialog';
 import { PricingTable } from './pricing-table';
 import { useExamTypesList } from '@/hooks/exams/use-exam-types-list';
 import { useExamTypeMutations } from '@/hooks/exams/use-exam-type-mutations';
+import { useResolvedConvenioId } from '@/hooks/convenio/use-resolved-convenio-id';
 import { useConvenioSettings } from '@/hooks/settings/use-convenio-settings';
 import type { ExamType } from '@api/types/ExamType';
 import type { ExamTypeRequest } from '@api/types/ExamTypeRequest';
 import type { PatchedExamTypeRequest } from '@api/types/PatchedExamTypeRequest';
-import { useAuthStore } from '@/stores/auth-store';
-import { getAuthUserConvenioId } from '@/lib/auth-user';
 import {
   normalizeBookableServices,
   toConvenioSettingsRecord,
 } from '@/features/settings/convenio-settings';
 
 export function ExamsPageContent() {
-  const convenioId = useAuthStore((state) => getAuthUserConvenioId(state.user));
+  const {
+    convenioId,
+    isLoading: isResolvingConvenio,
+    isError: isConvenioResolutionError,
+    refetch: refetchConvenioResolution,
+  } = useResolvedConvenioId();
   const [createOpen, setCreateOpen] = useState(false);
   const [editExamType, setEditExamType] = useState<ExamType | null>(null);
   const [deleteExamType, setDeleteExamType] = useState<ExamType | null>(null);
@@ -45,6 +49,7 @@ export function ExamsPageContent() {
     useConvenioSettings();
   const convenioSettings = toConvenioSettingsRecord(convenio?.settings);
   const services = normalizeBookableServices(convenioSettings);
+  const canManageExamTypes = Boolean(convenioId);
 
   const handleCreate = useCallback(() => setCreateOpen(true), []);
   const handleEdit = useCallback((et: ExamType) => setEditExamType(et), []);
@@ -94,7 +99,7 @@ export function ExamsPageContent() {
         <CrudTableTemplate
           title=""
           createLabel="Novo Tipo de Exame"
-          onCreate={handleCreate}
+          onCreate={canManageExamTypes ? handleCreate : undefined}
           toolbar={
             <DataTableToolbar
               searchValue={list.search}
@@ -105,12 +110,12 @@ export function ExamsPageContent() {
           table={
             <ExamTypesTable
               examTypes={list.examTypes}
-              isLoading={list.isLoading}
-              isError={list.isError}
-              onRetry={list.refetch}
+              isLoading={isResolvingConvenio || list.isLoading}
+              isError={isConvenioResolutionError || list.isError}
+              onRetry={convenioId ? list.refetch : refetchConvenioResolution}
               onEdit={handleEdit}
               onDelete={handleDeletePrompt}
-              onCreate={handleCreate}
+              onCreate={canManageExamTypes ? handleCreate : () => void 0}
             />
           }
           pagination={
@@ -154,21 +159,25 @@ export function ExamsPageContent() {
       </TabsContent>
 
       {/* Modais */}
-      <ExamTypeFormDialog
-        open={createOpen}
-        onClose={() => setCreateOpen(false)}
-        convenioId={convenioId}
-        onSubmit={handleFormSubmit}
-        isSubmitting={mutations.isCreating}
-      />
-      <ExamTypeFormDialog
-        open={!!editExamType}
-        onClose={() => setEditExamType(null)}
-        examType={editExamType}
-        convenioId={convenioId}
-        onSubmit={handleFormSubmit}
-        isSubmitting={mutations.isPatching}
-      />
+      {convenioId && (
+        <ExamTypeFormDialog
+          open={createOpen}
+          onClose={() => setCreateOpen(false)}
+          convenioId={convenioId}
+          onSubmit={handleFormSubmit}
+          isSubmitting={mutations.isCreating}
+        />
+      )}
+      {convenioId && (
+        <ExamTypeFormDialog
+          open={!!editExamType}
+          onClose={() => setEditExamType(null)}
+          examType={editExamType}
+          convenioId={convenioId}
+          onSubmit={handleFormSubmit}
+          isSubmitting={mutations.isPatching}
+        />
+      )}
       <ExamTypeDeleteDialog
         open={!!deleteExamType}
         onClose={() => setDeleteExamType(null)}

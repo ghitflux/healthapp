@@ -40,11 +40,15 @@ import type { DoctorScheduleRequest } from '@api/types/DoctorScheduleRequest';
 import type { PatchedDoctorScheduleRequest } from '@api/types/PatchedDoctorScheduleRequest';
 import type { ScheduleExceptionRequest } from '@api/types/ScheduleExceptionRequest';
 import { queryClient } from '@/lib/query-client';
-import { useAuthStore } from '@/stores/auth-store';
-import { getAuthUserConvenioId } from '@/lib/auth-user';
+import { useResolvedConvenioId } from '@/hooks/convenio/use-resolved-convenio-id';
 
 export function SchedulesPageContent() {
-  const convenioId = useAuthStore((state) => getAuthUserConvenioId(state.user));
+  const {
+    convenioId,
+    isLoading: isResolvingConvenio,
+    isError: isConvenioResolutionError,
+    refetch: refetchConvenioResolution,
+  } = useResolvedConvenioId();
   const [selectedDoctorId, setSelectedDoctorId] = useState<string | null>(null);
 
   // Schedule modal state
@@ -59,7 +63,7 @@ export function SchedulesPageContent() {
   // Fetch doctors for selector
   const doctorsQuery = useListDoctors(
     { convenio: convenioId, page_size: 100 },
-    { query: { client: queryClient, enabled: Boolean(convenioId) } }
+    { query: { client: queryClient, enabled: Boolean(convenioId) && !isResolvingConvenio } }
   );
   const doctors: DoctorList[] = doctorsQuery.data?.data ?? [];
 
@@ -172,6 +176,16 @@ export function SchedulesPageContent() {
 
   const selectedDoctor = doctors.find((d) => d.id === selectedDoctorId) ?? null;
 
+  if (isConvenioResolutionError) {
+    return (
+      <ErrorStateBlock
+        title="Erro ao carregar agendas"
+        message="Não foi possível identificar o convênio da sessão atual."
+        onRetry={() => void refetchConvenioResolution()}
+      />
+    );
+  }
+
   return (
     <>
       {/* Page header */}
@@ -196,7 +210,7 @@ export function SchedulesPageContent() {
               </div>
             </div>
 
-            {doctorsQuery.isLoading ? (
+            {isResolvingConvenio || doctorsQuery.isLoading ? (
               <div className="p-3 space-y-2">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Skeleton key={i} className="h-14 w-full rounded-md" />

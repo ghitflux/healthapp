@@ -1,5 +1,5 @@
 export interface AuthUserLike {
-  convenio?: string | null;
+  convenio?: string | { id?: string | null } | null;
   convenio_id?: string | null;
 }
 
@@ -12,6 +12,15 @@ export function getAuthUserConvenioId(user?: AuthUserLike | null): string {
     return user.convenio;
   }
 
+  if (
+    typeof user?.convenio === 'object' &&
+    user.convenio !== null &&
+    typeof user.convenio.id === 'string' &&
+    user.convenio.id.trim().length > 0
+  ) {
+    return user.convenio.id;
+  }
+
   return '';
 }
 
@@ -22,7 +31,7 @@ export function normalizeAuthUser<T extends AuthUserLike>(user: T | null | undef
 
   return {
     ...user,
-    convenio: typeof user.convenio === 'string' ? user.convenio : convenioId || undefined,
+    convenio: convenioId || undefined,
     convenio_id: convenioId || undefined,
   } as T;
 }

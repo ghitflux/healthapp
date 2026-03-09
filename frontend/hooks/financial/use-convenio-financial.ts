@@ -5,9 +5,8 @@ import { format, startOfMonth } from 'date-fns';
 import { useGetConvenioFinancialReport } from '@api/hooks/useConvenio';
 import type { FinancialReport } from '@api/types/FinancialReport';
 import { queryClient } from '@/lib/query-client';
-import { useAuthStore } from '@/stores/auth-store';
 import { unwrapEnvelope } from '@/hooks/owner/utils';
-import { getAuthUserConvenioId } from '@/lib/auth-user';
+import { useResolvedConvenioId } from '@/hooks/convenio/use-resolved-convenio-id';
 
 function getCurrentMonthWindow() {
   const now = new Date();
@@ -19,7 +18,12 @@ function getCurrentMonthWindow() {
 }
 
 export function useConvenioFinancial() {
-  const convenioId = useAuthStore((state) => getAuthUserConvenioId(state.user));
+  const {
+    convenioId,
+    isLoading: isResolvingConvenio,
+    isError: isConvenioResolutionError,
+    refetch: refetchConvenioResolution,
+  } = useResolvedConvenioId();
   const monthWindow = getCurrentMonthWindow();
   const [dateFrom, setDateFrom] = useState(monthWindow.from);
   const [dateTo, setDateTo] = useState(monthWindow.to);
@@ -34,7 +38,10 @@ export function useConvenioFinancial() {
       query: {
         client: queryClient,
         staleTime: 5 * 60_000,
-        enabled: Boolean(dateFrom && dateTo && convenioId),
+        enabled:
+          Boolean(dateFrom && dateTo && convenioId) &&
+          !isResolvingConvenio &&
+          !isConvenioResolutionError,
       },
     }
   );
@@ -66,10 +73,11 @@ export function useConvenioFinancial() {
   }
 
   return {
+    convenioId,
     report,
-    isLoading: query.isLoading,
-    isError: query.isError,
-    refetch: query.refetch,
+    isLoading: isResolvingConvenio || query.isLoading,
+    isError: isConvenioResolutionError || query.isError,
+    refetch: convenioId ? query.refetch : refetchConvenioResolution,
     dateFrom,
     dateTo,
     handleDateFrom,
