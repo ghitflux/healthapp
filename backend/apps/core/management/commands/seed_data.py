@@ -209,6 +209,9 @@ class Command(BaseCommand):
             if created:
                 admin.set_password("Admin@2026!")
                 admin.save(update_fields=["password", "updated_at"])
+            elif admin.convenio_id != convenio.id:
+                admin.convenio = convenio
+                admin.save(update_fields=["convenio", "updated_at"])
             convenios.append(convenio)
         return convenios
 
@@ -251,6 +254,9 @@ class Command(BaseCommand):
             if created:
                 user.set_password("Doctor@2026!")
                 user.save(update_fields=["password", "updated_at"])
+            elif user.convenio_id != convenio.id:
+                user.convenio = convenio
+                user.save(update_fields=["convenio", "updated_at"])
 
             doctor, _ = Doctor.objects.get_or_create(
                 user=user,

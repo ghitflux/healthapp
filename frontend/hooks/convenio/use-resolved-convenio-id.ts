@@ -45,11 +45,13 @@ export function useResolvedConvenioId() {
   }, [convenioQuery.data]);
 
   const convenioId = storedConvenioId || fallbackConvenio?.id || '';
-  const isResolving = shouldResolveFromList && !convenioId;
+  const isResolving = shouldResolveFromList && convenioQuery.isLoading;
   const isError =
     !authLoading &&
-    isResolving &&
-    (convenioQuery.isError || (!convenioQuery.isLoading && !fallbackConvenio?.id));
+    shouldResolveFromList &&
+    !convenioId &&
+    !convenioQuery.isLoading &&
+    (convenioQuery.isError || !fallbackConvenio?.id);
 
   useEffect(() => {
     if (!user || storedConvenioId || !fallbackConvenio?.id) {
