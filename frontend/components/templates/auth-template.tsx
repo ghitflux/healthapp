@@ -36,7 +36,7 @@ export function AuthTemplate({
             <HeartIcon className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">HealthApp</h1>
+            <h1 className="text-2xl font-bold text-foreground">Abase Saúde</h1>
             <p className="text-sm text-muted-foreground">Gestão em Saúde</p>
           </div>
         </div>

@@ -271,7 +271,7 @@ export default function RegisterScreen() {
                   <CheckboxRow
                     checked={field.value}
                     onPress={() => field.onChange(!field.value)}
-                    label="Li e aceito os termos de uso do SIS."
+                    label="Li e aceito os termos de uso do Abase Saúde."
                   />
                   {fieldState.error?.message ? <Text className="text-sm text-danger">{fieldState.error.message}</Text> : null}
                 </View>

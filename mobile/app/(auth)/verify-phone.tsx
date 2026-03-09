@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
@@ -26,18 +26,26 @@ export default function VerifyPhoneScreen() {
     defaultValues: { code: '' },
   });
 
-  const bootstrapOtp = useEffectEvent(async () => {
-    try {
-      await resendPhoneOtp();
-      setCountdown(60);
-    } catch (error) {
-      showErrorToast(getErrorMessage(error, 'Nao foi possivel enviar o codigo por SMS.'));
-    }
-  });
-
   useEffect(() => {
-    bootstrapOtp();
-  }, [bootstrapOtp]);
+    let mounted = true;
+
+    async function bootstrapOtp() {
+      try {
+        await resendPhoneOtp();
+        if (mounted) {
+          setCountdown(60);
+        }
+      } catch (error) {
+        showErrorToast(getErrorMessage(error, 'Nao foi possivel enviar o codigo por SMS.'));
+      }
+    }
+
+    void bootstrapOtp();
+
+    return () => {
+      mounted = false;
+    };
+  }, [resendPhoneOtp]);
 
   useEffect(() => {
     if (countdown <= 0) return undefined;

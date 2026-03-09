@@ -18,10 +18,20 @@ export function formatDate(value: string | null | undefined) {
   return format(parseISO(value), "dd MMM yyyy", { locale: ptBR });
 }
 
+export function formatTime(value: string | null | undefined) {
+  if (!value) return '-';
+  return value.slice(0, 5);
+}
+
+export function formatLongDate(value: string | null | undefined) {
+  if (!value) return '-';
+  return format(parseISO(value), "EEEE, dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+}
+
 export function formatDateTime(date: string | null | undefined, time?: string | null) {
   if (!date) return '-';
   if (time) {
-    return `${formatDate(date)} - ${time.slice(0, 5)}`;
+    return `${formatDate(date)} - ${formatTime(time)}`;
   }
   return format(parseISO(date), "dd MMM yyyy - HH:mm", { locale: ptBR });
 }

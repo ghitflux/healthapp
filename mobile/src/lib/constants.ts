@@ -9,6 +9,13 @@ export const SPECIALTIES = [
   'Urologia',
 ] as const;
 
+export const SEARCH_PRICE_OPTIONS = [
+  { label: 'Sem limite', value: undefined },
+  { label: 'Ate R$ 150', value: 150 },
+  { label: 'Ate R$ 250', value: 250 },
+  { label: 'Ate R$ 400', value: 400 },
+] as const;
+
 export const APPOINTMENT_STATUS_META = {
   pending: {
     label: 'Pendente',
@@ -77,3 +84,4 @@ export const PAYMENT_METHOD_LABELS = {
 } as const;
 
 export const PLACEHOLDER_STRIPE_KEY = 'pk_test_placeholder';
+export const MOCK_PIX_ENABLED = process.env.EXPO_PUBLIC_ENABLE_PIX_MOCKS !== 'false';

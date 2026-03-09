@@ -110,7 +110,7 @@ frontend/src/
 
 - Inputs:
   - auth: email/senha/2FA.
-  - médicos: CRM, especialidade, preço, duração.
+  - médicos: CRM, especialidade, preco, duracao, vinculo automatico com a clinica atual.
   - agenda: dia da semana, faixa horário, exceções.
   - financeiro: faixa de data, método pagamento, status.
   - settings globais: toggles `maintenance_mode`, `pix_enabled`, limites.
@@ -124,7 +124,8 @@ frontend/src/
 - Tabelas:
   - médicos, agendamentos, pagamentos, usuários, convênios, logs de auditoria, notificações.
 - Seções completas:
-  - dashboards (convênio + owner), financeiro, governança, configurações, auditoria.
+  - dashboards (clinica + owner), financeiro, governança, configurações, auditoria.
+  - fila operacional da clinica: exibe somente consultas e exames liberados apos pagamento confirmado.
 
 ## 9) Contratos de integração com API gerada
 

@@ -35,7 +35,7 @@ function createListState() {
         action: '1',
         action_label: 'update',
         actor: 'user-1',
-        actor_email: 'owner@healthapp.com',
+        actor_email: 'owner@abasesaude.com',
         changes: { name: ['Antigo', 'Novo'] },
         timestamp: '2026-03-01T10:00:00Z',
         remote_addr: '127.0.0.1',
@@ -72,7 +72,7 @@ describe('OwnerAuditLogsPageContent', () => {
 
     render(<OwnerAuditLogsPageContent />);
 
-    expect(screen.getByText('owner@healthapp.com')).toBeInTheDocument();
+    expect(screen.getByText('owner@abasesaude.com')).toBeInTheDocument();
     expect(screen.getByText('convênio')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'CSV' }));

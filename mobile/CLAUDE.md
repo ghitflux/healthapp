@@ -83,7 +83,7 @@ import axios from 'axios'
 import * as SecureStore from 'expo-secure-store'
 
 const client = axios.create({
-  baseURL: 'https://api.healthapp.com.br',
+  baseURL: 'https://api.abasesaude.com.br',
 })
 
 client.interceptors.request.use(async (config) => {

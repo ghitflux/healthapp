@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "SIS - Sistema Integrado a Saude",
-    "slug": "sis-healthapp",
+    "name": "Abase Saúde",
+    "slug": "abase-saude",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "sis",
+    "scheme": "abasesaude",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -15,13 +15,13 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.healthapp.sis",
+      "bundleIdentifier": "com.abase.saude",
       "infoPlist": {
-        "NSFaceIDUsageDescription": "Use Face ID para login rapido no SIS"
+        "NSFaceIDUsageDescription": "Use Face ID para login rapido no Abase Saúde"
       }
     },
     "android": {
-      "package": "com.healthapp.sis",
+      "package": "com.abase.saude",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
@@ -42,7 +42,7 @@
       [
         "@stripe/stripe-react-native",
         {
-          "merchantIdentifier": "merchant.com.healthapp.sis",
+          "merchantIdentifier": "merchant.com.abase.saude",
           "enableGooglePay": false
         }
       ]

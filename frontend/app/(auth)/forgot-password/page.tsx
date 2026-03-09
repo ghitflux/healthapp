@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 export const metadata: Metadata = {
-  title: 'Recuperar Senha — HealthApp',
+  title: 'Recuperar Senha — Abase Saúde',
 };
 
 export default function ForgotPasswordPage() {

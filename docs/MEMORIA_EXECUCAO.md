@@ -2,6 +2,84 @@
 
 Ultima atualizacao: 2026-03-09
 
+## Ajuste de Branding Abase Saúde (2026-03-09)
+
+- Removido branding antigo `SIS` / `HealthApp` das superficies web e mobile.
+- Mobile:
+  - nome do app, slug, scheme e identificadores Expo atualizados para `Abase Saúde`
+  - textos de login, biometria, termos, suporte e mocks Pix atualizados
+- Frontend:
+  - metadata, sidebar, template auth e titulos de paginas atualizados para `Abase Saúde`
+  - chave de persistencia web alterada para `abase-saude-auth`
+
+## Downgrade para Expo SDK 54 (2026-03-09)
+
+- Mobile rebaixado de Expo SDK 55 para SDK 54 para compatibilidade com o Expo Go da Play Store:
+  - `expo` -> `^54.0.33`
+  - `expo-router` -> `~6.0.23`
+  - `react` / `react-dom` -> `19.1.0`
+  - `react-native` -> `0.81.5`
+  - modulos `expo-*` e `react-native-*` alinhados com `expo install --fix`
+- Ajustes de compatibilidade feitos no codigo:
+  - removido uso de `useEffectEvent` nas telas/auth e bootstrap de notificacoes
+  - `use-notifications.ts` passou a expor callback estavel via `useCallback`
+- Validacao local apos downgrade:
+  - `npm run type-check` concluido sem erros
+  - `expo start --go --lan` voltou a subir o Metro sem erro de incompatibilidade de SDK no host
+
+## Ajuste Expo Go Mobile (2026-03-09)
+
+- Mobile agora pode abrir no Expo Go para validacao de fluxo nao-nativo:
+  - `app/_layout.tsx` deixou de importar Stripe estaticamente no root.
+  - `src/components/providers/optional-stripe-provider.tsx` carrega `@stripe/stripe-react-native` apenas fora do Expo Go.
+  - `metro.config.js` passou a observar apenas `shared/`, evitando varrer `node_modules` da raiz do monorepo no Windows.
+  - `metro.config.js` passou a resolver explicitamente `@react-native/virtualized-lists` a partir de `react-native/node_modules`, corrigindo o bundle Android no Expo Go.
+  - `metro.config.js` passou a priorizar o `node_modules` interno do `expo-router` e aliasar `@expo/metro-runtime`, corrigindo o conflito entre a versao `55.0.6` trazida pelo `expo` e a `6.1.2` exigida pelo `expo-router`.
+  - `package.json` passou a declarar `@kubb/plugin-client`, necessario em runtime para o client gerado usado pelo mobile.
+  - `package.json` recebeu scripts `start:go` e `start:go:tunnel`.
+- Limitacoes mantidas no Expo Go:
+  - pagamentos nativos Stripe continuam indisponiveis
+  - notificacoes Firebase continuam desabilitadas no runtime do Expo Go
+  - o mock Pix segue funcional para teste de UX
+- Validacao local apos os ajustes:
+  - `node ./node_modules/expo/bin/cli export --platform android` concluiu sem erro no host Windows
+  - `npm run type-check` concluiu sem erros
+
+## Atualizacao Semana 10 Mobile (2026-03-09)
+
+- Busca e descoberta do paciente entregues no mobile:
+  - `app/search/index.tsx` implementado com header de busca, debounce 300ms, filtros combinaveis, contagem, infinite scroll e refresh.
+  - `app/(tabs)/index.tsx` transformada em dashboard com CTA de busca, especialidades navegaveis, medicos em destaque e carrossel de clinicas.
+  - novos hooks `use-doctors.ts`, `use-doctor-profile.ts`, `use-doctor-slots.ts`, `use-clinic.ts` e `use-debounce.ts`.
+- Fluxo clinica -> medico -> horario concluido:
+  - `app/clinic/[id].tsx` com contato, endereco, atalho para mapa e lista real de medicos da clinica.
+  - `app/doctor/[id].tsx` com perfil completo, CRM, preco, duracao, reviews mockadas e CTA de agendamento.
+  - `app/booking/select-time.tsx` com calendario horizontal de 30 dias e grid de slots reais.
+- Mock local de Pix adicionado para simular checkout antes da Semana 11:
+  - `app/booking/confirm.tsx`, `app/booking/payment.tsx` e `app/booking/success.tsx` agora formam um fluxo navegavel fim-a-fim.
+  - `mobile/src/stores/booking-store.ts` guarda o draft do booking e o pagamento mock.
+  - `mobile/src/lib/mock-data.ts` gera `pix_code`, expiracao, status local e reviews de exemplo.
+  - `use-payment-polling.ts` passou a suportar pagamento mock alem do polling real existente.
+
+## Validacoes executadas - Semana 10
+
+- `cd mobile && npm run type-check` ✅
+- `cd mobile && npm run lint` ⚠️
+  - o processo local do ESLint permaneceu ativo por tempo anormal sem emitir saida adicional nem encerrar, inclusive ao limitar para os arquivos alterados
+  - `tsc --noEmit` concluiu sem erros, entao o codigo entregue esta consistente em compilacao
+  - a causa aparenta ser comportamental do ambiente/ferramental e nao um erro imediato de tipagem ou sintaxe nas mudancas da Semana 10
+
+## Bloqueios restantes - Semana 10
+
+- O fluxo de Pix entregue nesta semana e **mock local** para validacao de UX:
+  - nao cria appointment real
+  - nao aparece em `Meus agendamentos`
+  - nao dispara webhook Stripe
+- O checkout real permanece dependente de:
+  - `createAppointment` conectado ao fluxo final da Semana 11
+  - `useGeneratePIX` / `useCreatePaymentIntent` com credenciais Stripe reais
+  - device build com artefatos nativos para validacao completa
+
 ## Atualizacao Semana 9 Mobile (2026-03-09)
 
 - App mobile Expo criado em `mobile/` com Expo Router, NativeWind, TanStack Query, Zustand, Axios, React Hook Form, Zod, SecureStore, biometria local, Stripe provider e wiring inicial de notificacoes.

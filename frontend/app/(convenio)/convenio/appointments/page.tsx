@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { AppointmentsPageContent } from '@/features/appointments';
 
-export const metadata: Metadata = { title: 'Agendamentos — HealthApp' };
+export const metadata: Metadata = { title: 'Agendamentos — Abase Saúde' };
 export const dynamic = 'force-dynamic';
 
 export default function AppointmentsPage() {

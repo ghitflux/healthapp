@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Text, View } from 'react-native';
 import { Link, router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
@@ -23,14 +23,6 @@ export default function LoginScreen() {
   const [canUseBiometrics, setCanUseBiometrics] = useState(false);
   const { login, loginMutation } = useAuth();
   const { checkBiometrics, biometricLogin } = useBiometrics();
-  const loadBiometrics = useEffectEvent(async () => {
-    const [supported, isEnabled] = await Promise.all([
-      checkBiometrics(),
-      storage.getBiometricEnabled(),
-    ]);
-
-    setCanUseBiometrics(supported && isEnabled);
-  });
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginRequestSchema),
@@ -41,8 +33,25 @@ export default function LoginScreen() {
   });
 
   useEffect(() => {
-    loadBiometrics();
-  }, [loadBiometrics]);
+    let mounted = true;
+
+    async function loadBiometrics() {
+      const [supported, isEnabled] = await Promise.all([
+        checkBiometrics(),
+        storage.getBiometricEnabled(),
+      ]);
+
+      if (mounted) {
+        setCanUseBiometrics(supported && isEnabled);
+      }
+    }
+
+    void loadBiometrics();
+
+    return () => {
+      mounted = false;
+    };
+  }, [checkBiometrics]);
 
   async function handleLogin(values: LoginFormValues) {
     try {
@@ -76,7 +85,7 @@ export default function LoginScreen() {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1">
         <View className="flex-1 justify-center gap-8 px-1">
           <View className="gap-3">
-            <Text className="text-4xl font-bold text-white">SIS</Text>
+            <Text className="text-4xl font-bold text-white">Abase Saúde</Text>
             <Text className="text-base leading-7 text-primary-100">
               Seus exames e consultas na palma da mao, com seguranca e agilidade.
             </Text>

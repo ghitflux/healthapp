@@ -20,7 +20,7 @@ function createListState() {
     users: [
       {
         id: 'user-1',
-        email: 'owner@healthapp.com',
+        email: 'owner@abasesaude.com',
         full_name: 'Owner Teste',
         role: 'owner',
         is_active: true,
@@ -57,7 +57,7 @@ describe('OwnerUsersPageContent', () => {
     render(<OwnerUsersPageContent />);
 
     expect(screen.getByText('Owner Teste')).toBeInTheDocument();
-    expect(screen.getByText('owner@healthapp.com')).toBeInTheDocument();
+    expect(screen.getByText('owner@abasesaude.com')).toBeInTheDocument();
     expect(screen.getByText('Ativo')).toBeInTheDocument();
   });
 

@@ -6,7 +6,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'HealthApp',
+  title: 'Abase Saúde',
   description: 'Plataforma de gestão em saúde',
 };
 

@@ -131,7 +131,7 @@ export default function ProfileScreen() {
           <MenuRow
             icon={<PhoneIcon color="#2563EB" size={18} />}
             title="Central de ajuda"
-            description="Canal de suporte do SIS"
+            description="Canal de suporte do Abase Saúde"
             onPress={() => router.push('/(tabs)/profile/notifications')}
           />
         </Card>

@@ -59,7 +59,7 @@ export function Sidebar({ variant }: SidebarProps) {
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600">
           <HeartIcon className="h-4 w-4 text-white" />
         </div>
-        <span className="font-bold text-lg">HealthApp</span>
+        <span className="font-bold text-lg">Abase Saúde</span>
         {variant === 'owner' && (
           <Badge variant="secondary" className="ml-auto text-xs">
             Owner

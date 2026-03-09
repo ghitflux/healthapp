@@ -7,14 +7,16 @@
 
 ## 1. Visão Geral do Projeto
 
-**HealthApp** é uma plataforma de gestão em saúde para o mercado brasileiro que conecta três stakeholders: convênios (healthcare providers), pacientes e administradores do sistema (owner). O sistema permite agendamento de consultas e exames com pagamento integrado (Stripe + PIX), compliance LGPD obrigatório, e opera como SaaS multi-tenant.
+**HealthApp** é uma plataforma de gestão em saúde para o mercado brasileiro que conecta três stakeholders: clinicas parceiras (internamente ainda chamadas de `convenio`), pacientes e administradores do sistema (owner). O sistema permite agendamento de consultas e exames com pagamento integrado (Stripe + PIX), compliance LGPD obrigatório, e opera como SaaS multi-tenant.
+
+Regra de negocio permanente: todo medico pertence a uma unica clinica/convenio. O agendamento so entra na operacao da clinica depois que o pagamento do paciente for confirmado no backend.
 
 ### 1.1 Stakeholders e Interfaces
 
 | Stakeholder | Interface | Tecnologia | Descrição |
 |---|---|---|---|
-| **Convênio Admin** | Painel Web | Next.js 16 | CRUD médicos, agendas, exames, financeiro, dashboard KPIs |
-| **Owner** | Painel Web | Next.js 16 | Gestão global: convênios, usuários, analytics, auditoria LGPD |
+| **Clinica Admin** | Painel Web | Next.js 16 | CRUD medicos, agendas, exames, financeiro, dashboard KPIs |
+| **Owner** | Painel Web | Next.js 16 | Gestao global: clinicas, usuarios, analytics, auditoria LGPD |
 | **Paciente** | App Mobile | React Native/Expo | Busca médicos, agendamento, pagamento, histórico, notificações |
 | **Suporte Interno** | Django Admin | Django 6.0 | Painel de emergência, correções manuais, debug |
 

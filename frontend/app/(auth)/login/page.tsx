@@ -3,7 +3,7 @@ import { LoginForm } from '@/features/auth/login-form';
 import { AuthTemplate } from '@/components/templates/auth-template';
 
 export const metadata: Metadata = {
-  title: 'Login — HealthApp',
+  title: 'Login — Abase Saúde',
 };
 
 export default function LoginPage() {

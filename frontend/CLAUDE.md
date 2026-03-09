@@ -78,6 +78,13 @@ frontend/
 
 ## 3. Regras Obrigatórias
 
+### 3.0 Contexto de Domínio do Painel Web
+
+- A pasta `(convenio)` continua com esse nome por compatibilidade de rotas e tipos, mas representa o painel da clinica.
+- Toda copy de UX do painel deve tratar `convenio` como clinica sempre que isso melhorar a clareza para o operador.
+- Todo medico cadastrado no web fica vinculado a uma unica clinica.
+- A fila operacional da clinica so deve considerar atendimentos liberados apos pagamento confirmado no backend.
+
 ### 3.1 Imports da API — SEMPRE via @api/*
 
 ```typescript

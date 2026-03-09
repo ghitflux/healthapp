@@ -48,7 +48,7 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: 'healthapp-auth',
+      name: 'abase-saude-auth',
       merge: (persistedState, currentState) => {
         const persisted = persistedState as Partial<AuthState> | undefined;
         const user = normalizeAuthUser(persisted?.user ?? currentState.user);

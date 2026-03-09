@@ -21,7 +21,7 @@ export default function TermsScreen() {
 
         <Card className="gap-3">
           <Text className="text-sm leading-6 text-muted">
-            O SIS trata dados pessoais para autenticacao, agendamento, notificacoes operacionais e historico assistencial.
+            O Abase Saúde trata dados pessoais para autenticacao, agendamento, notificacoes operacionais e historico assistencial.
           </Text>
           <Text className="text-sm leading-6 text-muted">
             Esta fase mobile usa somente a API existente. Fluxos completos de consentimento, exportacao e exclusao entram

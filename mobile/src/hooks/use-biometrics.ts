@@ -10,7 +10,7 @@ export function useBiometrics() {
 
   async function authenticate() {
     const result = await LocalAuthentication.authenticateAsync({
-      promptMessage: 'Autentique para acessar o SIS',
+      promptMessage: 'Autentique para acessar o Abase Saúde',
       cancelLabel: 'Usar senha',
       disableDeviceFallback: false,
     });

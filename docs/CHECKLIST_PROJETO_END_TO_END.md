@@ -124,9 +124,9 @@
 - [ ] Validacao nativa FCM/Stripe em device build (depende de `google-services.json`, `GoogleService-Info.plist` e credenciais reais)
 
 ### Semana 10 - Busca e Medicos
-- [ ] Home/dashboard paciente
-- [ ] Busca de medicos com filtros/mapa
-- [ ] Perfil medico e selecao de horario
+- [x] Home/dashboard paciente
+- [x] Busca de medicos com filtros/mapa
+- [x] Perfil medico e selecao de horario
 
 ### Semana 11 - Booking + Pagamento
 - [ ] Confirmacao de agendamento

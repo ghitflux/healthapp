@@ -102,7 +102,7 @@ O fluxo de agendamento é o core do sistema e envolve múltiplas validações, l
 
 **Etapa 4 — Pagamento:** O app exibe a tela de pagamento com duas opções: PIX (QR code + código copia-e-cola, expiração de 30 minutos) ou cartão de crédito (Stripe Payment Intent via SDK nativo). O backend chama `POST /api/v1/payments/create-intent/` ou `POST /api/v1/payments/pix/generate/`.
 
-**Etapa 5 — Confirmação:** Para cartão, a confirmação é síncrona via Stripe SDK. Para PIX, o paciente paga via app bancário e o Stripe envia webhook `POST /api/v1/webhooks/stripe/` com evento `payment_intent.succeeded`. O backend atualiza Payment.status para `completed` e Appointment.status para `confirmed`.
+**Etapa 5 — Confirmação:** Para cartão, a confirmação é síncrona via Stripe SDK. Para PIX, o paciente paga via app bancário e o Stripe envia webhook `POST /api/v1/webhooks/stripe/` com evento `payment_intent.succeeded`. O backend atualiza Payment.status para `completed`, Appointment.status para `confirmed` e libera o atendimento para a fila operacional da clinica.
 
 **Etapa 6 — Notificações:** Tasks assíncronas disparam: email de confirmação com detalhes, push notification ao paciente, e agenda lembretes automáticos: 48h antes (email), 24h antes (push), 2h antes (push + SMS), 30min antes (push final).
 
@@ -112,9 +112,9 @@ O fluxo de agendamento é o core do sistema e envolve múltiplas validações, l
 
 PIX é o método dominante no Brasil (93% dos adultos possuem chave PIX). O fluxo via Stripe: backend cria Payment Intent com `payment_method_types=["pix"]`. O Stripe retorna `pix_display_qr_code` (base64) e `pix_copy_and_paste` (string). O app exibe ambas opções. O processamento é quase instantâneo (segundos). Webhook confirma. Backend atualiza status e dispara notificações. Alternativas com taxas menores (Asaas 0.99%, Mercado Pago 1.99%) podem ser avaliadas pós-lançamento.
 
-### 4.3 Fluxo do Convênio
+### 4.3 Fluxo da Clinica
 
-O admin do convênio acessa o painel web Next.js com login (2FA opcional). Dashboard exibe KPIs em tempo real: agendamentos do mês, receita, taxa de ocupação, taxa de cancelamento, comparativo mensal. O admin pode cadastrar médicos, configurar agendas semanais, criar exceções (feriados, férias), gerenciar tipos de exames, definir tabela de preços, e visualizar agendamentos com filtros e exportação CSV/PDF.
+O admin da clinica (role `convenio_admin`) acessa o painel web Next.js com login (2FA opcional). Dashboard exibe KPIs em tempo real: agendamentos do mes, receita, taxa de ocupacao, taxa de cancelamento, comparativo mensal. O admin pode cadastrar medicos, configurar agendas semanais, criar excecoes (feriados, ferias), gerenciar tipos de exames, definir tabela de precos, e visualizar os atendimentos liberados apos pagamento confirmado com filtros e exportacao CSV/PDF.
 
 ### 4.4 Fluxo do Owner
 
@@ -124,11 +124,11 @@ O owner acessa o painel master com 2FA obrigatório (TOTP). Dashboard executivo 
 
 ## 5. Painéis Web — Telas
 
-### 5.1 Painel do Convênio
+### 5.1 Painel da Clinica
 
 **Dashboard:** KPIs com gráficos interativos (Recharts): agendamentos por período, receita mensal, taxa de ocupação por médico, taxa de cancelamento. Cards com métricas e comparativo mensal. Cache Components para dados lentos.
 
-**Médicos:** Tabela com listagem, filtros e busca. Modal de criação/edição (React Hook Form + Zod). Upload de foto. Visualização de agenda e histórico.
+**Médicos:** Tabela com listagem, filtros e busca. Modal de criacao/edicao (React Hook Form + Zod). Cada medico fica vinculado automaticamente a clinica atual. Upload de foto. Visualizacao de agenda e historico.
 
 **Agendas:** Calendário interativo para configurar horários semanais por médico. Drag-and-drop para ajustar blocos. Views diária, semanal e mensal.
 
@@ -138,11 +138,11 @@ O owner acessa o painel master com 2FA obrigatório (TOTP). Dashboard executivo 
 
 **Tabela de Preços:** Valores por tipo de consulta e exame. Histórico de alterações. Suporte a promoções temporárias.
 
-**Agendamentos:** Listagem com filtros por médico, status, data e tipo. Ações: confirmar, cancelar, marcar no-show. Detalhes com dados do paciente e pagamento.
+**Agendamentos:** Listagem com filtros por medico, status, data e tipo. A clinica recebe apenas atendimentos com pagamento confirmado. Acoes: cancelar, iniciar atendimento, concluir e marcar no-show. Detalhes com dados do paciente e pagamento.
 
 **Financeiro:** Relatórios de receita por período, médico, tipo. Gráfico de evolução. Status de pagamentos. Exportação CSV e PDF.
 
-**Configurações:** Dados do convênio (nome, CNPJ, logo, contato), políticas de cancelamento, configurações de notificações.
+**Configurações:** Dados da clinica (nome, CNPJ, logo, contato), politicas de cancelamento, configuracoes de notificacoes.
 
 ### 5.2 Painel do Owner
 

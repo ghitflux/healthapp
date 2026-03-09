@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 import type { UnreadCount } from '@api/types/UnreadCount';
@@ -25,7 +26,7 @@ export function useNotifications() {
 
   const unreadCount = unwrapEnvelope<UnreadCount>(unreadQuery.data)?.count ?? 0;
 
-  async function registerCurrentDevice() {
+  const registerCurrentDevice = useCallback(async () => {
     if (!canAttemptNativePushRegistration()) {
       return false;
     }
@@ -51,7 +52,7 @@ export function useNotifications() {
       console.warn('Push registration unavailable on this device/build:', error);
       return false;
     }
-  }
+  }, [registerMutation]);
 
   return {
     unreadCount,

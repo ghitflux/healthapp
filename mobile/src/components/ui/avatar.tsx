@@ -5,13 +5,14 @@ import { cn } from '@/lib/utils';
 interface AvatarProps extends ViewProps {
   uri?: string | null;
   name?: string | null;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 const sizeClasses = {
   sm: 'h-10 w-10',
   md: 'h-14 w-14',
   lg: 'h-20 w-20',
+  xl: 'h-24 w-24',
 } as const;
 
 function getInitials(name?: string | null) {
