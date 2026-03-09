@@ -115,11 +115,13 @@
 ## 3. Fase 3 - Mobile (Semanas 9-13)
 
 ### Semana 9 - Setup Mobile + Auth
-- [ ] Expo SDK 52 + React Native + TS + Navigation
-- [ ] Alias `@api/*` integrado ao codigo gerado
-- [ ] Auth mobile com SecureStore + refresh
-- [ ] Onboarding + login/registro/verificacao
-- [ ] Push setup e biometria
+- [x] Expo SDK 55 + React Native + TS + Expo Router
+- [x] Alias `@api/*` integrado ao codigo gerado
+- [x] Auth mobile com SecureStore + refresh
+- [x] Onboarding + login/registro/verificacao
+- [x] Push setup e biometria
+- [x] Fundacao de pagamento (StripeProvider, rotas booking, polling de status)
+- [ ] Validacao nativa FCM/Stripe em device build (depende de `google-services.json`, `GoogleService-Info.plist` e credenciais reais)
 
 ### Semana 10 - Busca e Medicos
 - [ ] Home/dashboard paciente

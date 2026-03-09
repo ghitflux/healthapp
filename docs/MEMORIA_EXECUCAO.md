@@ -1,6 +1,73 @@
 # Memoria de Execucao - Semana 4
 
-Ultima atualizacao: 2026-03-04
+Ultima atualizacao: 2026-03-09
+
+## Atualizacao Semana 9 Mobile (2026-03-09)
+
+- App mobile Expo criado em `mobile/` com Expo Router, NativeWind, TanStack Query, Zustand, Axios, React Hook Form, Zod, SecureStore, biometria local, Stripe provider e wiring inicial de notificacoes.
+- Navegacao base concluida:
+  - `app/_layout.tsx`, `app/index.tsx`
+  - fluxo auth em `app/(auth)/*`
+  - 4 tabs fixas: `Inicio`, `Agendamentos`, `Prontuario`, `Perfil`
+  - rotas auxiliares `doctor/[id]`, `clinic/[id]` e `booking/*`
+- Integracao com API alinhada ao contrato real atual:
+  - consumo apenas de `@api/hooks`, `@api/types` e `@api/zod`
+  - `mobile/src/lib/kubb-client.ts` configurado sem duplicar `/api`
+  - `mobile/src/services/api.ts` com refresh token e fallback de host para Android emulator vs localhost fora do Android
+  - home adaptada para `listDoctors(include_next_slot=true)` em vez de convenios
+  - appointments separados no client por status
+  - prontuario derivado de appointments `completed`
+  - detalhe busca `getPaymentStatus(paymentId)` quando `appointment.payment` existe
+- Auth mobile implementado conforme restricoes do backend:
+  - login com `useLoginUser`
+  - register com `useRegisterUser` seguido de auto-login
+  - verify email autenticado
+  - verify phone com `resendPhoneOTP` antes da confirmacao
+  - forgot password com mensagem generica do backend
+  - login biometrico habilitado apenas apos sessao tradicional salva
+- Fundacao de push/pagamento:
+  - `StripeProvider` no root, plugin Stripe no `app.json` e rotas `booking/payment` + `booking/success`
+  - `use-payment-polling.ts` criado
+  - `use-notifications.ts` com fallback quando artefatos Firebase nao existem
+
+## Validacoes executadas - Semana 9
+
+- `cd mobile && npm install` ✅
+- `cd mobile && npm run type-check` ✅
+- `cd mobile && npm run lint` ✅
+- `cd mobile && npx expo config --json` ✅
+- `cd mobile && npx expo-doctor --verbose` ⚠️
+  - 16/17 checks OK
+  - falha restante: `Check Expo config (app.json/ app.config.js) schema` com `Request timed out`
+  - como `expo config --json` resolveu o config completo, o problema observado e de timeout da validacao remota, nao de schema invalido local
+- `cd mobile && CI=1 npx expo start --clear --offline` ⚠️
+  - Metro subiu em `http://localhost:8081`
+  - React Native DevTools falhou por dependencia nativa ausente no host: `libnspr4.so`
+  - o bundler permaneceu funcional
+- Smoke API publica real:
+  - `GET /api/v1/doctors/?include_next_slot=true` retornou `status=success` com dados reais em 2026-03-09
+- Smoke auth real com usuario seed:
+  - login `patient1@healthapp.com.br` / `Patient@2026!` retornou sucesso
+  - `GET /api/v1/users/me/` retornou sucesso
+  - `GET /api/v1/appointments/` retornou `total=3`
+  - `GET /api/v1/appointments/{id}/` retornou appointment `completed` com `payment`
+  - `GET /api/v1/payments/{id}/status/` retornou `status=success`, pagamento `completed`, metodo `pix`
+- Smoke de cadastro/validacao:
+  - usuario temporario `mobile.week9.1773059131@example.com` criado via `POST /api/v1/auth/register/`
+  - login real do usuario temporario validado
+  - `POST /api/v1/auth/forgot-password/` validado com resposta generica esperada
+  - `verify-email`, `resend-phone-otp` e `verify-phone` validados em-process com DRF views porque o processo HTTP local nao expunha o mesmo cache Redis visivel ao `manage.py shell`
+
+## Bloqueios restantes - Semana 9
+
+- Validacao nativa real de FCM bloqueada ate adicionar:
+  - `mobile/google-services.json`
+  - `mobile/GoogleService-Info.plist`
+- Payment Sheet/PIX nativo completo permanece para Semana 11:
+  - depende de chave Stripe publica real
+  - depende de build nativo/dev client
+  - depende de merchant identifier/artefatos finais
+- `expo-doctor` ainda sofre timeout na checagem remota do schema do `app.json`, apesar de `expo config --json` validar o config localmente.
 
 ## Atualizacao Semana 7/8 (2026-03-04)
 
